@@ -34,7 +34,11 @@
                 <div class="col-lg-6">
                     <h2>Upload</h2>
                     <p>Drag a file onto the page, or click</p>
-                    <p><a class="btn btn-default" href="#">this button!</a></p>
+                    <form action="/upload" method="post" enctype="multipart/form-data">
+                        Select a file: <input type="file" name="upload" />
+                        <input class="btn btn-default" type="submit" value="Upload" />
+                    </form>      
+                
                 </div>
                 <div class="col-lg-6">
                     <h2>Download</h2>
