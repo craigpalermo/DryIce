@@ -38,7 +38,7 @@ def main():
 
 @route('/')
 def route_root():
-    return template('public/index.html', files=list_files())
+    return template('public/index.html', files=get_file_info())
 
 @route('/download/<filepath:path>')
 def download_file(filepath):
@@ -48,7 +48,6 @@ def download_file(filepath):
 def upload_file():
     upload = request.files.get('upload')
     name, ext = os.path.splitext(upload.filename)
-    print type(upload)
     upload.save(datastore_path)
     return 'Success!'
 
@@ -60,16 +59,14 @@ def list_files():
         if isfile(join(datastore_path, f))]
 
 def get_file_info():
-    result = {}
-    files = list_files()
+    files = []
     try:
-        for f in files:
-            temp = time.ctime(os.path.getmtime(datastore_path + '/' + f))
-            time = datetime.strptime(temp, "%a %b %d %H:%M:%S %Y")
-            result[f] = time
-    except:
-        pass
-    return result
+        for f in list_files():
+            temp_time = time.ctime(os.path.getmtime(datastore_path + '/' + f))
+            file_time = datetime.strptime(temp_time, "%a %b %d %H:%M:%S %Y")
+            files.append({'name': f, 'created': file_time})
+    except: pass
+    return files
 
 @route('/debug/path')
 def print_path():
