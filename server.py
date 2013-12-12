@@ -60,10 +60,6 @@ def list_files():
 
 @route('/debug/path')
 def print_path():
-    '''
-    Prints the absolute path of the datastore directory, 
-    FOR DEBUG USE ONLY
-    '''
     return datastore_path
 
 
