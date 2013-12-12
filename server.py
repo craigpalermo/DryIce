@@ -1,42 +1,59 @@
-from bottle import route, run, static_file, request, template
-from os.path import isfile, join
+from bottle import route, run, static_file
 from os import listdir
+from os.path import isfile, join
+from os import walk
 from datetime import datetime, timedelta
 
 import os, os.path, time
 import threading
 import traceback
+import sys
 
-path           = os.path.dirname(os.path.realpath(__file__))
+path = os.path.dirname(os.path.realpath(__file__))
 datastore_path = path + '/datastore'
-retention_time = 10 # minutes
+retention_time = 1 # in minutes
 
 @route('/')
 def route_root():
-    return template('public/index.html', files=list_files())
+    return static_file("index.html", root=path + '/public')
 
 @route('/download/<filepath:path>')
 def download_file(filepath):
+    '''
+    Download the file whose path is in the URL
+    '''
     return static_file(filepath, root=datastore_path)
 
 @route('/upload', method='POST')
 def upload_file():
+    '''
+    Upload the file that the user enters in the form
+    '''
     upload = request.files.get('upload')
     name, ext = os.path.splitext(upload.filename)
     upload.save(datastore_path)
     return 'Success!'
 
-@route('/debug/list_files')
+@route('/list')
 def list_files():
-    return [f for f
-            in listdir(datastore_path)
-            if isfile(join(datastore_path, f))]
+    '''
+    Lists all the files in the datastore
+    '''
+    files = []
+    for (dirpath, dirnames, filenames) in walk(datastore_path):
+        files.extend(filenames)
 
-@route('/debug/path')
+    return files
+
+@route('/path')
 def print_path():
-    # FIXME: debug
+    '''
+    Prints the absolute path of the datastore directory, 
+    FOR DEBUG USE ONLY
+    '''
     return datastore_path
 
+@route('/expire')
 def expire_files():
     '''
     Removes from the datastore directory all files that have modified
@@ -51,9 +68,8 @@ def expire_files():
                 if age > timedelta(minutes=retention_time):
                     os.remove(datastore_path + '/' + f)
             except:
-                print("error statting files - " + traceback.format_exc())
+                print "error statting files - " + traceback.format_exc()
         time.sleep(60)
-
 
 # Static Routes
 @route('/<filename:re:.*\.js>')
@@ -73,11 +89,19 @@ def images(filename):
 def fonts(filename):
     return static_file(filename, root=path + '/public')
 
-
+# Initialize the server
+print "Starting server"
 datetime.strptime('2013-01-01', '%Y-%m-%d')
 expire_files_thread = threading.Thread(target=expire_files)
+expire_files_thread.daemon = True
 expire_files_thread.start()
+thread2 = threading.Thread(target=lambda: run(host='localhost', port=8080, debug=True))
+thread2.daemon = True
+thread2.start()
 
+while True:
+    try:
+        time.sleep(1)
+    except KeyboardInterrupt:
+        sys.exit()
 
-print("Starting server")
-run(host='localhost', port=8080, debug=True, reloader=True)
