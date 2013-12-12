@@ -11,5 +11,5 @@ def download_file(filepath):
 def print_path():
     return path + '/datastore'
 
-run(host='localhost', port=8080, debug=True)    
+run(host='localhost', port=8080, debug=True)
 
