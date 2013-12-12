@@ -1,4 +1,4 @@
-from bottle import route, run, static_file, request
+from bottle import route, run, static_file, request, template
 from os import listdir
 from os.path import isfile, join
 from datetime import datetime, timedelta
@@ -38,7 +38,7 @@ def main():
 
 @route('/')
 def route_root():
-    return static_file("index.html", root=path + '/public')
+    return template('public/index.html', files=list_files())
 
 @route('/download/<filepath:path>')
 def download_file(filepath):
