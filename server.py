@@ -5,8 +5,14 @@ from os import walk
 
 import os
 
+
 path = os.path.dirname(os.path.realpath(__file__))
 datastore_path = path + '/datastore'
+
+
+@route('/')
+def route_root():
+    return static_file("index.html", root=path + '/public')
 
 @route('/download/<filepath:path>')
 def download_file(filepath):
@@ -44,5 +50,24 @@ def print_path():
     '''
     return datastore_path
 
-run(host='localhost', port=8080, debug=True)    
 
+ # Static Routes
+@route('/<filename:re:.*\.js>')
+def javascripts(filename):
+    return static_file(filename, root=path + '/public')
+
+@route('/<filename:re:.*\.css>')
+def stylesheets(filename):
+    print(filename)
+    return static_file(filename, root=path + '/public')
+
+@route('/<filename:re:.*\.(jpg|png|gif|ico)>')
+def images(filename):
+    return static_file(filename, root=path + '/public')
+
+@route('/<filename:re:.*\.(eot|ttf|woff|svg)>')
+def fonts(filename):
+    return static_file(filename, root=path + '/public')
+
+
+run(host='localhost', port=8080, debug=True)
