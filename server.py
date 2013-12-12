@@ -48,6 +48,7 @@ def download_file(filepath):
 def upload_file():
     upload = request.files.get('upload')
     name, ext = os.path.splitext(upload.filename)
+    print type(upload)
     upload.save(datastore_path)
     return 'Success!'
 
@@ -55,8 +56,20 @@ def upload_file():
 @route('/debug/list_files')
 def list_files():
     return [f for f
-            in listdir(datastore_path)
-            if isfile(join(datastore_path, f))]
+        in listdir(datastore_path)
+        if isfile(join(datastore_path, f))]
+
+def get_file_info():
+    result = {}
+    files = list_files()
+    try:
+        for f in files:
+            temp = time.ctime(os.path.getmtime(datastore_path + '/' + f))
+            time = datetime.strptime(temp, "%a %b %d %H:%M:%S %Y")
+            result[f] = time
+    except:
+        pass
+    return result
 
 @route('/debug/path')
 def print_path():
