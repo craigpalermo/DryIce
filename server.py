@@ -7,9 +7,9 @@ import os, os.path, time
 import threading
 import traceback
 
-path = os.path.dirname(os.path.realpath(__file__))
+path           = os.path.dirname(os.path.realpath(__file__))
 datastore_path = path + '/datastore'
-retention_time = 1 # in minutes
+retention_time = 10 # minutes
 
 @route('/')
 def route_root():
