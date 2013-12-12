@@ -2,13 +2,14 @@ from bottle import route, run, static_file
 from os import listdir
 from os.path import isfile, join
 from os import walk
+from datetime import datetime, timedelta
 
-import os
+import os, os.path, time
 
 
 path = os.path.dirname(os.path.realpath(__file__))
 datastore_path = path + '/datastore'
-
+retention_time = 10 # in minutes
 
 @route('/')
 def route_root():
@@ -50,8 +51,23 @@ def print_path():
     '''
     return datastore_path
 
+@route('/expire')
+def expire_files():
+    '''
+    Removes from the datastore directory all files that have modified
+    time older than retention_time
+    '''
+    files = list_files()
+    for f in files:
+        try:
+            temp = time.ctime(os.path.getmtime(datastore_path + '/' + f))
+            age = datetime.now() - datetime.strptime(temp, "%a %b %d %H:%M:%S %Y")
+            if age > timedelta(minutes=retention_time):
+                os.remove(datastore_path + '/' + f)
+        except:
+            return "error statting files"
 
- # Static Routes
+# Static Routes
 @route('/<filename:re:.*\.js>')
 def javascripts(filename):
     return static_file(filename, root=path + '/public')
