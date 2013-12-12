@@ -1,7 +1,6 @@
-from bottle import route, run, static_file
-from os import listdir
+from bottle import route, run, static_file, request, template
 from os.path import isfile, join
-from os import walk
+from os import listdir
 from datetime import datetime, timedelta
 
 import os, os.path, time
@@ -18,41 +17,26 @@ def route_root():
 
 @route('/download/<filepath:path>')
 def download_file(filepath):
-    '''
-    Download the file whose path is in the URL
-    '''
     return static_file(filepath, root=datastore_path)
 
 @route('/upload', method='POST')
 def upload_file():
-    '''
-    Upload the file that the user enters in the form
-    '''
     upload = request.files.get('upload')
     name, ext = os.path.splitext(upload.filename)
     upload.save(datastore_path)
     return 'Success!'
 
-@route('/list')
+@route('/debug/list_files')
 def list_files():
-    '''
-    Lists all the files in the datastore
-    '''
-    files = []
-    for (dirpath, dirnames, filenames) in walk(datastore_path):
-        files.extend(filenames)
+    return [f for f
+            in listdir(datastore_path)
+            if isfile(join(datastore_path, f))]
 
-    return files
-
-@route('/path')
+@route('/debug/path')
 def print_path():
-    '''
-    Prints the absolute path of the datastore directory, 
-    FOR DEBUG USE ONLY
-    '''
+    # FIXME: debug
     return datastore_path
 
-@route('/expire')
 def expire_files():
     '''
     Removes from the datastore directory all files that have modified
@@ -67,8 +51,9 @@ def expire_files():
                 if age > timedelta(minutes=retention_time):
                     os.remove(datastore_path + '/' + f)
             except:
-                print "error statting files - " + traceback.format_exc()
-        time.sleep(5)
+                print("error statting files - " + traceback.format_exc())
+        time.sleep(60)
+
 
 # Static Routes
 @route('/<filename:re:.*\.js>')
@@ -88,35 +73,11 @@ def images(filename):
 def fonts(filename):
     return static_file(filename, root=path + '/public')
 
-# Initialize the server
-print "Starting server"
+
 datetime.strptime('2013-01-01', '%Y-%m-%d')
 expire_files_thread = threading.Thread(target=expire_files)
 expire_files_thread.start()
-run(host='localhost', port=8080, debug=True)
 
 
-# Static Routes
-@route('/<filename:re:.*\.js>')
-def javascripts(filename):
-    return static_file(filename, root=path + '/public')
-
-@route('/<filename:re:.*\.css>')
-def stylesheets(filename):
-    return static_file(filename, root=path + '/public')
-
-@route('/<filename:re:.*\.(jpg|png|gif|ico)>')
-def images(filename):
-    return static_file(filename, root=path + '/public')
-
-@route('/<filename:re:.*\.(eot|ttf|woff|svg)>')
-def fonts(filename):
-    return static_file(filename, root=path + '/public')
-
-# Initialize the server
-print "Starting server"
-datetime.strptime('2013-01-01', '%Y-%m-%d')
-expire_files_thread = threading.Thread(target=expire_files)
-expire_files_thread.start()
-run(host='localhost', port=8080, debug=True)
-
+print("Starting server")
+run(host='localhost', port=8080, debug=True, reloader=True)
