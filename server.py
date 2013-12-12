@@ -35,7 +35,6 @@ def main():
         except KeyboardInterrupt:
             sys.exit()
 
-
 @route('/')
 def route_root():
     return template('public/index.html', files=get_file_info())
@@ -46,11 +45,16 @@ def download_file(filepath):
 
 @route('/upload', method='POST')
 def upload_file():
-    upload = request.files.get('upload')
-    name, ext = os.path.splitext(upload.filename)
-    upload.save(datastore_path)
-    return 'Success!'
+    data = request.files.get('upload')
+    name, ext = os.path.splitext(data.filename)
+    # data.save(datastore_path)
+    
+    raw = data.file.read() # small files =.=
+    filename = data.filename
+    with open(datastore_path + '/' + filename, 'w') as f:
+        f.write(raw)
 
+    return route_root()
 
 @route('/debug/list_files')
 def list_files():
