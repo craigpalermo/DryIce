@@ -14,7 +14,7 @@ retention_time = 1 # in minutes
 
 @route('/')
 def route_root():
-    return static_file("index.html", root=path + '/public')
+    return template('public/index.html', files=list_files())
 
 @route('/download/<filepath:path>')
 def download_file(filepath):
@@ -78,6 +78,31 @@ def javascripts(filename):
 @route('/<filename:re:.*\.css>')
 def stylesheets(filename):
     print(filename)
+    return static_file(filename, root=path + '/public')
+
+@route('/<filename:re:.*\.(jpg|png|gif|ico)>')
+def images(filename):
+    return static_file(filename, root=path + '/public')
+
+@route('/<filename:re:.*\.(eot|ttf|woff|svg)>')
+def fonts(filename):
+    return static_file(filename, root=path + '/public')
+
+# Initialize the server
+print "Starting server"
+datetime.strptime('2013-01-01', '%Y-%m-%d')
+expire_files_thread = threading.Thread(target=expire_files)
+expire_files_thread.start()
+run(host='localhost', port=8080, debug=True)
+
+
+# Static Routes
+@route('/<filename:re:.*\.js>')
+def javascripts(filename):
+    return static_file(filename, root=path + '/public')
+
+@route('/<filename:re:.*\.css>')
+def stylesheets(filename):
     return static_file(filename, root=path + '/public')
 
 @route('/<filename:re:.*\.(jpg|png|gif|ico)>')
