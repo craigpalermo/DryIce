@@ -1,7 +1,6 @@
-from bottle import route, run, static_file
+from bottle import route, run, static_file, request
 from os import listdir
 from os.path import isfile, join
-from os import walk
 from datetime import datetime, timedelta
 
 import os, os.path, time
@@ -9,9 +8,33 @@ import threading
 import traceback
 import sys
 
+
 path = os.path.dirname(os.path.realpath(__file__))
 datastore_path = path + '/datastore'
 retention_time = 1 # in minutes
+
+
+def main():
+    print("Starting server")
+    datetime.strptime('2013-01-01', '%Y-%m-%d')
+
+    expire_files_thread = threading.Thread(
+            target=expire_files)
+    main_bottle_thread  = threading.Thread(
+            target=lambda: run(host='localhost', port=8080, debug=True))
+
+    expire_files_thread.daemon = True
+    main_bottle_thread.daemon = True
+
+    expire_files_thread.start()
+    main_bottle_thread.start()
+
+    while True:
+        try:
+            time.sleep(1)
+        except KeyboardInterrupt:
+            sys.exit()
+
 
 @route('/')
 def route_root():
@@ -19,33 +42,23 @@ def route_root():
 
 @route('/download/<filepath:path>')
 def download_file(filepath):
-    '''
-    Download the file whose path is in the URL
-    '''
     return static_file(filepath, root=datastore_path)
 
 @route('/upload', method='POST')
 def upload_file():
-    '''
-    Upload the file that the user enters in the form
-    '''
     upload = request.files.get('upload')
     name, ext = os.path.splitext(upload.filename)
     upload.save(datastore_path)
     return 'Success!'
 
-@route('/list')
+
+@route('/debug/list_files')
 def list_files():
-    '''
-    Lists all the files in the datastore
-    '''
-    files = []
-    for (dirpath, dirnames, filenames) in walk(datastore_path):
-        files.extend(filenames)
+    return [f for f
+            in listdir(datastore_path)
+            if isfile(join(datastore_path, f))]
 
-    return files
-
-@route('/path')
+@route('/debug/path')
 def print_path():
     '''
     Prints the absolute path of the datastore directory, 
@@ -53,7 +66,7 @@ def print_path():
     '''
     return datastore_path
 
-@route('/expire')
+
 def expire_files():
     '''
     Removes from the datastore directory all files that have modified
@@ -68,40 +81,24 @@ def expire_files():
                 if age > timedelta(minutes=retention_time):
                     os.remove(datastore_path + '/' + f)
             except:
-                print "error statting files - " + traceback.format_exc()
+                print("error statting files - " + traceback.format_exc())
         time.sleep(60)
+
 
 # Static Routes
 @route('/<filename:re:.*\.js>')
 def javascripts(filename):
     return static_file(filename, root=path + '/public')
-
 @route('/<filename:re:.*\.css>')
 def stylesheets(filename):
-    print(filename)
     return static_file(filename, root=path + '/public')
-
 @route('/<filename:re:.*\.(jpg|png|gif|ico)>')
 def images(filename):
     return static_file(filename, root=path + '/public')
-
 @route('/<filename:re:.*\.(eot|ttf|woff|svg)>')
 def fonts(filename):
     return static_file(filename, root=path + '/public')
 
-# Initialize the server
-print "Starting server"
-datetime.strptime('2013-01-01', '%Y-%m-%d')
-expire_files_thread = threading.Thread(target=expire_files)
-expire_files_thread.daemon = True
-expire_files_thread.start()
-thread2 = threading.Thread(target=lambda: run(host='localhost', port=8080, debug=True))
-thread2.daemon = True
-thread2.start()
 
-while True:
-    try:
-        time.sleep(1)
-    except KeyboardInterrupt:
-        sys.exit()
-
+if __name__ == "__main__":
+    main()
