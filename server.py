@@ -21,7 +21,7 @@ def main():
     expire_files_thread = threading.Thread(
             target=expire_files)
     main_bottle_thread  = threading.Thread(
-            target=lambda: run(host='localhost', port=8080, debug=True))
+            target=lambda: run(host='0.0.0.0', port=8080, debug=True))
 
     expire_files_thread.daemon = True
     main_bottle_thread.daemon = True
@@ -44,8 +44,14 @@ def download_file(filepath):
     return static_file(filepath, root=datastore_path)
 
 @route('/upload', method='POST')
-def upload_file():
+def upload_runner():
     data = request.files.get('upload')
+    thread = threading.Thread(target=upload_file, args=[data])
+    thread.daemon = True
+    thread.start()
+    return route_root()
+
+def upload_file(data):
     name, ext = os.path.splitext(data.filename)
     # data.save(datastore_path)
     
@@ -53,8 +59,6 @@ def upload_file():
     filename = data.filename
     with open(datastore_path + '/' + filename, 'w') as f:
         f.write(raw)
-
-    return route_root()
 
 @route('/debug/list_files')
 def list_files():
