@@ -1,4 +1,8 @@
 from bottle import route, run, static_file
+from os import listdir
+from os.path import isfile, join
+from os import walk
+
 import os
 
 path = os.path.dirname(os.path.realpath(__file__))
@@ -21,6 +25,17 @@ def upload_file():
     upload.save(datastore_path)
     return 'Success!'
 
+@route('/list')
+def list_files():
+    '''
+    Lists all the files in the datastore
+    '''
+    files = []
+    for (dirpath, dirnames, filenames) in walk(datastore_path):
+        files.extend(filenames)
+
+    return files
+
 @route('/path')
 def print_path():
     '''
@@ -29,5 +44,5 @@ def print_path():
     '''
     return datastore_path
 
-run(host='localhost', port=8080, debug=True)
+run(host='localhost', port=8080, debug=True)    
 
