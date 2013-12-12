@@ -33,18 +33,22 @@
             <div class="row">
                 <div class="col-lg-6">
                     <h2>Upload</h2>
-                    <p>Drag a file onto the page, or click</p>
+                    <p>Drag a file onto the page, or</p>
                     <form action="/upload" method="post" enctype="multipart/form-data">
-                        Select a file: <input type="file" name="upload" />
-                        <input class="btn btn-default" type="submit" value="Upload" />
-                    </form>      
-                
+                        <span class="btn btn-file">
+                            <input type="file" name="upload" />
+                        </span>
+                        <p>and then</p>
+                        <input class="btn btn-default" type="submit" value="upload it" />
+                    </form>
                 </div>
                 <div class="col-lg-6">
                     <h2>Download</h2>
                     <p>Upload something, or click one of the links below.</p>
                 </div>
             </div>
+
+            <hr>
 
             <div id="files-container" class="row">
                 <div class="col-xs-12">
@@ -53,15 +57,17 @@
                 <div class="col-xs-12">
                     <div class="row" id="files">
                         % for file in files:
-                            <div class="col-lg-3 col-md-4 col-sm-6">
-                                {{file}}
+                            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                                <div class="file">
+                                    <a href="/download/file.name">
+                                        <button class="btn btn-primary">{{file}}</button>
+                                    </a>
+                                </div>
                             </div>
                         % end
                     </div>
                 </div>
             </div>
-
-            <hr>
 
             <footer>
                 <!--<p>&copy; Company 2013</p>-->

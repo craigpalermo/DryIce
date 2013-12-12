@@ -11,7 +11,7 @@ import sys
 
 path = os.path.dirname(os.path.realpath(__file__))
 datastore_path = path + '/datastore'
-retention_time = 1 # in minutes
+retention_time = 10 # in minutes
 
 
 def main():
