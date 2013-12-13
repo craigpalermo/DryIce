@@ -1,6 +1,6 @@
-from bottle import route, run, static_file, request, template
-from os import listdir
-from os.path import isfile, join
+from bottle   import route, run, static_file, request
+from os       import listdir
+from os.path  import isfile, join
 from datetime import datetime, timedelta
 
 import os, os.path, time
@@ -8,14 +8,15 @@ import threading
 import traceback
 import sys
 
+from lib.template import render
 
-path = os.path.dirname(os.path.realpath(__file__))
+
+path           = os.path.dirname(os.path.realpath(__file__))
 datastore_path = path + '/datastore'
 retention_time = 10 # in minutes
 
 
 def main():
-    print("Starting server")
     datetime.strptime('2013-01-01', '%Y-%m-%d')
 
     expire_files_thread = threading.Thread(
@@ -37,7 +38,7 @@ def main():
 
 @route('/')
 def route_root():
-    return template('public/index.html', files=get_file_info())
+    return render('index.jade', {'files': get_file_info()})
 
 @route('/download/<filepath:path>')
 def download_file(filepath):

@@ -14,3 +14,19 @@
 .file button {
     width: 80%;
 }
+
+#file-input-wrapper {
+    position:         relative;
+}
+
+#file-input-wrapper input {
+    position:         absolute;
+    z-index:          2;
+    top:              0;
+    left:             0;
+    filter:           alpha(opacity = 0);
+    -ms-filter:       "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+    opacity:          0;
+    background-color: transparent;
+    color:            transparent;
+}

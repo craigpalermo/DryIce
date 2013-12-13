@@ -1,0 +1,58 @@
+!!! 5
+html.no-js
+  head
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge,chrome=1')
+    title
+    meta(name='description', content='')
+    meta(name='viewport', content='width=device-width')
+    link(rel='stylesheet', href='css/bootstrap.min.css')
+    style
+      body {
+      padding-bottom: 20px;
+      }
+    link(rel='stylesheet', href='css/bootstrap-theme.min.css')
+    link(rel='stylesheet', href='css/main.css')
+
+  body
+    .jumbotron
+      .container
+        .row
+          .col-xs-12
+            h1 Dropbucket
+            p.lead Upload files. Download files. What more could you need?
+
+    .container
+      .row
+        .col-xs-12
+          h2 Upload
+          p Drag a file onto the page, or
+          form(action='/upload', method='post', enctype='multipart/form-data')
+            #file-input-wrapper
+              a.btn.btn-primary(href='javascript:;')
+                | click here
+                input(type='file', name='upload', size='40', onchange='$("#file-input-info").html($(this).val());')
+              span#file-input-info.label.label-info
+
+      hr
+
+      #files-container.row
+        .col-xs-12
+          h2 Download
+          p Upload something, or click one of the links below.
+        .col-xs-12
+          #files.row
+            each file in files
+              .col-xs-12.col-sm-6.col-md-4.col-lg-3
+                .file
+                  a(href='/download/'+file.name, download=file.name)
+                    button.btn.btn-primary=file.name
+                    p.text-info=file.created
+
+      footer
+        // <p>&copy; Company 2013</p>
+
+    #scripts
+      script(src='js/vendor/jquery-1.10.1.min.js')
+      script(src='js/vendor/bootstrap.min.js')
+      script(src='js/main.js')
