@@ -28,10 +28,14 @@ body {
     color: #e1e1e1 !important;
 }
 h1, h3, h5 {
+    margin: 20px 0 10px 0;
     color: #fff !important;
+    line-height: 1;
 }
 h2, h4, h6 {
+    margin: 20px 0 10px 0;
     color: #cacaca !important;
+    line-height: 1;
 }
 h1 { font-size: 40px; }
 h2 { font-size: 32px; }
@@ -44,12 +48,28 @@ body {
     background-color: #333;
 }
 
+small {
+    padding-right: 5px;
+}
+
 header {
     background-color: #222;
     padding: 20px 0;
 }
 header #title h1 {
     font-size: 2.6em;
+    margin: 0;
+    line-height: 135px;
+}
+header #subtitle h2 {
+    font-size: 1.5em;
+    margin: 0;
+}
+header #subtitle {
+    height: 135px;
+    width: 999px; /* Obviously a hack. */
+    display: table-cell;
+    vertical-align: middle;
 }
 
 #content {
@@ -76,6 +96,11 @@ footer {
     background-color: #bbb;
     font-size: 17px;
     font-weight: bold;
+}
+
+#content h3, #content h4 {
+    height:      30px;
+    line-height: 30px;
 }
 
 #upload-form {

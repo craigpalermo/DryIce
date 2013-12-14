@@ -18,47 +18,51 @@ html.no-js
     header#header
       .container
         .row
-          #title.col-xs-12.col-sm-5.col-md-3.col-md-push-2
+          #title.col-xs-12.col-sm-5.col-md-3.col-md-offset-2
             h1.col-xs-center.col-sm-right.col-lg-left Dropbucket
-          #subtitle.col-xs-12.col-sm-7.col-md-7.col-md-push-2
-            h2.col-xs-center.col-sm-left Upload files. Download files.
-              br
-              small What more could you need?
+          .col-xs-12.col-sm-6.col-md-3
+            #subtitle
+              h2.col-xs-center.col-sm-right
+                | upload files
+                br
+                | download files
+                br
+                small nothing else
 
     #content
       .container
         .row
-          .col-sm-5.col-md-2
-            h3.col-xs-center.col-sm-right Upload
-          .col-sm-7.col-md-10
-            .col-xs-center.col-sm-left
-              h4 drag and drop
-              form#upload-form(action='/upload', method='post', enctype='multipart/form-data')
-                button#browse-button
-                  span#browse browse
-                  input(type='file', name='upload')
-                span#file-input-info.label
-                button#upload-button(type='submit') upload
+          .col-xs-12.col-sm-6#upload-container
+            .row
+              .col-xs-12.col-sm-5.col-md-4
+                h3.col-xs-center.col-sm-right up
+              .col-xs-12.col-sm-7.col-md-8
+                .col-xs-center.col-sm-left
+                  h4 drag and drop
+                  form#upload-form(action='/upload', method='post', enctype='multipart/form-data')
+                    button#browse-button
+                      span#browse browse
+                      input(type='file', name='upload')
+                    span#file-input-info.label
+                    button#upload-button(type='submit') upload
 
-        hr
-
-        .row#files-container
-          .col-sm-5.col-md-2
-            h3.col-xs-center.col-sm-right Download
-          .col-sm-7.col-md-10
-            .col-xs-center.col-sm-left
-              h4 pick and click
-
-              .row#files
-                each file in files
-                  .file-wrapper.col-xs-12.col-sm-6.col-md-4.col-lg-3
-                    .file
-                      a(href='/download/'+file.name, download=file.name)
-                        button.btn=file.name
-                      p=file.created
+          .col-xs-12.col-sm-6#files-container
+            .row
+              .col-xs-12.col-sm-5.col-md-4
+                h3.col-xs-center.col-sm-right down
+              .col-xs-12.col-sm-7.col-md-8
+                .col-xs-center.col-sm-left
+                  h4 pick and click
+                  .row#files
+                    each file in files
+                      .file-wrapper.col-xs-12.col-md-6.col-lg-4
+                        .file
+                          a(href='/download/'+file.name, download=file.name)
+                            button.btn=file.name
+                          p=file.created
 
     footer#footer
-      // <p>&copy; Company 2013</p>
+      // things and stuff
 
     #scripts
       script(src='js/vendor/jquery-1.10.1.min.js')
