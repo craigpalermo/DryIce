@@ -17,7 +17,7 @@ def def_routes():
     # Upload and download files
     @route('/download/<filepath:path>')
     def download_file(filepath):
-        return static_file(filepath, root=FILE_RETENTION_TIME)
+        return static_file(filepath, root=PATH_DATASTORE)
 
     @route('/upload', method='POST')
     def upload_runner():
