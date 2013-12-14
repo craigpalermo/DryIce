@@ -67,7 +67,10 @@ footer {
     padding: 14px 5px;
 }
 #files .file button {
-    width: 60%;
+    max-width: 400px;
+    width: 100%;
+    padding-left: 10%;
+    padding-right: 10%;
     border-radius: 0;
     color: #222;
     background-color: #ddd;
