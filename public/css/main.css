@@ -92,10 +92,15 @@ footer {
     padding-left: 10%;
     padding-right: 10%;
     border-radius: 0;
-    color: #222;
-    background-color: #bbb;
     font-size: 17px;
     font-weight: bold;
+    color: #222;
+    background-color: #bbb;
+}
+#files .file button:hover {
+    color: #000;
+    background-color: #fff;
+    transition: all 0.4s ease-out;
 }
 
 #content h3, #content h4 {
@@ -107,16 +112,21 @@ footer {
     padding: 20px 0;
 }
 #browse-button, #upload-button {
+    width: 100px;
     position: relative;
     overflow: hidden;
     color: #222;
     background-color: #eee;
     border: none;
 }
+#browse-button:hover, #upload-button:hover {
+    color: #eee;
+    background-color: #222;
+    transition: all 0.4s ease-out;
+}
 #browse-button { margin-bottom:15px; }
 #upload-button { margin-top:   15px; }
 #browse-button, #file-input-info, #upload-button {
-    font-size: 16px;
     font-weight: bold;
     padding: 9px 18px;
 }
@@ -135,5 +145,5 @@ footer {
     color: #eee;
     background-color: #222;
     margin-right: -5px;
-    font-size: 14px;
+    font-size: 13px;
 }
