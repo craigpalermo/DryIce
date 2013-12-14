@@ -15,14 +15,16 @@ html.no-js
     link(rel='stylesheet', href='css/main.css')
 
   body
-    .jumbotron
+    header#header.jumbotron
       .container
         .row
-          .col-xs-12
+          #title.col-xs-12.col-md-5
             h1 Dropbucket
-            p.lead Upload files. Download files. What more could you need?
+          #subtitle.col-xs-12.col-md-7
+            h2 Upload files. Download files.
+            small What more could you need?
 
-    .container
+    #content.container
       .row
         .col-xs-12
           h2 Upload
@@ -32,7 +34,7 @@ html.no-js
               a.btn.btn-primary(href='javascript:;')
                 | click here
                 input(type='file', name='upload', size='40', onchange='$("#file-input-info").html($(this).val());')
-              span#file-input-info.label.label-info
+              span#file-input-info.label.label-primary
 
       hr
 
@@ -46,11 +48,11 @@ html.no-js
               .col-xs-12.col-sm-6.col-md-4.col-lg-3
                 .file
                   a(href='/download/'+file.name, download=file.name)
-                    button.btn.btn-primary=file.name
+                    button.btn.btn-info=file.name
                     p.text-info=file.created
 
-      footer
-        // <p>&copy; Company 2013</p>
+    footer#footer
+      // <p>&copy; Company 2013</p>
 
     #scripts
       script(src='js/vendor/jquery-1.10.1.min.js')
