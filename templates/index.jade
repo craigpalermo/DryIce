@@ -15,41 +15,48 @@ html.no-js
     link(rel='stylesheet', href='css/main.css')
 
   body
-    header#header.jumbotron
+    header#header
       .container
         .row
-          #title.col-xs-12.col-md-5
-            h1 Dropbucket
-          #subtitle.col-xs-12.col-md-7
-            h2 Upload files. Download files.
-            small What more could you need?
+          #title.col-xs-12.col-sm-5.col-md-3.col-md-push-2
+            h1.col-xs-center.col-sm-right.col-lg-left Dropbucket
+          #subtitle.col-xs-12.col-sm-7.col-md-7.col-md-push-2
+            h2.col-xs-center.col-sm-left Upload files. Download files.
+              br
+              small What more could you need?
 
-    #content.container
-      .row
-        .col-xs-12
-          h2 Upload
-          p Drag a file onto the page, or
-          form(action='/upload', method='post', enctype='multipart/form-data')
-            #file-input-wrapper
-              a.btn.btn-primary(href='javascript:;')
-                | click here
-                input(type='file', name='upload', size='40', onchange='$("#file-input-info").html($(this).val());')
-              span#file-input-info.label.label-primary
+    #content
+      .container
+        .row
+          .col-sm-5.col-md-2
+            h3.col-xs-center.col-sm-right Upload
+          .col-sm-7.col-md-10
+            .col-xs-center.col-sm-left
+              h4 drag and drop
+              form#upload-form(action='/upload', method='post', enctype='multipart/form-data')
+                button#browse-button
+                  span#browse browse
+                  input(type='file', name='upload')
+                span#file-input-info.label
+                button#upload-button(type='submit') upload
 
-      hr
+        hr
 
-      #files-container.row
-        .col-xs-12
-          h2 Download
-          p Upload something, or click one of the links below.
-        .col-xs-12
-          #files.row
-            each file in files
-              .col-xs-12.col-sm-6.col-md-4.col-lg-3
-                .file
-                  a(href='/download/'+file.name, download=file.name)
-                    button.btn.btn-info=file.name
-                    p.text-info=file.created
+        .row#files-container
+          .col-sm-5.col-md-2
+            h3.col-xs-center.col-sm-right Download
+          .col-sm-7.col-md-10
+            .col-xs-center.col-sm-left
+              h4 pick and click
+        .row
+          .col-xs-12
+            #files.row
+              each file in files
+                .file-wrapper.col-xs-12.col-sm-6.col-md-4.col-lg-3
+                  .file
+                    a(href='/download/'+file.name, download=file.name)
+                      button.btn=file.name
+                    p=file.created
 
     footer#footer
       // <p>&copy; Company 2013</p>

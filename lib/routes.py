@@ -1,53 +1,52 @@
-from bottle import redirect, request, route, static_file
+from bottle     import redirect, request, route, static_file
+from threading  import Thread
 
-from template  import render
-from fileutils import get_file_info
+from template   import render
+from .fileutils import get_file_info, list_files, upload_file
 
-from   .          import *
-print(FILE_RETENTION_TIME)
-
-
-
-@route('/')
-def route_root():
-    return render('index.jade', {'files': get_file_info()})
-
-@route('/download/<filepath:path>')
-def download_file(filepath):
-    return static_file(filepath, root=FILE_RETENTION_TIME)
-
-@route('/upload', method='POST')
-def upload_runner():
-    data   = request.files.get('upload')
-    thread = threading.Thread(target=upload_file, args=[data])
-    thread.daemon = True
-    thread.start()
-    return redirect('/')
-
-@route('/debug/list_files')
-def list_files():
-    return [f for f
-        in listdir(datastore_path)
-        if isfile(join(datastore_path, f))]
-
-@route('/debug/path')
-def print_path():
-    return datastore_path
+from .constants import *
 
 
-# Static files
-@route('/<filename:re:.*\.js>')
-def javascripts(filename):
-    return static_file(filename, root=path + '/public')
+def def_routes():
+    # Render pages
+    @route('/')
+    def route_root():
+        return render('index.jade', {'files': get_file_info()})
 
-@route('/<filename:re:.*\.css>')
-def stylesheets(filename):
-    return static_file(filename, root=path + '/public')
 
-@route('/<filename:re:.*\.(jpg|png|gif|ico)>')
-def images(filename):
-    return static_file(filename, root=path + '/public')
+    # Upload and download files
+    @route('/download/<filepath:path>')
+    def download_file(filepath):
+        return static_file(filepath, root=FILE_RETENTION_TIME)
 
-@route('/<filename:re:.*\.(eot|ttf|woff|svg)>')
-def fonts(filename):
-    return static_file(filename, root=path + '/public')
+    @route('/upload', method='POST')
+    def upload_runner():
+        data   = request.files.get('upload')
+        thread = Thread(target=upload_file, args=[data])
+        thread.daemon = True
+        thread.start()
+        return redirect('/')
+
+
+    # Debug
+    @route('/debug/list_files')
+    def debug_list_files():
+        return map(lambda f: f+' ', list_files())
+
+
+    # Static assets
+    @route('/<filename:re:.*\.js>')
+    def javascripts(filename):
+        return static_file(filename, root=PATH_ROOT + '/public')
+
+    @route('/<filename:re:.*\.css>')
+    def stylesheets(filename):
+        return static_file(filename, root=PATH_ROOT  + '/public')
+
+    @route('/<filename:re:.*\.(jpg|png|gif|ico)>')
+    def images(filename):
+        return static_file(filename, root=PATH_ROOT  + '/public')
+
+    @route('/<filename:re:.*\.(eot|ttf|woff|svg)>')
+    def fonts(filename):
+        return static_file(filename, root=PATH_ROOT  + '/public')

@@ -1,6 +1,4 @@
-from os.path import abspath, dirname
+from routes import def_routes
 
 
-PATH_DATASTORE = dirname(dirname(abspath(__file__))) + '/datastore'
-
-FILE_RETENTION_TIME = 10 # in minutes
+def_routes()

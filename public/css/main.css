@@ -1,40 +1,112 @@
-@media only screen and (min-width: 992px) {
-    header #subtitle {
-        text-align: right;
-    }
+* {
+    box-sizing: border-box;
 }
 
-@media only screen and (max-width: 991px) {
-    header {
-        text-align: center;
-    }
+@media only screen {
+    .col-xs-left   { text-align: left   !important; }
+    .col-xs-center { text-align: center !important; }
+    .col-xs-right  { text-align: right  !important; }
+}
+@media only screen and (min-width: 768px) {
+    .col-sm-left   { text-align: left   !important; }
+    .col-sm-center { text-align: center !important; }
+    .col-sm-right  { text-align: right  !important; }
+}
+@media only screen and (min-width: 992px) {
+    .col-md-left   { text-align: left   !important; }
+    .col-md-center { text-align: center !important; }
+    .col-md-right  { text-align: right  !important; }
+}
+@media only screen and (min-width: 1200px) {
+    .col-lg-left   { text-align: left   !important; }
+    .col-lg-center { text-align: center !important; }
+    .col-lg-right  { text-align: right  !important; }
+}
+
+body {
+    font-size: 16px;
+    color: #e1e1e1 !important;
+}
+h1, h3, h5 {
+    color: #fff !important;
+}
+h2, h4, h6 {
+    color: #cacaca !important;
+}
+h1 { font-size: 40px; }
+h2 { font-size: 32px; }
+h3 { font-size: 26px; }
+h4 { font-size: 20px; }
+h5 { font-size: 18px; }
+h6 { font-size: 16px; }
+
+body {
+    background-color: #333;
+}
+
+header {
+    background-color: #222;
+    padding: 20px 0;
+}
+header #title h1 {
+    font-size: 2.6em;
+}
+
+#content {
+    padding: 40px 0;
+}
+
+footer {
+    background-color: #282828;
 }
 
 #files {
     padding-top: 20px;
 }
-
-.file {
+#files .file {
     text-align: center;
     padding: 14px 5px;
 }
-
-.file button {
-    width: 80%;
+#files .file button {
+    width: 60%;
+    border-radius: 0;
+    color: #222;
+    background-color: #ddd;
+    font-size: 17px;
+    font-weight: bold;
 }
 
-#file-input-wrapper {
-    position:         relative;
+#upload-form {
+    padding: 20px 0;
 }
-
-#file-input-wrapper input {
-    position:         absolute;
-    z-index:          2;
-    top:              0;
-    left:             0;
-    filter:           alpha(opacity = 0);
-    -ms-filter:       "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
-    opacity:          0;
-    background-color: transparent;
-    color:            transparent;
+#browse-button, #upload-button {
+    position: relative;
+    overflow: hidden;
+    color: #222;
+    background-color: #ddd;
+    border: none;
+}
+#browse-button { margin-bottom:15px; }
+#upload-button { margin-top:   15px; }
+#browse-button, #file-input-info, #upload-button {
+    font-size: 16px;
+    font-weight: bold;
+    padding: 9px 18px;
+}
+#browse-button input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    opacity: 0;
+    cursor: inherit;
+    display: block;
+}
+#file-input-info {
+    border-radius: 0;
+    color: #ddd;
+    background-color: #222;
+    margin-right: -5px;
+    font-size: 14px;
 }
