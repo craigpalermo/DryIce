@@ -73,7 +73,7 @@ footer {
     padding-right: 10%;
     border-radius: 0;
     color: #222;
-    background-color: #ddd;
+    background-color: #bbb;
     font-size: 17px;
     font-weight: bold;
 }
@@ -85,7 +85,7 @@ footer {
     position: relative;
     overflow: hidden;
     color: #222;
-    background-color: #ddd;
+    background-color: #eee;
     border: none;
 }
 #browse-button { margin-bottom:15px; }
@@ -107,7 +107,7 @@ footer {
 }
 #file-input-info {
     border-radius: 0;
-    color: #ddd;
+    color: #eee;
     background-color: #222;
     margin-right: -5px;
     font-size: 14px;
