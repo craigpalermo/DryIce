@@ -5,23 +5,20 @@ from   os         import listdir
 from   os.path    import getmtime, isfile, join, splitext
 from   datetime   import datetime, timedelta
 from   time       import ctime, sleep
-
-from .constants   import *
+from   werkzeug   import secure_filename
+from   constants   import *
 
 
 def list_files():
+    '''
+    returns list containing names of all files in datastore
+    '''
     return [f for f
         in listdir(PATH_DATASTORE)
         if isfile(join(PATH_DATASTORE, f))]
 
-
 def upload_file(data):
-    name, ext = splitext(data.filename)
-    raw       = data.file.read() # small files =.=
-    filename  = data.filename
-    with open(PATH_DATASTORE + '/' + filename, 'w') as f:
-        f.write(raw)
-
+    data.save(PATH_DATASTORE + '/' + secure_filename(data.filename))
 
 def get_file_info():
     files = []
