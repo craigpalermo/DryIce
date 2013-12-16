@@ -22,41 +22,42 @@ def route_root():
 
 
 # Upload and download files
-@app.route('/download/<path:filename>')
+@app.route('/download/<path:filename>/')
 def download_file(filename):
     return send_from_directory(PATH_DATASTORE, filename)
 
-@app.route('/upload', methods=['POST'])
+@app.route('/upload/', methods=['GET', 'POST'])
 def upload_runner():
-    try:
-        f      = request.files.get('upload')
-        thread = Thread(target=upload_file, args=[f])
-        thread.daemon = True
-        thread.start()
-    except:
-        print traceback.format_exc()
+    if request.method == 'POST':
+        try:
+            f      = request.files.get('upload')
+            thread = Thread(target=upload_file, args=[f])
+            thread.daemon = True
+            thread.start()
+        except:
+            print traceback.format_exc()
     return redirect('/')
 
 
 # Debug
-@app.route('/debug/list_files')
+@app.route('/debug/list_files/')
 def debug_list_files():
     return map(lambda f: f+' ', list_files())
 
 # Static assets
-@app.route('/<regex(".*\.js"):filename>')
+@app.route('/<regex(".*\.js"):filename>/')
 def javascripts(filename):
     return url_for('static', filename=filename)
 
-@app.route('/<regex(".*\.css>"):filename>')
+@app.route('/<regex(".*\.css>"):filename>/')
 def stylesheets(filename):
     return url_for('static', filename=filename) 
 
-@app.route('/<regex(".*\.(jpg|png|gif|ico)"):filename>')
+@app.route('/<regex(".*\.(jpg|png|gif|ico)"):filename>/')
 def images(filename):
     return url_for('static', filename=filename)
 
-@app.route('/<regex(".*\.(eot|ttf|woff|svg)"):filename>')
+@app.route('/<regex(".*\.(eot|ttf|woff|svg)"):filename>/')
 def fonts(filename):
     return url_for('static', filename=filename)
 
