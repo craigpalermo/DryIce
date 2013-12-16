@@ -1,5 +1,5 @@
 Feature Wish-List:
-- 
+- implement limit for file upload size (frontent and backend)
 
 Pre-Deployment Checklist:
 - set up file downloads to be handled by the webserver rather than the python script. this will make the server more efficient.
