@@ -8,7 +8,6 @@ from   time       import ctime, sleep
 from   werkzeug   import secure_filename
 from   constants   import *
 
-
 def list_files():
     '''
     returns list containing names of all files in datastore
@@ -18,7 +17,10 @@ def list_files():
         if isfile(join(PATH_DATASTORE, f))]
 
 def upload_file(data):
-    data.save(PATH_DATASTORE + '/' + secure_filename(data.filename))
+    try:
+        data.save(PATH_DATASTORE + '/' + secure_filename(data.filename))
+    except:
+        print traceback.format_exc()
 
 def get_file_info():
     files = []
