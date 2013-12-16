@@ -16,12 +16,6 @@ def list_files():
         in listdir(PATH_DATASTORE)
         if isfile(join(PATH_DATASTORE, f))]
 
-def upload_file(data):
-    try:
-        data.save(PATH_DATASTORE + '/' + secure_filename(data.filename))
-    except:
-        print traceback.format_exc()
-
 def get_file_info():
     files = []
     try:

@@ -30,10 +30,10 @@ def download_file(filename):
 def upload_runner():
     if request.method == 'POST':
         try:
-            f      = request.files.get('upload')
-            thread = Thread(target=upload_file, args=[f])
-            thread.daemon = True
-            thread.start()
+            file      = request.files.get('upload')
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         except:
             print traceback.format_exc()
     return redirect('/')
