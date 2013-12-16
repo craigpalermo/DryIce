@@ -3,7 +3,7 @@ import os
 
 def render(path,dic={}):
     env_path = os.path.abspath(os.path.dirname(__file__))
-    template_path = os.path.abspath(os.path.join(env_path,"../templates"))
+    template_path = os.path.abspath(os.path.join(env_path,"templates"))
     env = Environment(
             loader=FileSystemLoader(template_path),
             extensions=['pyjade.ext.jinja.PyJadeExtension'],
