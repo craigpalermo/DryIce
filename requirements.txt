@@ -1,3 +1,4 @@
 jinja2
-pyjade
+werkzeug
 flask
+pyjade
