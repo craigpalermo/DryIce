@@ -2,7 +2,7 @@ import sys
 
 from flask         import Flask, send_from_directory, request, redirect, \
                             url_for
-from datetime      import datetime
+from werkzeug.exceptions import RequestEntityTooLarge
 from time          import sleep
 from threading     import Thread
 
@@ -14,6 +14,7 @@ from constants     import *
 app = Flask(__name__)
 app.url_map.converters['regex'] = RegexConverter
 app.config['UPLOAD_FOLDER'] = PATH_DATASTORE
+app.config['MAX_CONTENT_LENGTH'] = 512 * 1024 * 1024
 
 # Routes ------------------------------------------------------------------
 @app.route('/')
@@ -31,13 +32,14 @@ def upload_runner():
     if request.method == 'POST':
         try:
             file      = request.files.get('upload')
-            if file and allowed_file(file.filename):
+            if file:
                 filename = secure_filename(file.filename)
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        except RequestEntityTooLarge:
+            print "File size too large"
         except:
             print traceback.format_exc()
     return redirect('/')
-
 
 # Debug
 @app.route('/debug/list_files/')
