@@ -18,7 +18,7 @@ app.config['MAX_CONTENT_LENGTH'] = 512 * 1024 * 1024
 # Routes ------------------------------------------------------------------
 @app.route('/')
 def route_root():
-    return render('index.jade', {'files': get_file_info()})
+    return render('index.jade', {'files': get_file_info(), 'size_limit': app.config['MAX_CONTENT_LENGTH']})
 
 
 # Upload and download files

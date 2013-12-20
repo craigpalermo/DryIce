@@ -39,11 +39,11 @@ html(lang='en')
                   form#upload-form(action='/upload/', method='post', enctype='multipart/form-data')
                     button#browse-button
                       span#browse browse
-                      input(type='file', name='upload')
+                      input(id='file-input', type='file', name='upload')
                     input(type='hidden', name='filesize', value='-1')
                     span#file-input-info.label
                     br
-                    button#upload-button(type='submit') upload
+                    button#upload-button(id='upload-button', type='submit') upload
 
           .col-xs-12.col-sm-6#files-container
             .row
@@ -63,7 +63,28 @@ html(lang='en')
     footer#footer
       // things and stuff
 
+
     #scripts
       script(src='/static/js/vendor/jquery-1.10.1.min.js')
       script(src='/static/js/vendor/bootstrap.min.js')
       script(src='/static/js/main.js')
+
+    script(type='text/javascript').
+        $("document").ready(function() {
+            $('#upload-button').prop('disabled', true);
+            
+            var size_limit = {{size_limit}} / 1024 / 1024;
+            
+            $("#file-input").change(function (e) {
+                var files = e.currentTarget.files;
+                var filesize = ((files[0].size/1024)/1024).toFixed(4); //MB
+                console.log(filesize[0].name);
+                if (filesize > size_limit) {
+                    $('#upload-button').prop('disabled', true);
+                    alert("Selected file is larger than the " + 
+                            size_limit + "MB limit.");
+                } else {
+                    $('#upload-button').prop('disabled', false);
+                }
+            });
+        });
