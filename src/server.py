@@ -1,7 +1,6 @@
 import sys
 
-from flask         import Flask, send_from_directory, request, redirect, \
-                            url_for
+from flask         import Flask, send_from_directory, request, redirect, url_for
 from werkzeug.exceptions import RequestEntityTooLarge
 from time          import sleep
 from threading     import Thread

@@ -6,7 +6,8 @@ from   os.path    import getmtime, isfile, join, splitext
 from   datetime   import datetime, timedelta
 from   time       import ctime, sleep
 from   werkzeug   import secure_filename
-from   constants   import *
+from   constants  import *
+from   operator   import itemgetter
 
 def list_files():
     '''
@@ -17,6 +18,10 @@ def list_files():
         if isfile(join(PATH_DATASTORE, f))]
 
 def get_file_info():
+    '''
+    Returns a list of dictionaries as such: 
+    [{'name': FILENAME, 'created': TIME_CREATED},...]
+    '''
     files = []
     try:
         for f in list_files():
@@ -26,7 +31,8 @@ def get_file_info():
                     "%a %b %d %H:%M:%S %Y")
             files.append({'name': f, 'created': file_time})
     except: pass
-    return files
+    sorted_files = sorted(files, key=itemgetter('created'), reverse=True)
+    return sorted_files
 
 
 def expire_files():
