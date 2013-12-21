@@ -1,6 +1,7 @@
 import sys
 
 from flask         import Flask, send_from_directory, request, redirect, url_for
+import flask
 from werkzeug.exceptions import RequestEntityTooLarge
 from time          import sleep
 from threading     import Thread
@@ -11,14 +12,21 @@ from template      import render
 from constants     import *
 
 app = Flask(__name__)
+MB_UPLOAD_LIMIT = 512
 app.url_map.converters['regex'] = RegexConverter
 app.config['UPLOAD_FOLDER'] = PATH_DATASTORE
-app.config['MAX_CONTENT_LENGTH'] = 512 * 1024 * 1024
+app.config['MAX_CONTENT_LENGTH'] = MB_UPLOAD_LIMIT * 1024 * 1024 
+
+# stores list of IPs that have uploaded and how many MB they
+# have uploaded since the last quota reset
+ip_list = {}
+
 
 # Routes ------------------------------------------------------------------
 @app.route('/')
 def route_root():
-    return render('index.jade', {'files': get_file_info(), 'size_limit': app.config['MAX_CONTENT_LENGTH']})
+    quota_remaining = MB_UPLOAD_LIMIT - ip_list.get(request.remote_addr, 0)
+    return render('index.jade', {'files': get_file_info(), 'size_limit': app.config['MAX_CONTENT_LENGTH'], 'quota_left': quota_remaining})
 
 
 # Upload and download files
@@ -34,11 +42,22 @@ def upload_runner():
             if file:
                 filename = secure_filename(file.filename)
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                size = os.path.getsize(app.config['UPLOAD_FOLDER'] + '/' + filename)
+                update_quota(request.remote_addr, (size/1024/1024))
         except RequestEntityTooLarge:
             print "File size too large"
         except:
             print traceback.format_exc()
     return redirect('/')
+
+def update_quota(ip_address, filesize):
+    '''
+    Adds the filesize (in MB) to the user's value in ip_list
+    '''
+    if ip_address in ip_list:
+        ip_list[ip_address] += filesize
+    else:
+        ip_list[ip_address] = filesize
 
 # Debug
 @app.route('/debug/list_files/')
