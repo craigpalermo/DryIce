@@ -43,7 +43,7 @@ html(lang='en')
                     input(type='hidden', name='filesize', value='-1')
                     span#file-input-info.label
                     br
-                    button#upload-button(id='upload-button', type='submit') upload
+                    button#upload-button(id='upload-button', type='button') upload
 
           .col-xs-12.col-sm-6#files-container
             .row
@@ -62,7 +62,9 @@ html(lang='en')
 
     footer#footer
       // things and stuff
-      h4 {{ quota_left }}MB remaining.<!--Next reset at {{ next_reset_time }}.-->
+      h4 {{ quota_left }}MB remaining. 
+      h4 Next reset at {{ reset_time }}.
+      h4 Quota reached: {{ quota_reached }}
 
     #scripts
       script(src='/static/js/vendor/jquery-1.10.1.min.js')
@@ -73,16 +75,25 @@ html(lang='en')
         $("document").ready(function() {
             $('#upload-button').prop('disabled', true);
             
-            var size_limit = {{size_limit}} / 1024 / 1024;
-            
+            var size_limit = {{ size_limit }} / 1024 / 1024;
+            var quota_reached = {{ quota_reached }}
+
+            $('#upload-button').click(function() {
+                if (quota_reached === false) {
+                    document.getElementById("upload-form").submit();
+                } else {
+                    alert("You've reached your upload limit. Please try again in a few minutes.");
+                }
+            });
+
             $("#file-input").change(function (e) {
                 var files = e.currentTarget.files;
                 var filesize = ((files[0].size/1024)/1024).toFixed(4); //MB
                 console.log(filesize[0].name);
                 if (filesize > size_limit) {
-                    $('#upload-button').prop('disabled', true);
                     alert("Selected file is larger than the " + 
                             size_limit + "MB limit.");
+                    $('#upload-button').prop('disabled', true);
                 } else {
                     $('#upload-button').prop('disabled', false);
                 }

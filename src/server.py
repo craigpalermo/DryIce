@@ -1,10 +1,11 @@
-import sys
+import sys, time
 
-from flask         import Flask, send_from_directory, request, redirect, url_for
-import flask
+from flask         import Flask, send_from_directory, request, redirect, \
+                            url_for, session
 from werkzeug.exceptions import RequestEntityTooLarge
 from time          import sleep
 from threading     import Thread
+from time          import mktime
 
 from fileutils     import *
 from converter     import RegexConverter
@@ -16,17 +17,22 @@ MB_UPLOAD_LIMIT = 512
 app.url_map.converters['regex'] = RegexConverter
 app.config['UPLOAD_FOLDER'] = PATH_DATASTORE
 app.config['MAX_CONTENT_LENGTH'] = MB_UPLOAD_LIMIT * 1024 * 1024 
-
-# stores list of IPs that have uploaded and how many MB they
-# have uploaded since the last quota reset
-ip_list = {}
+app.secret_key = '8s9fs9fs09dfi9324s'
 
 
 # Routes ------------------------------------------------------------------
 @app.route('/')
 def route_root():
-    quota_remaining = MB_UPLOAD_LIMIT - ip_list.get(request.remote_addr, 0)
-    return render('index.jade', {'files': get_file_info(), 'size_limit': app.config['MAX_CONTENT_LENGTH'], 'quota_left': quota_remaining})
+    quota_remaining = MB_UPLOAD_LIMIT - session.get('mb_used', 0)
+    template_data = {
+                    'files': get_file_info(), \
+                    'size_limit': app.config['MAX_CONTENT_LENGTH'], \
+                    'quota_left': quota_remaining, \
+                    'reset_time': session.get('reset_time', 'n/a'), \
+                    'quota_reached': session.get('quota_reached', 'false')
+                    }
+    update_reset_time()
+    return render('index.jade', template_data)
 
 
 # Upload and download files
@@ -38,28 +44,52 @@ def download_file(filename):
 def upload_runner():
     if request.method == 'POST':
         try:
-            file      = request.files.get('upload')
-            if file:
+            file = request.files.get('upload')
+            if file and session.get('quota_reached', 'false') != 'true':
                 filename = secure_filename(file.filename)
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                size = os.path.getsize(app.config['UPLOAD_FOLDER'] + '/' + filename)
-                update_quota(request.remote_addr, (size/1024/1024))
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], \
+                            filename))
+                size = os.path.getsize(app.config['UPLOAD_FOLDER'] + \
+                                        '/' + filename)
+                update_session((size/1024/1024), filename)
         except RequestEntityTooLarge:
             print "File size too large"
         except:
             print traceback.format_exc()
     return redirect('/')
 
-def update_quota(ip_address, filesize):
-    '''
-    Adds the filesize (in MB) to the user's value in ip_list
-    '''
-    if ip_address in ip_list:
-        ip_list[ip_address] += filesize
-    else:
-        ip_list[ip_address] = filesize
 
-# Debug
+# Other Functions --------------------------------------------------------
+def update_session(filesize, filename):
+    '''
+    Adds the filesize (in MB) to the user's value in ip_list and adds the
+    filename to the user's list of uploads
+    '''
+    if 'mb_used' in session:
+        session['mb_used'] += filesize
+    else: # initialize mb_used
+        session['mb_used'] = filesize
+    update_reset_time()
+
+def update_reset_time():
+    reset_time =  datetime.now() + timedelta(minutes=FILE_RETENTION_TIME)
+    t_format = "%Y-%m-%d %H:%M:%S"
+
+    if 'reset_time' in session:
+        reset = time.strptime(session.get('reset_time'), t_format)
+        reset = datetime.fromtimestamp(mktime(reset))
+        if datetime.now() > reset: # time's up, reset the time
+            session['reset_time'] = reset_time.strftime(t_format)
+            session['quota_reached'] = 'false'
+            session['mb_used'] = 0
+        else: # time not up yet, check to see if quota reached
+            if session['mb_used'] > MB_UPLOAD_LIMIT:
+                session['quota_reached'] = 'true'
+    else: # initialize the reset time
+        session['reset_time'] = reset_time.strftime(t_format) 
+
+
+# Debug ------------------------------------------------------------------
 @app.route('/debug/list_files/')
 def debug_list_files():
     return map(lambda f: f+' ', list_files())
