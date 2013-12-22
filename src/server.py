@@ -23,7 +23,6 @@ app.config['UPLOAD_FOLDER'] = PATH_DATASTORE
 app.config['MAX_CONTENT_LENGTH'] = MB_UPLOAD_LIMIT * 1024 * 1024 
 app.secret_key = '8s9fs9fs09dfi9324s'
 
-
 # Routes ------------------------------------------------------------------
 @app.route('/')
 def route_root():
@@ -153,19 +152,8 @@ def main():
     # dummy call b/c strptime has thread-related bug
     datetime.strptime('2013-01-01', '%Y-%m-%d')
 
-    # start function to delete expired files as a thread
-    expire_files_thread = Thread(target=expire_files)
-    expire_files_thread.daemon = True
-    expire_files_thread.start()
-
     # start the server
     app.run(host='0.0.0.0', debug=True)
-
-    while True:
-        try:
-            sleep(1)
-        except KeyboardInterrupt:
-            sys.exit()
 
 if __name__ == "__main__":
     main()

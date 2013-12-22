@@ -42,6 +42,7 @@ def expire_files():
     while(True):
         for f in list_files():
             try:
+                print "Removing old files..."
                 tmp = ctime(getmtime(PATH_DATASTORE + '/' + f))
                 age = datetime.now() - datetime.strptime(tmp,
                         "%a %b %d %H:%M:%S %Y")
