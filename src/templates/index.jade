@@ -60,11 +60,13 @@ html(lang='en')
                             button.btn=file.name
                           p=file.created
 
+    div#info-box
+      h4 You can still upload <strong>{{ quota_left }} MB</strong>.
+      h4 That limit will reset at <strong>{{ reset_time }}</strong>.
+      // h4 Quota reached: {{ quota_reached }}
+
     footer#footer
       // things and stuff
-      h4 {{ quota_left }}MB remaining. 
-      h4 Next reset at {{ reset_time }}.
-      h4 Quota reached: {{ quota_reached }}
 
     #scripts
       script(src='/static/js/vendor/jquery-1.10.1.min.js')
