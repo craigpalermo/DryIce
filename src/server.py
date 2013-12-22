@@ -12,25 +12,38 @@ from converter     import RegexConverter
 from template      import render
 from constants     import *
 
-app = Flask(__name__)
+# Global Variables
 MB_UPLOAD_LIMIT = 512
+count = 0
+
+# Flask Configuration
+app = Flask(__name__)
 app.url_map.converters['regex'] = RegexConverter
 app.config['UPLOAD_FOLDER'] = PATH_DATASTORE
 app.config['MAX_CONTENT_LENGTH'] = MB_UPLOAD_LIMIT * 1024 * 1024 
 app.secret_key = '8s9fs9fs09dfi9324s'
-count = 0
+
 
 # Routes ------------------------------------------------------------------
 @app.route('/')
 def route_root():
     quota_remaining = MB_UPLOAD_LIMIT - session.get('mb_used', 0)
+    temp = get_file_info()
+    files = []
+    
+    # pick out which files were uploaded from the current session
+    for f in temp:
+        if f['name'] in session.get('uploads', []):
+            files.append(f)
+
     template_data = {
-                    'files': get_file_info(), \
+                    'files': files, \
                     'size_limit': app.config['MAX_CONTENT_LENGTH'], \
                     'quota_left': quota_remaining, \
                     'reset_time': session.get('reset_time', 'n/a'), \
                     'quota_reached': session.get('quota_reached', 'false')
                     }
+
     update_reset_time()
     return render('index.jade', template_data)
 
@@ -73,9 +86,19 @@ def update_session(filesize, filename):
         session['mb_used'] += filesize
     else: # initialize mb_used
         session['mb_used'] = filesize
+    
+    if 'uploads' in session:
+        session['uploads'].append(filename)
+    else:
+        session['uploads'] = [filename]
+    
     update_reset_time()
 
 def update_reset_time():
+    '''
+    Updates the session's reset time and quota when the current time
+    becomes greater than reset time
+    '''
     reset_time =  datetime.now() + timedelta(minutes=FILE_RETENTION_TIME)
     t_format = "%Y-%m-%d %H:%M:%S"
 
@@ -93,6 +116,10 @@ def update_reset_time():
         session['reset_time'] = reset_time.strftime(t_format) 
 
 def counter():
+    '''
+    Provides a unique number used to differentiate filenames to avoid
+    overwriting files with duplicate names
+    '''
     global count
     temp = count
     count += 1
