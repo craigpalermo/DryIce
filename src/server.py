@@ -18,7 +18,7 @@ app.url_map.converters['regex'] = RegexConverter
 app.config['UPLOAD_FOLDER'] = PATH_DATASTORE
 app.config['MAX_CONTENT_LENGTH'] = MB_UPLOAD_LIMIT * 1024 * 1024 
 app.secret_key = '8s9fs9fs09dfi9324s'
-
+count = 0
 
 # Routes ------------------------------------------------------------------
 @app.route('/')
@@ -49,6 +49,8 @@ def upload_runner():
                     and MB_UPLOAD_LIMIT - (session.get('mb_used', 0) \
                         + file.content_length) >= 0:
                 filename = secure_filename(file.filename)
+                filename = str(counter()) + filename
+                print filename
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], \
                             filename))
                 size = os.path.getsize(app.config['UPLOAD_FOLDER'] + \
@@ -90,6 +92,11 @@ def update_reset_time():
     else: # initialize the reset time
         session['reset_time'] = reset_time.strftime(t_format) 
 
+def counter():
+    global count
+    temp = count
+    count += 1
+    return temp
 
 # Debug ------------------------------------------------------------------
 @app.route('/debug/list_files/')
