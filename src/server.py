@@ -45,7 +45,9 @@ def upload_runner():
     if request.method == 'POST':
         try:
             file = request.files.get('upload')
-            if file and session.get('quota_reached', 'false') != 'true':
+            if file and session.get('quota_reached', 'false') != 'true' \
+                    and MB_UPLOAD_LIMIT - (session.get('mb_used', 0) \
+                        + file.content_length) >= 0:
                 filename = secure_filename(file.filename)
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], \
                             filename))

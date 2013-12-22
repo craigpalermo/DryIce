@@ -94,6 +94,9 @@ html(lang='en')
                     alert("Selected file is larger than the " + 
                             size_limit + "MB limit.");
                     $('#upload-button').prop('disabled', true);
+                } else if ({{quota_left}} - filesize < 0) {
+                    alert("That file exceeds your remaining upload allowance. Please try again after your limit resets.");
+                    $('#upload-button').prop('disabled', true);
                 } else {
                     $('#upload-button').prop('disabled', false);
                 }
