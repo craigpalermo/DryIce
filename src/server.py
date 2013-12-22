@@ -110,7 +110,7 @@ def update_reset_time():
             session['quota_reached'] = 'false'
             session['mb_used'] = 0
         else: # time not up yet, check to see if quota reached
-            if session['mb_used'] > MB_UPLOAD_LIMIT:
+            if session.get('mb_used', 0) > MB_UPLOAD_LIMIT:
                 session['quota_reached'] = 'true'
     else: # initialize the reset time
         session['reset_time'] = reset_time.strftime(t_format) 
