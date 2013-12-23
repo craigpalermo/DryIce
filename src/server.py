@@ -29,17 +29,24 @@ def route_root():
     quota_remaining = MB_UPLOAD_LIMIT - session.get('mb_used', 0)
     temp = get_file_info()
     files = []
-    
+   
+    if not 'reset_time' in session:
+        session['reset_time'] = datetime.now() + \
+                                timedelta(minutes=FILE_RETENTION_TIME)
+
+    print type(session['reset_time'])
     # pick out which files were uploaded from the current session
     for f in temp:
         if f['name'] in session.get('uploads', []):
+            f['expire_time'] = f['created'] + \
+                                timedelta(minutes=FILE_RETENTION_TIME)
             files.append(f)
 
     template_data = {
                     'files': files, \
                     'size_limit': app.config['MAX_CONTENT_LENGTH'], \
                     'quota_left': quota_remaining, \
-                    'reset_time': session.get('reset_time', 'n/a'), \
+                    'reset_time': session.get('reset_time'), \
                     'quota_reached': session.get('quota_reached', 'false')
                     }
 
@@ -62,7 +69,6 @@ def upload_runner():
                         + file.content_length) >= 0:
                 filename = secure_filename(file.filename)
                 filename = str(counter()) + filename
-                print filename
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], \
                             filename))
                 size = os.path.getsize(app.config['UPLOAD_FOLDER'] + \
@@ -102,17 +108,20 @@ def update_reset_time():
     t_format = "%Y-%m-%d %H:%M:%S"
 
     if 'reset_time' in session:
-        reset = time.strptime(session.get('reset_time'), t_format)
-        reset = datetime.fromtimestamp(mktime(reset))
-        if datetime.now() > reset: # time's up, reset the time
-            session['reset_time'] = reset_time.strftime(t_format)
+        #reset = time.strptime(session.get('reset_time'), t_format)
+        #reset = datetime.fromtimestamp(mktime(reset))
+        if datetime.now() > reset_time: # time's up, reset the time
+            #session['reset_time'] = reset_time.strftime(t_format)
+            session['reset_time'] = reset_time
             session['quota_reached'] = 'false'
             session['mb_used'] = 0
         else: # time not up yet, check to see if quota reached
             if session.get('mb_used', 0) > MB_UPLOAD_LIMIT:
                 session['quota_reached'] = 'true'
     else: # initialize the reset time
-        session['reset_time'] = reset_time.strftime(t_format) 
+        #session['reset_time'] = reset_time.strftime(t_format) 
+        session['reset_time'] = reset_time
+        print type(session['reset_time'])
 
 def counter():
     '''
