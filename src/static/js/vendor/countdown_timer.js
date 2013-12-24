@@ -24,7 +24,6 @@ function startCountdown(endTime, id) {
      * another timer from being made.
 	 */
 	if(runningTimerIds.indexOf(id) > -1){
-        console.log('exiting here');
 		return;
 	}
 	

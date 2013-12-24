@@ -30,7 +30,8 @@ def route_root():
     temp = get_file_info()
     files = []
    
-    if not 'reset_time' in session:
+    if not 'reset_time' in session or \
+    session.get('reset_time') < datetime.now():
         session['reset_time'] = datetime.now() + \
                                 timedelta(minutes=FILE_RETENTION_TIME)
 
