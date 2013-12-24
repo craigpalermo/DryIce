@@ -30,12 +30,8 @@ def route_root():
     temp = get_file_info()
     files = []
    
-    if not 'reset_time' in session or \
-    session.get('reset_time') < datetime.now():
-        session['reset_time'] = datetime.now() + \
-                                timedelta(minutes=FILE_RETENTION_TIME)
-
-    print type(session['reset_time'])
+    update_reset_time()
+    
     # pick out which files were uploaded from the current session
     for f in temp:
         if f['name'] in session.get('uploads', []):
@@ -51,7 +47,6 @@ def route_root():
                     'quota_reached': session.get('quota_reached', 'false')
                     }
 
-    update_reset_time()
     return render('index.jade', template_data)
 
 @app.route('/disclaimer/')
@@ -112,24 +107,20 @@ def update_reset_time():
     Updates the session's reset time and quota when the current time
     becomes greater than reset time
     '''
-    reset_time =  datetime.now() + timedelta(minutes=FILE_RETENTION_TIME)
-    t_format = "%Y-%m-%d %H:%M:%S"
-
+    temp_reset_time =  datetime.now() + \
+                       timedelta(minutes=FILE_RETENTION_TIME)
+    
     if 'reset_time' in session:
-        #reset = time.strptime(session.get('reset_time'), t_format)
-        #reset = datetime.fromtimestamp(mktime(reset))
-        if datetime.now() > reset_time: # time's up, reset the time
-            #session['reset_time'] = reset_time.strftime(t_format)
-            session['reset_time'] = reset_time
+        # time's up, reset the time
+        if datetime.now() > session['reset_time']:
+            session['reset_time'] = temp_reset_time
             session['quota_reached'] = 'false'
             session['mb_used'] = 0
         else: # time not up yet, check to see if quota reached
             if session.get('mb_used', 0) > MB_UPLOAD_LIMIT:
                 session['quota_reached'] = 'true'
     else: # initialize the reset time
-        #session['reset_time'] = reset_time.strftime(t_format) 
-        session['reset_time'] = reset_time
-        print type(session['reset_time'])
+        session['reset_time'] = temp_reset_time
 
 def counter():
     '''
