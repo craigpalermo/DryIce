@@ -58,9 +58,13 @@ def route_about():
     return render('about.html')
 
 # Upload and download files
+# In production, download_file should be removed and add this line to apache.conf:
+# $ alias /download/ /var/www/datastore/
+'''
 @app.route('/download/<path:filename>/')
 def download_file(filename):
     return send_from_directory(PATH_DATASTORE, filename)
+'''
 
 @app.route('/upload/', methods=['GET', 'POST'])
 def upload_runner():
