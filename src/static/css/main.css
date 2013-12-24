@@ -10,8 +10,14 @@
     padding-left: 15px;
 }
 
-/* Bootstrap Additions & Modifications */
+.text-content {
+    width: 65%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
 
+/* Bootstrap Additions & Modifications */
 .pull-center { text-align: center; }
 
 @media only screen {

@@ -1,137 +1,100 @@
-doctype 5
-html(lang='en')
-  head
-    meta(charset='utf-8')
-    meta(http-equiv='X-UA-Compatible', content='IE=edge,chrome=1')
-    meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no')
+{% extends "base.jade" %}
 
-    title Dropbucket
+{% block content %}
 
-    link(rel='stylesheet', href='/static/css/bootstrap.min.css')
-    link(rel='stylesheet', href='/static/css/bootstrap-theme.min.css')
-    link(rel='stylesheet', href='/static/css/main.css')
-    
-    <!--scripts that need to load first-->
-    script(src='/static/js/vendor/countdown_timer.js')
-    script(src='/static/js/vendor/jquery-1.10.1.min.js')
-
-  body
-    header#header
-      .container
+#content
+  .container
+    .row
+      .col-xs-12.col-sm-6#upload-container
         .row
-          #title.col-xs-12.col-sm-5.col-md-3.col-md-offset-2
-            h1.col-xs-center.col-sm-right.col-lg-left Dropbucket
-          .col-xs-12.col-sm-6.col-md-3
-            #subtitle
-              h2.col-xs-center.col-sm-right
-                | upload files
+          .col-xs-12.col-sm-5.col-md-4
+            h3.col-xs-center.col-sm-right up
+          .col-xs-12.col-sm-7.col-md-8
+            .col-xs-center.col-sm-left
+              h4 drag and drop
+              form#upload-form(action='/upload/', method='post', enctype='multipart/form-data')
+                button#browse-button
+                  span#browse browse
+                  input(id='file-input', type='file', name='upload')
+                input(type='hidden', name='filesize', value='-1')
+                span#file-input-info.label
                 br
-                | download files
-                br
-                small nothing else
+                button#upload-button(id='upload-button', type='button') upload
 
-    #content
-      .container
+      .col-xs-12.col-sm-6#files-container
         .row
-          .col-xs-12.col-sm-6#upload-container
-            .row
-              .col-xs-12.col-sm-5.col-md-4
-                h3.col-xs-center.col-sm-right up
-              .col-xs-12.col-sm-7.col-md-8
-                .col-xs-center.col-sm-left
-                  h4 drag and drop
-                  form#upload-form(action='/upload/', method='post', enctype='multipart/form-data')
-                    button#browse-button
-                      span#browse browse
-                      input(id='file-input', type='file', name='upload')
-                    input(type='hidden', name='filesize', value='-1')
-                    span#file-input-info.label
-                    br
-                    button#upload-button(id='upload-button', type='button') upload
+          .col-xs-12.col-sm-5.col-md-4
+            h3.col-xs-center.col-sm-right down
+          .col-xs-12.col-sm-7.col-md-8
+            .col-xs-center.col-sm-left
+              h4 pick and click
+              .row#files
+                each file in files
+                  .file-wrapper.col-xs-12.col-md-6.col-lg-4
+                    .file
+                      a(href='/download/'+file.name, download=file.name)
+                        button.btn=file.name
+                      p.
+                        Expires in <span id="{{loop.index}}_timeRemaining"></span>
+                      script.
+                          var endTime = 
+                            new Date(Date.UTC(
+                                {{ file.expire_time.year }}, 
+                                {{ file.expire_time.month }} - 1, 
+                                {{ file.expire_time.day }}, 
+                                {{ file.expire_time.hour }},
+                                {{ file.expire_time.minute }}, 
+                                {{ file.expire_time.second }}));
+                          startCountdown(endTime, {{loop.index}});
+{% endblock %}
 
-          .col-xs-12.col-sm-6#files-container
-            .row
-              .col-xs-12.col-sm-5.col-md-4
-                h3.col-xs-center.col-sm-right down
-              .col-xs-12.col-sm-7.col-md-8
-                .col-xs-center.col-sm-left
-                  h4 pick and click
-                  .row#files
-                    each file in files
-                      .file-wrapper.col-xs-12.col-md-6.col-lg-4
-                        .file
-                          a(href='/download/'+file.name, download=file.name)
-                            button.btn=file.name
-                          p.
-                            Expires in <span id="{{loop.index}}_timeRemaining"></span>
-                          script.
-                              var endTime = 
-                                new Date(Date.UTC(
-                                    {{ file.expire_time.year }}, 
-                                    {{ file.expire_time.month }} - 1, 
-                                    {{ file.expire_time.day }}, 
-                                    {{ file.expire_time.hour }},
-                                    {{ file.expire_time.minute }}, 
-                                    {{ file.expire_time.second }}));
-                              startCountdown(endTime, {{loop.index}});
+{% block navbar_left %}
+div.container.pull-left
+  p.navbar-text You can still upload <strong>{{ quota_left }} MB</strong>.
+  p.navbar-text That limit will reset in <strong><span id="reset_timeRemaining"></span></strong>.
 
-    div.navbar.navbar-default.navbar-fixed-bottom
-      div.container.pull-left
+script.
+  var endTime = 
+    new Date(Date.UTC(
+        {{ reset_time.year }}, 
+        {{ reset_time.month }} - 1, 
+        {{ reset_time.day }}, 
+        {{ reset_time.hour }},
+        {{ reset_time.minute }}, 
+        {{ reset_time.second }}));
+  startCountdown(endTime, 'reset');
+{% endblock %}
 
-        p.navbar-text You can still upload <strong>{{ quota_left }} MB</strong>.
-        p.navbar-text That limit will reset in <strong><span id="reset_timeRemaining"></span></strong>.
-      div.container.pull-right
-        a(href='/disclaimer/').navbar-btn.btn-link.btn Disclaimer
-        a(href='/about/').navbar-btn.btn-link.btn About
+{% block scripts %}
+script(type='text/javascript').
+    $("document").ready(function() {
+        $('#upload-button').prop('disabled', true);
+        
+        var size_limit = {{ size_limit }} / 1024 / 1024;
+        var quota_reached = {{ quota_reached }}
 
-      script.
-          var endTime = 
-            new Date(Date.UTC(
-                {{ reset_time.year }}, 
-                {{ reset_time.month }} - 1, 
-                {{ reset_time.day }}, 
-                {{ reset_time.hour }},
-                {{ reset_time.minute }}, 
-                {{ reset_time.second }}));
-          startCountdown(endTime, 'reset');
-            
-      // h4 Quota reached: {{ quota_reached }}
-
-    footer#footer
-      // things and stuff
-
-    #scripts
-      script(src='/static/js/vendor/bootstrap.min.js')
-      script(src='/static/js/main.js')
-
-    script(type='text/javascript').
-        $("document").ready(function() {
-            $('#upload-button').prop('disabled', true);
-            
-            var size_limit = {{ size_limit }} / 1024 / 1024;
-            var quota_reached = {{ quota_reached }}
-
-            $('#upload-button').click(function() {
-                if (quota_reached === false) {
-                    document.getElementById("upload-form").submit();
-                } else {
-                    alert("You've reached your upload limit. Please try again in a few minutes.");
-                }
-            });
-
-            $("#file-input").change(function (e) {
-                var files = e.currentTarget.files;
-                var filesize = ((files[0].size/1024)/1024).toFixed(4); //MB
-                console.log(filesize[0].name);
-                if (filesize > size_limit) {
-                    alert("Selected file is larger than the " + 
-                            size_limit + "MB limit.");
-                    $('#upload-button').prop('disabled', true);
-                } else if ({{quota_left}} - filesize < 0) {
-                    alert("That file exceeds your remaining upload allowance. Please try again after your limit resets.");
-                    $('#upload-button').prop('disabled', true);
-                } else {
-                    $('#upload-button').prop('disabled', false);
-                }
-            });
+        $('#upload-button').click(function() {
+            if (quota_reached === false) {
+                document.getElementById("upload-form").submit();
+            } else {
+                alert("You've reached your upload limit. Please try again in a few minutes.");
+            }
         });
+
+        $("#file-input").change(function (e) {
+            var files = e.currentTarget.files;
+            var filesize = ((files[0].size/1024)/1024).toFixed(4); //MB
+            console.log(filesize[0].name);
+            if (filesize > size_limit) {
+                alert("Selected file is larger than the " + 
+                        size_limit + "MB limit.");
+                $('#upload-button').prop('disabled', true);
+            } else if ({{quota_left}} - filesize < 0) {
+                alert("That file exceeds your remaining upload allowance. Please try again after your limit resets.");
+                $('#upload-button').prop('disabled', true);
+            } else {
+                $('#upload-button').prop('disabled', false);
+            }
+        });
+    });
+{% endblock %}
