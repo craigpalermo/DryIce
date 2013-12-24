@@ -61,6 +61,11 @@ def route_about():
 def page_not_found(e):
 	return render('404.html')
 
+@app.route('/file/<path:filename>/')
+def route_file(filename):
+    template_data = {'filename': filename}
+    return render('file.html', template_data)
+
 # Upload and download files
 # In production, download_file should be removed and add this line to apache.conf:
 # $ alias /download/ /var/www/datastore/
@@ -79,7 +84,14 @@ def upload_runner():
                     and MB_UPLOAD_LIMIT - (session.get('mb_used', 0) \
                         + file.content_length) >= 0:
                 filename = secure_filename(file.filename)
-                filename = str(counter()) + filename
+               
+                # if filename exists, prepend unique number to new name
+                files = get_file_info()
+                for f in files:
+                    if filename == f['name']:
+                        filename = str(counter()) + filename
+                        break
+
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], \
                             filename))
                 size = os.path.getsize(app.config['UPLOAD_FOLDER'] + \

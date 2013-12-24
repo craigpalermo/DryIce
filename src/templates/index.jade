@@ -30,7 +30,7 @@
                 each file in files
                   .file-wrapper.col-xs-12.col-md-6.col-lg-4
                     .file
-                      a(href='/download/'+file.name, download=file.name)
+                      a(href='/file/'+file.name)
                         button.btn=file.name
                       p.
                         Expires in <span id="{{loop.index}}_timeRemaining"></span>

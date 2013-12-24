@@ -1,0 +1,11 @@
+{% extends "base.jade" %}
+
+{% block content %}
+<div class="text-content pull-center">
+    <h3><strong>File:</strong> {{ filename }}</h3>
+    
+    <a href="/download/{{ filename }}", download="{{ filename }}">
+        Click to Download
+    </a>
+</div>
+{% endblock %}
