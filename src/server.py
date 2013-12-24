@@ -1,7 +1,7 @@
 import sys, time
 
 from flask         import Flask, send_from_directory, request, redirect, \
-                            url_for, session
+                            url_for, session, render_template
 from werkzeug.exceptions import RequestEntityTooLarge
 from time          import sleep
 from threading     import Thread
@@ -56,6 +56,10 @@ def route_disclaimer():
 @app.route('/about/')
 def route_about():
     return render('about.html')
+
+@app.errorhandler(404)
+def page_not_found(e):
+	return render('404.html')
 
 # Upload and download files
 # In production, download_file should be removed and add this line to apache.conf:
