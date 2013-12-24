@@ -10,6 +10,10 @@
     padding-left: 15px;
 }
 
+/* Bootstrap Additions & Modifications */
+
+.pull-center { text-align: center; }
+
 @media only screen {
     .col-xs-left   { text-align: left   !important; }
     .col-xs-center { text-align: center !important; }

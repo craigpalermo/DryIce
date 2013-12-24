@@ -75,9 +75,14 @@ html(lang='en')
                                     {{ file.expire_time.second }}));
                               startCountdown(endTime, {{loop.index}});
 
-    div#info-box
-      h4 You can still upload <strong>{{ quota_left }} MB</strong>.
-      h4 That limit will reset in <strong><span id="reset_timeRemaining"></span></strong>.
+    div.navbar.navbar-default.navbar-fixed-bottom
+      div.container.pull-left
+
+        p.navbar-text You can still upload <strong>{{ quota_left }} MB</strong>.
+        p.navbar-text That limit will reset in <strong><span id="reset_timeRemaining"></span></strong>.
+      div.container.pull-right
+        a(href='/disclaimer/').navbar-btn.btn-link.btn Disclaimer
+        a(href='/about/').navbar-btn.btn-link.btn About
 
       script.
           var endTime = 

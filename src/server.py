@@ -54,6 +54,13 @@ def route_root():
     update_reset_time()
     return render('index.jade', template_data)
 
+@app.route('/disclaimer/')
+def route_disclaimer():
+    return render('disclaimer.html')
+
+@app.route('/about/')
+def route_about():
+    return render('about.html')
 
 # Upload and download files
 @app.route('/download/<path:filename>/')
