@@ -8,14 +8,13 @@ from   time       import ctime, sleep
 from   werkzeug   import secure_filename
 from   constants  import *
 from   operator   import itemgetter
+from   boto.s3.connection import S3Connection
 
-def list_files():
-    '''
-    returns list containing names of all files in datastore
-    '''
-    return [f for f
-        in listdir(PATH_DATASTORE)
-        if isfile(join(PATH_DATASTORE, f))]
+
+def setup_bucket():
+    conn = S3Connection(ACCESS_KEY, SECRET_ACCESS_KEY)
+    bucket = conn.get_bucket('storage.dropbucket')
+    return bucket
 
 def get_file_info():
     '''
@@ -23,13 +22,13 @@ def get_file_info():
     [{'name': FILENAME, 'created': TIME_CREATED},...]
     '''
     files = []
+    bucket = setup_bucket()
     try:
-        for f in list_files():
-            temp_time = ctime(getmtime(
-                PATH_DATASTORE + '/' + f))
-            file_time = datetime.strptime(temp_time,
-                    "%a %b %d %H:%M:%S %Y")
-            files.append({'name': f, 'created': file_time})
+        for key in bucket.list():
+            temp_time = key.last_modified[:-5] # todo, replace w/ regex instead
+            file_time = datetime.strptime(temp_time,"%Y-%m-%dT%H:%M:%S")
+            file_time = file_time - timedelta(hours=5) # hardcoded for EST
+            files.append({'name': key.name.encode('utf-8'), 'created': file_time})
     except: pass
     sorted_files = sorted(files, key=itemgetter('created'), reverse=True)
     return sorted_files
@@ -37,17 +36,22 @@ def get_file_info():
 
 def expire_files():
     '''
-    Delete from disk all files that are older than FILE_RETENTION_TIME.
+    Delete from bucket all files that are older than FILE_RETENTION_TIME.
     '''
+    bucket = setup_bucket()
+    
     while(True):
-        for f in list_files():
+        print "Removing old files..."
+        for key in bucket.list():
             try:
-                print "Removing old files..."
-                tmp = ctime(getmtime(PATH_DATASTORE + '/' + f))
-                age = datetime.now() - datetime.strptime(tmp,
-                        "%a %b %d %H:%M:%S %Y")
+                tmp = key.last_modified[:-5] # replace w/ regex later
+                tmp = datetime.strptime(tmp, "%Y-%m-%dT%H:%M:%S")
+                tmp = tmp - timedelta(hours=8) # adjust for PST
+                age = datetime.now() - tmp
+                
                 if age > timedelta(minutes=FILE_RETENTION_TIME):
-                    os.remove(PATH_DATASTORE + '/' + f)
+                    # print "Deleting %s" % (key.name.encode('utf-8'))
+                    bucket.delete_key(key)
             except:
                 print("error statting files - " + traceback.format_exc())
         sleep(60)

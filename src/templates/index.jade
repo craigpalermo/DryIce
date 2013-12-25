@@ -10,11 +10,19 @@
           .col-xs-12.col-sm-7.col-md-8
             .col-xs-center.col-sm-left
               h4 drag and drop
-              form#upload-form(action='/upload/', method='post', enctype='multipart/form-data')
+              form#upload-form(action='https://storage.dropbucket.s3.amazonaws.com', method='post', enctype='multipart/form-data')
+                input(type='hidden', name='key', value='${filename}')
+                input(type='hidden', name='AWSAccessKeyId', value='AKIAJY4PLTKEW3V6DPFQ')
+                input(type='hidden', name='acl', value='public-read')
+                input(type='hidden', name='success_action_redirect', value="/")
+                input(type='hidden', name='policy', value="{{ policy }}")
+                input(type='hidden', name='signature', value="{{ signature }}")
+                input(type='hidden', name='Content-Type', value="")                
+
                 button#browse-button
                   span#browse browse
-                  input(id='file-input', type='file', name='upload')
-                input(type='hidden', name='filesize', value='-1')
+                  input(id='file-input', type='file', name='file')
+                <!--input(type='hidden', name='filesize', value='-1')-->
                 span#file-input-info.label
                 br
                 button#upload-button(id='upload-button', type='button') upload
@@ -44,23 +52,6 @@
                                 {{ file.expire_time.minute }}, 
                                 {{ file.expire_time.second }}));
                           startCountdown(endTime, {{loop.index}});
-{% endblock %}
-
-{% block navbar_left %}
-div.container.pull-left
-  p.navbar-text You can still upload <strong>{{ quota_left }} MB</strong>.
-  p.navbar-text That limit will reset in <strong><span id="reset_timeRemaining"></span></strong>.
-
-script.
-  var endTime = 
-    new Date(Date.UTC(
-        {{ reset_time.year }}, 
-        {{ reset_time.month }} - 1, 
-        {{ reset_time.day }}, 
-        {{ reset_time.hour }},
-        {{ reset_time.minute }}, 
-        {{ reset_time.second }}));
-  startCountdown(endTime, 'reset');
 {% endblock %}
 
 {% block scripts %}

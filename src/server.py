@@ -23,6 +23,35 @@ app.config['UPLOAD_FOLDER'] = PATH_DATASTORE
 app.config['MAX_CONTENT_LENGTH'] = MB_UPLOAD_LIMIT * 1024 * 1024 
 app.secret_key = '8s9fs9fs09dfi9324s'
 
+# S3 Storage Setup
+def generate_upload_form():
+    policy = """
+    {"expiration": "%(expires)s",
+        "conditions": [ 
+            {"bucket": "%(bucket)s"}, 
+            ["starts-with", "$key", ""],
+            {"acl": "%(acl)s"},
+            {"success_action_redirect": "%(success_redirect)s"},
+            ["starts-with", "$Content-Type", ""],
+            ["content-length-range", 0, %(length_range)s]
+        ]
+    }
+    """
+    policy = policy%{
+        "expires":"2015-01-01T00:00:00Z",
+        "bucket": "storage.dropbucket",
+        "acl": "public-read",
+        "success_redirect": "/",
+        "length_range": app.config['MAX_CONTENT_LENGTH']
+    }
+
+    import base64
+    import hmac, hashlib
+
+    policy = base64.b64encode(policy)
+    signature = base64.b64encode(hmac.new(SECRET_ACCESS_KEY, policy, hashlib.sha1).digest())
+    return {'policy':policy, 'signature':signature}
+
 # Routes ------------------------------------------------------------------
 @app.route('/')
 def route_root():
@@ -34,11 +63,11 @@ def route_root():
     
     # pick out which files were uploaded from the current session
     for f in temp:
-        if f['name'] in session.get('uploads', []):
-            f['expire_time'] = f['created'] + \
-                                timedelta(minutes=FILE_RETENTION_TIME)
-            files.append(f)
-
+        #if f['name'] in session.get('uploads', []):
+        f['expire_time'] = f['created'] + \
+                            timedelta(minutes=FILE_RETENTION_TIME)
+        files.append(f)
+    
     template_data = {
                     'files': files, \
                     'size_limit': app.config['MAX_CONTENT_LENGTH'], \
@@ -46,6 +75,9 @@ def route_root():
                     'reset_time': session.get('reset_time'), \
                     'quota_reached': session.get('quota_reached', 'false')
                     }
+
+    temp = generate_upload_form()
+    template_data.update(temp)
 
     return render('index.jade', template_data)
 
@@ -63,7 +95,10 @@ def page_not_found(e):
 
 @app.route('/file/<path:filename>/')
 def route_file(filename):
-    template_data = {'filename': filename}
+    bucket = setup_bucket()
+    key = bucket.new_key(filename)
+    url = key.generate_url(expires_in=(FILE_RETENTION_TIME * 60),query_auth=False, force_http=True)
+    template_data = {'filename': filename, 'url': url}
     return render('file.html', template_data)
 
 # Upload and download files
@@ -151,11 +186,6 @@ def counter():
     temp = count
     count += 1
     return temp
-
-# Debug ------------------------------------------------------------------
-@app.route('/debug/list_files/')
-def debug_list_files():
-    return map(lambda f: f+' ', list_files())
 
 # Static assets
 @app.route('/<regex(".*\.js"):filename>/')
