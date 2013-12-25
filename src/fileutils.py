@@ -42,21 +42,23 @@ def expire_files():
     
     while(True):
         print "Removing old files..."
+        to_delete = []
         for key in bucket.list():
             try:
                 tmp = key.last_modified[:-5] # replace w/ regex later
                 tmp = datetime.strptime(tmp, "%Y-%m-%dT%H:%M:%S")
                 #tmp = tmp - timedelta(hours=8) # adjust for PST
                 tmp = tmp - timedelta(hours=5) # adjust for EST
-		age = datetime.now() - tmp
-               
-		#print tmp
-		#print datetime.now()
+                age = datetime.now() - tmp
+                       
+                #print tmp
+                #print datetime.now()
  
                 if age > timedelta(minutes=FILE_RETENTION_TIME):
                     # print "Deleting %s" % (key.name.encode('utf-8'))
-                    bucket.delete_key(key)
+                    to_delete.append(key)
             except:
                 print("error statting files - " + traceback.format_exc())
+        bucket.delete_keys(to_delete)
         sleep(60)
 

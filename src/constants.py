@@ -8,5 +8,6 @@ PATH_DATASTORE      =  PATH_ROOT + '/datastore'
 FILE_RETENTION_TIME = 30 
 
 # S3 Credentials
+BUCKET = "storage.dropbucket"
 ACCESS_KEY = "AKIAJY4PLTKEW3V6DPFQ"
 SECRET_ACCESS_KEY = "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"

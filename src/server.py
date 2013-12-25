@@ -1,4 +1,6 @@
 import sys, time
+import base64
+import hmac, hashlib
 
 from flask         import Flask, send_from_directory, request, redirect, \
                             url_for, session, render_template
@@ -39,14 +41,11 @@ def generate_upload_form():
     """
     policy = policy%{
         "expires":"2015-01-01T00:00:00Z",
-        "bucket": "storage.dropbucket",
+        "bucket": BUCKET,
         "acl": "public-read",
         "success_redirect": "/",
         "length_range": app.config['MAX_CONTENT_LENGTH']
     }
-
-    import base64
-    import hmac, hashlib
 
     policy = base64.b64encode(policy)
     signature = base64.b64encode(hmac.new(SECRET_ACCESS_KEY, policy, hashlib.sha1).digest())
