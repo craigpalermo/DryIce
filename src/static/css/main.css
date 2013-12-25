@@ -2,14 +2,11 @@
     box-sizing: border-box;
 }
 
-#info-box {
-    width: 420px;
-    background: #222;   
-    position: absolute;
-    top: 80%;
-    padding-left: 15px;
+#logo-link {
+    text-decoration: none;
 }
 
+/* Center the text in the middle of the window */
 .text-content {
     width: 65%;
     display: block;
