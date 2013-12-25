@@ -16,19 +16,23 @@ def setup_bucket():
     bucket = conn.get_bucket('storage.dropbucket')
     return bucket
 
-def get_file_info():
+def get_file_info(session_id):
     '''
-    Returns a list of dictionaries as such: 
+    Returns list of dictionaries in this form for all files in the bucket
+    that have a session_id matching the function parameter:
     [{'name': FILENAME, 'created': TIME_CREATED},...]
     '''
     files = []
     bucket = setup_bucket()
     try:
         for key in bucket.list():
-            temp_time = key.last_modified[:-5] # todo, replace w/ regex instead
-            file_time = datetime.strptime(temp_time,"%Y-%m-%dT%H:%M:%S")
-            file_time = file_time - timedelta(hours=5) # hardcoded for EST
-            files.append({'name': key.name.encode('utf-8'), 'created': file_time})
+            # do individual lookup b/c .list() doesn't return metadata for individual keys
+            k = bucket.lookup(key)
+            if k.get_metadata('session_id') == session_id:
+                temp_time = key.last_modified[:-5] # todo, replace w/ regex instead
+                file_time = datetime.strptime(temp_time,"%Y-%m-%dT%H:%M:%S")
+                file_time = file_time - timedelta(hours=5) # hardcoded for EST
+                files.append({'name': key.name.encode('utf-8'), 'created': file_time})
     except: pass
     sorted_files = sorted(files, key=itemgetter('created'), reverse=True)
     return sorted_files

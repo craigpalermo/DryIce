@@ -1,4 +1,4 @@
-import sys, time
+import sys, time, uuid
 import base64
 import hmac, hashlib
 
@@ -26,7 +26,7 @@ app.config['MAX_CONTENT_LENGTH'] = MB_UPLOAD_LIMIT * 1024 * 1024
 app.secret_key = '8s9fs9fs09dfi9324s'
 
 # S3 Storage Setup
-def generate_upload_form():
+def generate_upload_form(session_id):
     policy = """
     {"expiration": "%(expires)s",
         "conditions": [ 
@@ -35,7 +35,8 @@ def generate_upload_form():
             {"acl": "%(acl)s"},
             {"success_action_redirect": "%(success_redirect)s"},
             ["starts-with", "$Content-Type", ""],
-            ["content-length-range", 0, %(length_range)s]
+            ["content-length-range", 0, %(length_range)s],
+            {"x-amz-meta-session_id": "%(session_id)s"}
         ]
     }
     """
@@ -44,7 +45,8 @@ def generate_upload_form():
         "bucket": BUCKET,
         "acl": "public-read",
         "success_redirect": "/",
-        "length_range": app.config['MAX_CONTENT_LENGTH']
+        "length_range": app.config['MAX_CONTENT_LENGTH'],
+        "session_id": session_id
     }
 
     policy = base64.b64encode(policy)
@@ -54,15 +56,19 @@ def generate_upload_form():
 # Routes ------------------------------------------------------------------
 @app.route('/')
 def route_root():
-    quota_remaining = MB_UPLOAD_LIMIT - session.get('mb_used', 0)
-    temp = get_file_info()
     files = []
-   
     update_reset_time()
-    
+
+    # set uuid in session
+    if not 'session_id' in session:
+        session['session_id'] = str(uuid.uuid1())
+        
+    id = session.get('session_id')
+    temp = get_file_info(id)
+    form_dict = generate_upload_form(id)
+
     # pick out which files were uploaded from the current session
     for f in temp:
-        #if f['name'] in session.get('uploads', []):
         f['expire_time'] = f['created'] + \
                             timedelta(minutes=FILE_RETENTION_TIME)
         files.append(f)
@@ -70,13 +76,11 @@ def route_root():
     template_data = {
                     'files': files, \
                     'size_limit': app.config['MAX_CONTENT_LENGTH'], \
-                    'quota_left': quota_remaining, \
                     'reset_time': session.get('reset_time'), \
-                    'quota_reached': session.get('quota_reached', 'false')
+                    'session_id': session.get('session_id')
                     }
 
-    temp = generate_upload_form()
-    template_data.update(temp)
+    template_data.update(form_dict)
 
     return render('index.jade', template_data)
 

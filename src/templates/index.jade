@@ -18,6 +18,7 @@
                 input(type='hidden', name='policy', value="{{ policy }}")
                 input(type='hidden', name='signature', value="{{ signature }}")
                 input(type='hidden', name='Content-Type', value="")                
+                input(type='hidden', name='x-amz-meta-session_id', value="{{session_id}}")
 
                 button#browse-button
                   span#browse browse
@@ -63,23 +64,15 @@ script(type='text/javascript').
         var quota_reached = {{ quota_reached }}
 
         $('#upload-button').click(function() {
-            if (quota_reached === false) {
-                document.getElementById("upload-form").submit();
-            } else {
-                alert("You've reached your upload limit. Please try again in a few minutes.");
-            }
+            document.getElementById("upload-form").submit();
         });
 
         $("#file-input").change(function (e) {
             var files = e.currentTarget.files;
             var filesize = ((files[0].size/1024)/1024).toFixed(4); //MB
-            console.log(filesize[0].name);
             if (filesize > size_limit) {
                 alert("Selected file is larger than the " + 
                         size_limit + "MB limit.");
-                $('#upload-button').prop('disabled', true);
-            } else if ({{quota_left}} - filesize < 0) {
-                alert("That file exceeds your remaining upload allowance. Please try again after your limit resets.");
                 $('#upload-button').prop('disabled', true);
             } else {
                 $('#upload-button').prop('disabled', false);
