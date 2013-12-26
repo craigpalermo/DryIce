@@ -13,7 +13,7 @@ from   boto.s3.connection import S3Connection
 
 def setup_bucket():
     conn = S3Connection(ACCESS_KEY, SECRET_ACCESS_KEY)
-    bucket = conn.get_bucket('storage.dropbucket')
+    bucket = conn.get_bucket(BUCKET)
     return bucket
 
 def get_file_info(session_id):

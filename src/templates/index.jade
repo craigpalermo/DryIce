@@ -10,7 +10,7 @@
           .col-xs-12.col-sm-7.col-md-8
             .col-xs-center.col-sm-left
               h4 drag and drop
-              form#upload-form(action='https://storage.dropbucket.s3.amazonaws.com', method='post', enctype='multipart/form-data')
+              form#upload-form(action='https://dropbucket-datastore.s3.amazonaws.com', method='post', enctype='multipart/form-data')
                 input(type='hidden', name='key', value='${filename}')
                 input(type='hidden', name='AWSAccessKeyId', value='AKIAJY4PLTKEW3V6DPFQ')
                 input(type='hidden', name='acl', value='public-read')
