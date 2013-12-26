@@ -23,20 +23,27 @@ def get_file_info(session_id):
     [{'name': FILENAME, 'created': TIME_CREATED},...]
     '''
     files = []
-    bucket = setup_bucket()
-    try:
-        for key in bucket.list():
-            # do individual lookup b/c .list() doesn't return metadata for individual keys
-            k = bucket.lookup(key)
-            if k.get_metadata('session_id') == session_id:
-                temp_time = key.last_modified[:-5] # todo, replace w/ regex instead
-                file_time = datetime.strptime(temp_time,"%Y-%m-%dT%H:%M:%S")
-                file_time = file_time - timedelta(hours=5) # hardcoded for EST
-                files.append({'name': key.name.encode('utf-8'), 'created': file_time})
-    except: pass
+    keys = get_session_keys(session_id)
+        
+    for key in keys:
+        temp_time = key.last_modified[:-5] # todo, replace w/ regex instead
+        file_time = datetime.strptime(temp_time,"%a, %d %b %Y %H:%M:%S")
+        file_time = file_time - timedelta(hours=5) # hardcoded for EST
+        files.append({'name': key.name.name, 'created': file_time})
     sorted_files = sorted(files, key=itemgetter('created'), reverse=True)
     return sorted_files
 
+def get_session_keys(id):
+    '''
+    Get list of key objects for session matching id
+    '''
+    keys = []
+    bucket= setup_bucket()
+    for key in bucket.list():
+        k = bucket.lookup(key)
+        if k.get_metadata('session_id') == id:
+            keys.append(k)
+    return keys
 
 def expire_files():
     '''
@@ -48,21 +55,30 @@ def expire_files():
         print "Removing old files..."
         to_delete = []
         for key in bucket.list():
-            try:
-                tmp = key.last_modified[:-5] # replace w/ regex later
-                tmp = datetime.strptime(tmp, "%Y-%m-%dT%H:%M:%S")
-                #tmp = tmp - timedelta(hours=8) # adjust for PST
-                tmp = tmp - timedelta(hours=5) # adjust for EST
-                age = datetime.now() - tmp
-                       
-                #print tmp
-                #print datetime.now()
- 
-                if age > timedelta(minutes=FILE_RETENTION_TIME):
-                    # print "Deleting %s" % (key.name.encode('utf-8'))
-                    to_delete.append(key)
-            except:
-                print("error statting files - " + traceback.format_exc())
+            tmp = key.last_modified[:-5] # replace w/ regex later
+            tmp = datetime.strptime(tmp, "%Y-%m-%dT%H:%M:%S")
+            #tmp = tmp - timedelta(hours=8) # adjust for PST
+            tmp = tmp - timedelta(hours=5) # adjust for EST
+            age = datetime.now() - tmp
+                   
+            #print tmp
+            #print datetime.now()
+
+            if age > timedelta(minutes=FILE_RETENTION_TIME):
+                # print "Deleting %s" % (key.name.encode('utf-8'))
+                to_delete.append(key)
         bucket.delete_keys(to_delete)
         sleep(60)
 
+def delete_session_keys(id):
+    '''
+    Delete all files uploaded by session with parameter id
+    '''
+    bucket = setup_bucket()
+    keys = get_session_keys(id)
+    to_delete = []
+
+    for key in keys:
+        to_delete.append(key.name.name)
+    
+    bucket.delete_keys(to_delete)

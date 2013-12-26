@@ -96,6 +96,12 @@ def route_about():
 def page_not_found(e):
 	return render('404.html')
 
+@app.route('/clear_session/')
+def clear_session():
+    delete_session_keys(session.get('session_id'))    
+    session.clear()
+    return route_root()
+
 @app.route('/file/<path:filename>/')
 def route_file(filename):
     bucket = setup_bucket()
@@ -104,62 +110,8 @@ def route_file(filename):
     template_data = {'filename': filename, 'url': url}
     return render('file.html', template_data)
 
-# Upload and download files
-# In production, download_file should be removed and add this line to apache.conf:
-# $ alias /download/ /var/www/datastore/
-'''
-@app.route('/download/<path:filename>/')
-def download_file(filename):
-    return send_from_directory(PATH_DATASTORE, filename)
-'''
-
-@app.route('/upload/', methods=['GET', 'POST'])
-def upload_runner():
-    if request.method == 'POST':
-        try:
-            file = request.files.get('upload')
-            if file and session.get('quota_reached', 'false') != 'true' \
-                    and MB_UPLOAD_LIMIT - (session.get('mb_used', 0) \
-                        + file.content_length) >= 0:
-                filename = secure_filename(file.filename)
-               
-                # if filename exists, prepend unique number to new name
-                files = get_file_info()
-                for f in files:
-                    if filename == f['name']:
-                        filename = str(counter()) + filename
-                        break
-
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], \
-                            filename))
-                size = os.path.getsize(app.config['UPLOAD_FOLDER'] + \
-                                        '/' + filename)
-                update_session((size/1024/1024), filename)
-        except RequestEntityTooLarge:
-            print "File size too large"
-        except:
-            print traceback.format_exc()
-    return redirect('/')
-
 
 # Other Functions --------------------------------------------------------
-def update_session(filesize, filename):
-    '''
-    Adds the filesize (in MB) to the user's value in ip_list and adds the
-    filename to the user's list of uploads
-    '''
-    if 'mb_used' in session:
-        session['mb_used'] += filesize
-    else: # initialize mb_used
-        session['mb_used'] = filesize
-    
-    if 'uploads' in session:
-        session['uploads'].append(filename)
-    else:
-        session['uploads'] = [filename]
-    
-    update_reset_time()
-
 def update_reset_time():
     '''
     Updates the session's reset time and quota when the current time

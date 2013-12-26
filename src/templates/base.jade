@@ -38,8 +38,9 @@ html(lang='en')
       {% block navbar_left %}{% endblock %} 
       div.container.pull-center
         a(href='/').navbar-btn.btn-link.btn Home
-        a(href='/about/').navbar-btn.btn-link.btn About
+        a(href='/about/').navbar-btn.btn-link.btn FAQ
         a(href='/disclaimer/').navbar-btn.btn-link.btn Disclaimer
+        a(href='/clear_session/', title="Delete all files linked to this session (cannot be undone).").navbar-btn.btn-danger.btn Dump files!
 
     #scripts
       script(src='/static/js/vendor/bootstrap.min.js')
