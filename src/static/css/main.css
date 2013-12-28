@@ -2,9 +2,20 @@
     box-sizing: border-box;
 }
 
-#logo-link {
-    text-decoration: none;
+/* File upload progress bar */
+.progress {
+    text-align: center;
 }
+.bar {
+    background: #5CB85C;
+    width: 0%;
+    height: 100%;
+    z-index: 50;
+}
+#message {
+    width: 100%;
+}
+
 
 /* Center the text in the middle of the window */
 .text-content {
@@ -14,6 +25,7 @@
     margin-right: auto;
     margin-bottom: 60px;
 }
+
 
 /* Bootstrap Additions & Modifications */
 .pull-center { text-align: center; }

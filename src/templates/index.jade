@@ -1,7 +1,9 @@
 {% extends "base.jade" %}
 
 {% block extrahead %}
+link(rel="stylesheet", href="/static/js/vendor/jQuery-File-Upload-9.5.2/css/jquery.fileupload-ui.css")
 script(src="/static/js/vendor/jquery-ui-1.10.3/ui/jquery.ui.widget.js")
+script(src="/static/js/vendor/jquery-ui-1.10.3/ui/jquery-ui.js")
 script(src="/static/js/vendor/jquery.iframe-transport.js")
 script(src="/static/js/vendor/jQuery-File-Upload-9.5.2/js/jquery.fileupload.js")
 script.
@@ -35,6 +37,7 @@ script.
           $("#progress").addClass("progress-striped active");
         }
         $("#bar").css("width", progress + "%");
+        $("#message").html(progress + "%");
       }
     });
   });
@@ -62,11 +65,11 @@ script.
                 input(type='file', name='file', id='uploadFile')
                 button(type='button', id='uploadButton') Upload
 
-            div#progress.progress
-              div#bar.bar
-
-            div.message
-
+              div#progress.progress 
+                div#bar.bar
+            
+              span#message.message
+ 
       .col-xs-12.col-sm-6#files-container
         .row
           .col-xs-12.col-sm-5.col-md-4
