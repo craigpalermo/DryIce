@@ -31,7 +31,7 @@ script.
       replaceFileInput: false,
       add: function (e, data) {
         $("#uploadButton").unbind("click").click(function () {
-            $("#uploadKey").val('${filename}');
+            $("#uploadKey").val('{{ session_id }}/${filename}');
             data.submit();
             $("#uploadButton").text("Uploading...").attr("disabled", "disabled");
         });
@@ -100,7 +100,7 @@ script.
                     tr.file_row
                       td.file_cell
                         a(href='/file/'+file.name, display='inline')
-                          button.btn.btn-default=file.name
+                          button.btn.btn-default=file.nice_name
                       td.expires_cell
                         p.
                           Expires in <span id="{{loop.index}}_timeRemaining"></span>

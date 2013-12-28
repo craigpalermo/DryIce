@@ -39,7 +39,8 @@ def get_session_keys(id):
     '''
     keys = []
     bucket= setup_bucket()
-    for key in bucket.list():
+    prefix = "%s/" % (id,)
+    for key in bucket.list(prefix=prefix):
         k = bucket.lookup(key)
         if k.get_metadata('session_id') == id:
             keys.append(k)

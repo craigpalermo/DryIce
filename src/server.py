@@ -65,12 +65,14 @@ def route_root():
         
     id = session.get('session_id')
     temp = get_file_info(id)
+
     form_dict = generate_upload_form(id)
 
     # pick out which files were uploaded from the current session
     for f in temp:
         f['expire_time'] = f['created'] + \
                             timedelta(minutes=FILE_RETENTION_TIME)
+        f['nice_name'] = f.get('name')[37:] # strip folder prefix
         files.append(f)
     
     template_data = {
@@ -108,6 +110,7 @@ def route_file(filename):
     bucket = setup_bucket()
     key = bucket.new_key(filename)
     url = key.generate_url(expires_in=(FILE_RETENTION_TIME * 60),query_auth=False, force_http=True)
+    filename = filename[37:] # strip folder prefix
     template_data = {'filename': filename, 'url': url}
     return render('file.html', template_data)
 
