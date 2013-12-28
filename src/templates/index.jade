@@ -2,12 +2,30 @@
 
 {% block extrahead %}
 link(rel="stylesheet", href="/static/js/vendor/jQuery-File-Upload-9.5.2/css/jquery.fileupload-ui.css")
+link(rel="stylesheet", href="/static/js/vendor/jquery-ui-1.10.3/themes/base/jquery-ui.css")
 script(src="/static/js/vendor/jquery-ui-1.10.3/ui/jquery.ui.widget.js")
 script(src="/static/js/vendor/jquery-ui-1.10.3/ui/jquery-ui.js")
 script(src="/static/js/vendor/jquery.iframe-transport.js")
 script(src="/static/js/vendor/jQuery-File-Upload-9.5.2/js/jquery.fileupload.js")
+script(src="/static/js/vendor/bootstrap.file-input.js")
 script.
   $(function () {
+    $('input[type=file]').bootstrapFileInput();
+    $('.file-inputs').bootstrapFileInput();
+ 
+    var progressbar = $("#progressbar"),
+        progressLabel = $(".progress-label");
+
+    progressbar.progressbar({
+        value: false,
+        change: function() {
+            progressLabel.text(progressbar.progressbar("value") + "%");
+        },
+        complete: function() {
+            progressLabel.text("Upload complete!");
+        }
+    });
+    
     $("#uploadFile").fileupload({
       dataType: "xml",
       replaceFileInput: false,
@@ -19,7 +37,7 @@ script.
         });
       },
       done: function (e, data) {
-        $("#message").html("Upload done!");
+        setTimeout(function(){location.reload()},800);
       },
       fail: function(e, data) {
         console.log(e);
@@ -30,14 +48,7 @@ script.
       },
       progress: function (e, data) {
         var progress = parseInt(data.loaded / data.total * 100, 10);
-        if(progress == 100) {
-          $("#progress").removeClass("progress-striped active");
-        }
-        else {
-          $("#progress").addClass("progress-striped active");
-        }
-        $("#bar").css("width", progress + "%");
-        $("#message").html(progress + "%");
+        progressbar.progressbar("value", progress + 1); 
       }
     });
   });
@@ -62,31 +73,39 @@ script.
                 input(type='hidden', name='signature', value='{{ signature }}')
                 input(type='hidden', name='Content-Type', value="")
                 input(type='hidden', name='x-amz-meta-session_id', value='{{ session_id }}')
-                input(type='file', name='file', id='uploadFile')
-                button(type='button', id='uploadButton') Upload
+                input.btn.btn-default(type='file', name='file', id='uploadFile')
+                br
+                br
+                button.btn.btn-success(type='button', id='uploadButton') Upload
+                br
+                br
 
-              div#progress.progress 
-                div#bar.bar
-            
-              span#message.message
+              div#progressbar
+                div.progress-label Select a file...
+
+              div#message                
  
       .col-xs-12.col-sm-6#files-container
         .row
-          .col-xs-12.col-sm-5.col-md-4
+          .col-xs-12.col-sm-3.col-md-2
             h3.col-xs-center.col-sm-right down
-          .col-xs-12.col-sm-7.col-md-8
+          .col-xs-12.col-sm-8.col-md-9
             .col-xs-center.col-sm-left
               h4 pick and click
               .row#files
-                each file in files
-                  .file-wrapper.col-xs-12.col-md-6.col-lg-4
-                    .file
-                      a(href='/file/'+file.name)
-                        button.btn=file.name
-                      p.
-                        Expires in <span id="{{loop.index}}_timeRemaining"></span>
+                table#link_table
+                  col(width='450px')
+                  col(width='300px')
+                  each file in files
+                    tr.file_row
+                      td.file_cell
+                        a(href='//'+file.name, display='inline')
+                          button.btn.btn-default=file.name
+                      td.expires_cell
+                        p.
+                          Expires in <span id="{{loop.index}}_timeRemaining"></span>
                       script.
-                          var endTime = 
+                        var endTime = 
                             new Date(Date.UTC(
                                 {{ file.expire_time.year }}, 
                                 {{ file.expire_time.month }} - 1, 

@@ -3,19 +3,16 @@
 }
 
 /* File upload progress bar */
-.progress {
-    text-align: center;
+.ui-progressbar {
+    position: relative;
 }
-.bar {
-    background: #5CB85C;
-    width: 0%;
-    height: 100%;
-    z-index: 50;
+.progress-label {
+    position: absolute;
+    left: 50%;
+    top: 4px;
+    font-weight: bold;
+    text-shadow: 1px 1px 0 #fff;
 }
-#message {
-    width: 100%;
-}
-
 
 /* Center the text in the middle of the window */
 .text-content {
@@ -111,32 +108,21 @@ footer {
     background-color: #282828;
 }
 
-#files {
-    padding-top: 20px;
-}
-#files .file {
-    padding: 14px 5px;
-}
-#files .file button {
-    max-width: 400px;
-    width: 100%;
-    padding-left: 10%;
-    padding-right: 10%;
-    border-radius: 0;
-    font-size: 17px;
-    font-weight: bold;
-    color: #222;
-    background-color: #bbb;
-}
-#files .file button:hover {
-    color: #000;
-    background-color: #fff;
-    transition: all 0.4s ease-out;
-}
-
 #content h3, #content h4 {
     height:      30px;
     line-height: 30px;
+}
+
+
+.file_cell {
+    text-align: right;
+}
+.expires_cell {
+    text-align: center;
+}
+#link_table td {
+    padding-top:6px;
+    padding-bottom:6px;
 }
 
 #upload-form {
@@ -160,16 +146,6 @@ footer {
 #browse-button, #file-input-info, #upload-button {
     font-weight: bold;
     padding: 9px 18px;
-}
-#browse-button input[type=file] {
-    position: absolute;
-    top: 0;
-    right: 0;
-    min-width: 100%;
-    min-height: 100%;
-    opacity: 0;
-    cursor: inherit;
-    display: block;
 }
 #file-input-info {
     border-radius: 0;
