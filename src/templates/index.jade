@@ -1,5 +1,45 @@
 {% extends "base.jade" %}
 
+{% block extrahead %}
+script(src="/static/js/vendor/jquery-ui-1.10.3/ui/jquery.ui.widget.js")
+script(src="/static/js/vendor/jquery.iframe-transport.js")
+script(src="/static/js/vendor/jQuery-File-Upload-9.5.2/js/jquery.fileupload.js")
+script.
+  $(function () {
+    $("#uploadFile").fileupload({
+      dataType: "xml",
+      replaceFileInput: false,
+      add: function (e, data) {
+        $("#uploadButton").unbind("click").click(function () {
+            $("#uploadKey").val('${filename}');
+            data.submit();
+            $("#uploadButton").text("Uploading...").attr("disabled", "disabled");
+        });
+      },
+      done: function (e, data) {
+        $("#message").html("Upload done!");
+      },
+      fail: function(e, data) {
+        console.log(e);
+        console.log(data);
+      },
+      always: function(e, data) {
+        $("#uploadButton").text("Upload").removeAttr("disabled");
+      },
+      progress: function (e, data) {
+        var progress = parseInt(data.loaded / data.total * 100, 10);
+        if(progress == 100) {
+          $("#progress").removeClass("progress-striped active");
+        }
+        else {
+          $("#progress").addClass("progress-striped active");
+        }
+        $("#bar").css("width", progress + "%");
+      }
+    });
+  });
+{% endblock %}
+
 {% block content %}
 #content.container
   .row
@@ -10,23 +50,22 @@
           .col-xs-12.col-sm-7.col-md-8
             .col-xs-center.col-sm-left
               h4 drag and drop
-              form#upload-form(action='https://dropbucket-datastore.s3.amazonaws.com', method='post', enctype='multipart/form-data')
-                input(type='hidden', name='key', value='${filename}')
-                input(type='hidden', name='AWSAccessKeyId', value='AKIAJY4PLTKEW3V6DPFQ')
+              form(id="uploadForm", action="https://dropbucket-datastore.s3.amazonaws.com", method="post", enctype='multipart/form-data')
+                input(type='hidden', name='key', id="uploadKey")
+                input(type='hidden', name='AWSAccessKeyId', value='{{ AWSAccessKeyId }}')
                 input(type='hidden', name='acl', value='public-read')
-                input(type='hidden', name='success_action_redirect', value="/")
-                input(type='hidden', name='policy', value="{{ policy }}")
-                input(type='hidden', name='signature', value="{{ signature }}")
-                input(type='hidden', name='Content-Type', value="")                
-                input(type='hidden', name='x-amz-meta-session_id', value="{{session_id}}")
+                input(type='hidden', name='success_action_redirect', value='/')
+                input(type='hidden', name='policy', value='{{ policy }}')
+                input(type='hidden', name='signature', value='{{ signature }}')
+                input(type='hidden', name='Content-Type', value="")
+                input(type='hidden', name='x-amz-meta-session_id', value='{{ session_id }}')
+                input(type='file', name='file', id='uploadFile')
+                button(type='button', id='uploadButton') Upload
 
-                button#browse-button
-                  span#browse browse
-                  input(id='file-input', type='file', name='file')
-                <!--input(type='hidden', name='filesize', value='-1')-->
-                span#file-input-info.label
-                br
-                button#upload-button(id='upload-button', type='button') upload
+            div#progress.progress
+              div#bar.bar
+
+            div.message
 
       .col-xs-12.col-sm-6#files-container
         .row
@@ -61,7 +100,6 @@ script(type='text/javascript').
         $('#upload-button').prop('disabled', true);
         
         var size_limit = {{ size_limit }} / 1024 / 1024;
-        var quota_reached = {{ quota_reached }}
 
         $('#upload-button').click(function() {
             document.getElementById("upload-form").submit();

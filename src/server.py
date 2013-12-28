@@ -77,7 +77,8 @@ def route_root():
                     'files': files, \
                     'size_limit': app.config['MAX_CONTENT_LENGTH'], \
                     'reset_time': session.get('reset_time'), \
-                    'session_id': session.get('session_id')
+                    'session_id': session.get('session_id'), \
+                    'AWSAccessKeyId': ACCESS_KEY
                     }
 
     template_data.update(form_dict)
