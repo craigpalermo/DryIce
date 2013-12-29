@@ -92,7 +92,6 @@ def page_not_found(e, message=None):
 @app.route('/clear_session/')
 def clear_session():
     delete_session_keys(session.get('session_id'))    
-    session.clear()
     return route_root()
 
 @app.route('/<path:ez_link>/')
