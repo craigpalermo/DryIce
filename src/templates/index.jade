@@ -61,9 +61,9 @@ script.
         .row
           .col-xs-12.col-sm-1.col-md-1
             h3.col-xs-center.col-sm-right up
-          .col-xs-12.col-sm-7.col-md-8
+          .col-xs-12.col-sm-8.col-md-8
             .col-xs-center.col-sm-left
-              h4 drag and drop
+              h4 browse
               form(id="uploadForm", action="https://dropbucket-datastore.s3.amazonaws.com", method="post", enctype='multipart/form-data')
                 input(type='hidden', name='key', id="uploadKey")
                 input(type='hidden', name='AWSAccessKeyId', value='{{ AWSAccessKeyId }}')
@@ -77,8 +77,6 @@ script.
                 br
                 br
                 button.btn.btn-success(type='button', id='uploadButton') Upload
-                br
-                br
 
               div#progressbar
                 div#progress-label Select a file...
@@ -86,16 +84,16 @@ script.
               div#message
         .row
           .col-xs-12
-            h3 Get Started:
+            h4 Get Started:
             ol
               <li>Click <strong>Browse</strong> to search for the file you want to share on your computer.</li>
               <li>Click <strong>Upload</strong> to securely upload the file to DryIce's cloud storage.</li>
               <li>Right-click on a file's button and select 'Copy Link Address'.</li>
               <li>Share the link! Anyone can use it to download that file until it expires.</li>
  
-        .row
+        .row#ez_link_instructions
           .col-xs-12
-            h3#ez_links_header Using EZLinks:
+            h4#ez_links_header Using EZLinks:
             p Visit a URL in this form for quick access to the files you've uploaded:<br/><strong>https://dryice.io/HappyPanda</strong> (EZLink is 'HappyPanda')
       .col-xs-12.col-sm-6#files-container
         .row

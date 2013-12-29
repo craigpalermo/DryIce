@@ -21,6 +21,9 @@
 #ez_links_header {
     margin-top: 5px;
 }
+#ez_links_instructions {
+    margin-bottom: 10px;
+}
 
 /* File upload progress bar */
 #progressbar {
@@ -30,6 +33,7 @@
     position: relative;
     vertical-align: middle;
     line-height: 35px;
+    width: auto;
 }
 #progress-label {
     float: left;
@@ -37,6 +41,10 @@
     height: 100%;
     position: absolute;
     vertical-align: middle;
+}
+#uploadButton {
+    margin-right: 10px;
+    float: left;
 }
 
 /* Center the text in the middle of the window */
@@ -105,18 +113,23 @@ small {
 header {
     background-color: #222;
     padding: 20px 0;
+    height: 140px;
+}
+header .row {
+    height: 120px;
+    margin-top: 0px;
 }
 header #title h1 {
     font-size: 2.6em;
     margin: 0;
-    line-height: 135px;
+    line-height: 120px;
 }
 header #subtitle h2 {
     font-size: 1.5em;
     margin: 0;
 }
 header #subtitle {
-    height: 135px;
+    height: 120px;
     width: 999px; /* Obviously a hack. */
     display: table-cell;
     vertical-align: middle;
