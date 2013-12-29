@@ -61,9 +61,11 @@ script.
         .row
           .col-xs-12.col-sm-1.col-md-1
             h3.col-xs-center.col-sm-right up
-          .col-xs-12.col-sm-12.col-md-12
+          .col-xs-12.col-sm-11.col-md-11
             .col-xs-center.col-sm-left
-              h4 browse
+              h4 browse and upload
+        .row
+          .col-xs-12.col-sm-12.col-md.12
               form(id="uploadForm", action="https://dropbucket-datastore.s3.amazonaws.com", method="post", enctype='multipart/form-data')
                 input(type='hidden', name='key', id="uploadKey")
                 input(type='hidden', name='AWSAccessKeyId', value='{{ AWSAccessKeyId }}')
