@@ -93,10 +93,6 @@ script.
               <li>Right-click on a file's button and select 'Copy Link Address'.</li>
               <li>Share the link! Anyone can use it to download that file until it expires.</li>
  
-        .row#ez_link_instructions
-          .col-xs-12
-            h4#ez_links_header Using EZLinks:
-            p Visit a URL in this form for quick access to the files you've uploaded:<br/><strong>https://dryice.io/HappyPanda</strong> (EZLink is 'HappyPanda')
       .col-xs-12.col-sm-6#files-container
         .row
           .col-xs-12.col-sm-3.col-md-2
@@ -108,24 +104,23 @@ script.
           .col-xs-12.col-sm-10.col-md-12
               .row#files
                 if files
-                    table#link_table
+                    table#link_table.table
                       col(width='600px')
                       col(width='250px')
                       col(width='300px')
                     
-                      th File Link
-                      th EZLink
+                      th File
+                      th Link
                       th Expires in...
 
                       each file in files
                         tr.file_row
                           td.file_cell
-                            a(href='/'+file.ez_link, display='inline')
-                              button#file.nice_name.btn.btn-default.file-button=file.nice_name
-                          td.
-                            {{file['ez_link']}}
+                            {{ file['nice_name'] }}
+                          td
+                            a(href='/'+file.ez_link, display='inline') https://dryice.io/{{ file['ez_link'] }}
                           td.expires_cell
-                            Expires in <span id="{{loop.index}}_timeRemaining"></span>
+                            <span id="{{loop.index}}_timeRemaining"></span>
                           script.
                             var endTime = 
                                 new Date(Date.UTC(
