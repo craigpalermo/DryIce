@@ -86,8 +86,8 @@ def route_about():
     return render('about.html')
 
 @app.errorhandler(404)
-def page_not_found(e):
-	return render('404.html')
+def page_not_found(e, message=None):
+    return render('404.html', {'message': message})
 
 @app.route('/clear_session/')
 def clear_session():
@@ -99,12 +99,15 @@ def clear_session():
 def route_file(ez_link):
     bucket = setup_bucket()
     filename = r_server.get(ez_link)
-    key = bucket.new_key(filename)
-    url = key.generate_url(expires_in=(FILE_RETENTION_TIME * 60),query_auth=False, force_http=True)
-    filename = filename[37:] # strip folder prefix
-    template_data = {'filename': filename, 'url': url}
-    return render('file.html', template_data)
-
+    if filename != None:
+        key = bucket.new_key(filename)
+        url = key.generate_url(expires_in=(FILE_RETENTION_TIME * 60),query_auth=False, force_http=True)
+        filename = filename[37:] # strip folder prefix
+        template_data = {'filename': filename, 'url': url}
+        return render('file.html', template_data)
+    else:
+        message = "That EZLink didn't match any files. Verify correct spelling and capitalization, then try again."
+        return page_not_found(None, message)
 
 # Other Functions --------------------------------------------------------
 # S3 Storage Setup
