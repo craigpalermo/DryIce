@@ -64,8 +64,7 @@ def expire_files():
         for key in bucket.list():
             tmp = key.last_modified[:-5] # replace w/ regex later
             tmp = datetime.strptime(tmp, "%Y-%m-%dT%H:%M:%S")
-            tmp = tmp - timedelta(hours=8) # adjust for PST
-            #tmp = tmp - timedelta(hours=5) # adjust for EST
+            # tmp = tmp - timedelta(hours=5) # adjust for EST
             age = datetime.now() - tmp
                    
             # print tmp
