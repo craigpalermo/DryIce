@@ -1,5 +1,9 @@
 {% extends "base.jade" %}
 
+{% block extrahead %}
+{% include 'analytics.html' %}
+{% endblock %}
+
 {% block content %}
 <div class="text-content pull-center">
 {% if not message %}
