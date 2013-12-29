@@ -9,12 +9,18 @@ from   werkzeug   import secure_filename
 from   constants  import *
 from   operator   import itemgetter
 from   boto.s3.connection import S3Connection
+from   redis      import Redis
 
+r_server = Redis("localhost")
 
 def setup_bucket():
     conn = S3Connection(ACCESS_KEY, SECRET_ACCESS_KEY)
     bucket = conn.get_bucket(BUCKET)
     return bucket
+
+def delete_redis_entry(filename):
+    ez_link = r_server.get(filename)
+    r_server.delete(ez_link, filename)
 
 def get_file_info(session_id):
     '''
@@ -67,6 +73,7 @@ def expire_files():
 
             if age > timedelta(minutes=FILE_RETENTION_TIME):
                 # print "Deleting %s" % (key.name.encode('utf-8'))
+                delete_redis_entry(key.name)
                 to_delete.append(key)
         bucket.delete_keys(to_delete)
         sleep(60)
@@ -81,5 +88,6 @@ def delete_session_keys(id):
 
     for key in keys:
         to_delete.append(key.name.name)
-    
+   
+    delete_redis_entry(to_delete)
     bucket.delete_keys(to_delete)

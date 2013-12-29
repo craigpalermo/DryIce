@@ -18,6 +18,10 @@
     padding-bottom:6px;
 }
 
+#ez_links_header {
+    margin-top: 5px;
+}
+
 /* File upload progress bar */
 #progressbar {
     position: relative;
@@ -118,8 +122,11 @@ header #subtitle {
     vertical-align: middle;
 }
 
+#no_files { text-align: center; }
+
 #content {
     padding: 20px 0;
+    padding-top: 0;
     display:block;
     margin-left:auto;
     margin-right:auto;

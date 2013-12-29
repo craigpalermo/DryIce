@@ -89,10 +89,14 @@ script.
             h3 Get Started:
             ol
               <li>Click <strong>Browse</strong> to search for the file you want to share on your computer.</li>
-              <li>Click <strong>Upload</strong> to upload the file to DryIce's cloud storage.</li>
-              <li>Click on a file's button to copy its link to your clipboard.</li>
+              <li>Click <strong>Upload</strong> to securely upload the file to DryIce's cloud storage.</li>
+              <li>Right-click on a file's button and select 'Copy Link Address'.</li>
               <li>Share the link! Anyone can use it to download that file until it expires.</li>
  
+        .row
+          .col-xs-12
+            h3#ez_links_header Using EZLinks:
+            p Visit a URL in this form for quick access to the files you've uploaded:<br/><strong>https://dryice.io/HappyPanda</strong> (EZLink is 'HappyPanda')
       .col-xs-12.col-sm-6#files-container
         .row
           .col-xs-12.col-sm-3.col-md-2
@@ -103,34 +107,38 @@ script.
         .row
           .col-xs-12.col-sm-10.col-md-12
               .row#files
-                table#link_table
-                  col(width='600px')
-                  col(width='250px')
-                  col(width='300px')
-                
-                  th File Link
-                  th EZLink
-                  th Expires in...
+                if files
+                    table#link_table
+                      col(width='600px')
+                      col(width='250px')
+                      col(width='300px')
+                    
+                      th File Link
+                      th EZLink
+                      th Expires in...
 
-                  each file in files
-                    tr.file_row
-                      td.file_cell
-                        a(href='/'+file.ez_link, display='inline')
-                          button.btn.btn-default=file.nice_name
-                      td.
-                        {{file['ez_link']}}
-                      td.expires_cell
-                        Expires in <span id="{{loop.index}}_timeRemaining"></span>
-                      script.
-                        var endTime = 
-                            new Date(Date.UTC(
-                                {{ file.expire_time.year }}, 
-                                {{ file.expire_time.month }} - 1, 
-                                {{ file.expire_time.day }}, 
-                                {{ file.expire_time.hour }},
-                                {{ file.expire_time.minute }}, 
-                                {{ file.expire_time.second }}));
-                          startCountdown(endTime, {{loop.index}});
+                      each file in files
+                        tr.file_row
+                          td.file_cell
+                            a(href='/'+file.ez_link, display='inline')
+                              button#file.nice_name.btn.btn-default.file-button=file.nice_name
+                          td.
+                            {{file['ez_link']}}
+                          td.expires_cell
+                            Expires in <span id="{{loop.index}}_timeRemaining"></span>
+                          script.
+                            var endTime = 
+                                new Date(Date.UTC(
+                                    {{ file.expire_time.year }}, 
+                                    {{ file.expire_time.month }} - 1, 
+                                    {{ file.expire_time.day }}, 
+                                    {{ file.expire_time.hour }},
+                                    {{ file.expire_time.minute }}, 
+                                    {{ file.expire_time.second }}));
+                              startCountdown(endTime, {{loop.index}});
+                else
+                  div#no_files  
+                    h3 You haven't uploaded any files yet!
 {% endblock %}
 
 {% block scripts %}
@@ -156,4 +164,5 @@ script(type='text/javascript').
             }
         });
     });
+
 {% endblock %}

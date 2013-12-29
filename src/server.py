@@ -53,6 +53,11 @@ def route_root():
 
         if not r_server.exists(f_name):
             ez_link = generate_ez_link()
+
+            # make sure ez_link is unique
+            while r_server.exists(ez_link):
+                ez_link = generate_ez_link()
+            
             r_server.set(f_name, ez_link)
             r_server.set(ez_link, f_name)
 
@@ -100,9 +105,6 @@ def route_file(ez_link):
     template_data = {'filename': filename, 'url': url}
     return render('file.html', template_data)
 
-@app.route('/random/')
-def route_random():
-    return generate_ez_link()
 
 # Other Functions --------------------------------------------------------
 # S3 Storage Setup
