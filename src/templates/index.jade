@@ -59,7 +59,7 @@ script.
   .row
       .col-xs-12.col-sm-6#upload-container
         .row
-          .col-xs-12.col-sm-5.col-md-4
+          .col-xs-12.col-sm-1.col-md-1
             h3.col-xs-center.col-sm-right up
           .col-xs-12.col-sm-7.col-md-8
             .col-xs-center.col-sm-left
@@ -83,27 +83,44 @@ script.
               div#progressbar
                 div#progress-label Select a file...
 
-              div#message                
+              div#message
+        .row
+          .col-xs-12
+            h3 Get Started:
+            ol
+              <li>Click <strong>Browse</strong> to search for the file you want to share on your computer.</li>
+              <li>Click <strong>Upload</strong> to upload the file to DryIce's cloud storage.</li>
+              <li>Click on a file's button to copy its link to your clipboard.</li>
+              <li>Share the link! Anyone can use it to download that file until it expires.</li>
  
       .col-xs-12.col-sm-6#files-container
         .row
           .col-xs-12.col-sm-3.col-md-2
             h3.col-xs-center.col-sm-right down
-          .col-xs-12.col-sm-8.col-md-9
+          .col-xs-12.col-sm-6.col-md-8
             .col-xs-center.col-sm-left
               h4 pick and click
+        .row
+          .col-xs-12.col-sm-10.col-md-12
               .row#files
                 table#link_table
-                  col(width='450px')
+                  col(width='600px')
+                  col(width='250px')
                   col(width='300px')
+                
+                  th File Link
+                  th EZLink
+                  th Expires in...
+
                   each file in files
                     tr.file_row
                       td.file_cell
-                        a(href='/file/'+file.name, display='inline')
+                        a(href='/'+file.ez_link, display='inline')
                           button.btn.btn-default=file.nice_name
+                      td.
+                        {{file['ez_link']}}
                       td.expires_cell
-                        p.
-                          Expires in <span id="{{loop.index}}_timeRemaining"></span>
+                        Expires in <span id="{{loop.index}}_timeRemaining"></span>
                       script.
                         var endTime = 
                             new Date(Date.UTC(

@@ -2,6 +2,22 @@
     box-sizing: border-box;
 }
 
+#link_table td, th {
+    text-align: center;
+}
+#link_table td {
+}
+.file_cell {
+    text-align: right;
+}
+.expires_cell {
+    text-align: center;
+}
+#link_table td {
+    padding-top:6px;
+    padding-bottom:6px;
+}
+
 /* File upload progress bar */
 #progressbar {
     position: relative;
@@ -12,11 +28,11 @@
     line-height: 35px;
 }
 #progress-label {
-        float: left;
-            width: 100%;
-                height: 100%;
-                    position: absolute;
-                        vertical-align: middle;
+    float: left;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    vertical-align: middle;
 }
 
 /* Center the text in the middle of the window */
@@ -116,18 +132,6 @@ footer {
 #content h3, #content h4 {
     height:      30px;
     line-height: 30px;
-}
-
-
-.file_cell {
-    text-align: right;
-}
-.expires_cell {
-    text-align: center;
-}
-#link_table td {
-    padding-top:6px;
-    padding-bottom:6px;
 }
 
 #upload-form {
