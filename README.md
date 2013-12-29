@@ -34,3 +34,9 @@ Simple way to _temporarily_ share files over the internet. No usernames or passw
 - Install dependencies as usual
 - Modify the VirtualHost conf file found here
 	https://www.digitalocean.com/community/articles/how-to-deploy-a-flask-application-on-an-ubuntu-vps
+
+### Redis Server (on Ubuntu)
+
+    $ sudo apt-get install redis-server
+    $ redis-server
+    $ redis-cli ping 	# check redis server status
