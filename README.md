@@ -1,10 +1,10 @@
-# Dropbucket
+# DryIce
 Simple way to _temporarily_ share files over the internet. No usernames or passwords, just a bucket with files in it.
 
 
 ## Install and run
 
-    $ git clone git@github.com:unscsprt/dropbucket && cd ./dropbucket
+    $ git clone git@github.com:unscsprt/DryIce && cd ./DryIce
     $ pip install -r requirements.txt
     $ python server.py
 
@@ -34,5 +34,3 @@ Simple way to _temporarily_ share files over the internet. No usernames or passw
 - Install dependencies as usual
 - Modify the VirtualHost conf file found here
 	https://www.digitalocean.com/community/articles/how-to-deploy-a-flask-application-on-an-ubuntu-vps
-
-** Make sure you change the datastore path in src/constants.py to a directory that Apache has access to and owns, such as /var/www/datastore. Otherwise, you'll see permission denied errors in the log when trying to upload and file operations won't work properly.
