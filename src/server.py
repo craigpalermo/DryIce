@@ -1,4 +1,4 @@
-import sys, time, uuid
+import sys, time, uuid, json
 import base64
 import hmac, hashlib
 
@@ -94,6 +94,14 @@ def clear_session():
     delete_session_keys(session.get('session_id'))    
     return redirect(url_for('route_root'))
 
+@app.route('/api/<action>/<int:value>/')
+def route_api(action, value):
+    message = {'error': 'null', 'data': 'null'}
+    if action == 'size-check':
+        if value > app.config['MAX_CONTENT_LENGTH']:
+            message['error'] = 'File size too large'
+    return json.dumps(message)
+
 @app.route('/<path:ez_link>/')
 def route_file(ez_link):
     bucket = setup_bucket()
@@ -107,6 +115,7 @@ def route_file(ez_link):
     else:
         message = "That EZLink didn't match any files. Verify correct spelling and capitalization, then try again."
         return page_not_found(None, message)
+
 
 # Other Functions --------------------------------------------------------
 # S3 Storage Setup
