@@ -94,7 +94,7 @@ def clear_session():
     delete_session_keys(session.get('session_id'))    
     return redirect(url_for('route_root'))
 
-@app.route('/api/<action>/<int:value>/')
+@app.route('/api/<action>/<value>/')
 def route_api(action, value):
     message = {'error': 'null', 'data': 'null'}
     if action == 'size-check':
