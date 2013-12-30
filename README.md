@@ -5,8 +5,8 @@ Simple way to _temporarily_ share files over the internet. No usernames or passw
 ## Install and run
 
     $ git clone git@github.com:unscsprt/DryIce && cd ./DryIce
-    $ pip install -r requirements.txt
-    $ python server.py
+    $ npm install
+    $ npm start
 
 
 ## Interface

@@ -1,0 +1,24 @@
+{
+  "name": "DryIce",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "jquery": "~2.0.3",
+    "bootstrap": "~3.0.3",
+    "jquery-ui": "~1.10.3",
+    "jquery-file-upload": "~9.5.2",
+    "moment": "~2.5.0"
+  },
+  "install": {
+    "path": "src/static/vendor",
+    "sources": {
+      "jquery-ui": [
+        "bower_components/jquery-ui/ui/jquery-ui.js",
+        "bower_components/jquery-ui/themes/base/jquery-ui.css"
+      ],
+      "bootstrap-file-input": [
+        "bower_components/bootstrap-file-input/bootstrap.file-input.js"
+      ]
+    }
+  }
+}

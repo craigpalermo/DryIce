@@ -2,3 +2,6 @@
 *.png
 *.ico
 datastore/*
+bower_components/*
+src/static/vendor/*
+node_modules/*

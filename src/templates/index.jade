@@ -1,63 +1,9 @@
-{% extends "base.jade" %}
+extends base
 
-{% block extrahead %}
-{% include 'analytics.html' %}
-link(rel="stylesheet", href="/static/js/vendor/jQuery-File-Upload-9.5.2/css/jquery.fileupload-ui.css")
-link(rel="stylesheet", href="/static/js/vendor/jquery-ui-1.10.3/themes/base/jquery-ui.css")
-script(src="/static/js/vendor/jquery-ui-1.10.3/ui/jquery.ui.widget.js")
-script(src="/static/js/vendor/jquery-ui-1.10.3/ui/jquery-ui.js")
-script(src="/static/js/vendor/jquery.iframe-transport.js")
-script(src="/static/js/vendor/jQuery-File-Upload-9.5.2/js/jquery.fileupload.js")
-script(src="/static/js/vendor/bootstrap.file-input.js")
-script.
-  $(function () {
-    $('input[type=file]').bootstrapFileInput();
-    $('.file-inputs').bootstrapFileInput();
- 
-    var progressbar = $("#progressbar"),
-        progressLabel = $("#progress-label");
 
-    progressbar.progressbar({
-        value: false,
-        change: function() {
-            progressLabel.text(progressbar.progressbar("value") + "%");
-        },
-        complete: function() {
-            progressLabel.text("Upload complete!");
-        }
-    });
-    
-    $("#uploadFile").fileupload({
-      dataType: "xml",
-      replaceFileInput: false,
-      add: function (e, data) {
-        $("#uploadButton").unbind("click").click(function () {
-            $("#uploadKey").val('{{ session_id }}/${filename}');
-            data.submit();
-            $("#uploadButton").text("Uploading...").attr("disabled", "disabled");
-        });
-      },
-      done: function (e, data) {
-        setTimeout(function(){location.reload()},800);
-      },
-      fail: function(e, data) {
-        console.log(e);
-        console.log(data);
-      },
-      always: function(e, data) {
-        $("#uploadButton").text("Upload").removeAttr("disabled");
-      },
-      progress: function (e, data) {
-        var progress = parseInt(data.loaded / data.total * 100, 10);
-        progressbar.progressbar("value", progress + 1); 
-      }
-    });
-  });
-{% endblock %}
-
-{% block content %}
-#content.container
-  .row
+block content
+  #content.container
+    .row
       .col-xs-12.col-sm-6#upload-container
         .row
           .col-xs-12.col-sm-1.col-md-1
@@ -65,34 +11,36 @@ script.
           .col-xs-12.col-sm-11.col-md-11
             .col-xs-center.col-sm-left
               h4 browse and upload
+
         .row
           .col-xs-12.col-sm-12.col-md.12
-              form(id="uploadForm", action="https://dropbucket-datastore.s3.amazonaws.com", method="post", enctype='multipart/form-data')
-                input(type='hidden', name='key', id="uploadKey")
-                input(type='hidden', name='AWSAccessKeyId', value='{{ AWSAccessKeyId }}')
-                input(type='hidden', name='acl', value='public-read')
-                input(type='hidden', name='success_action_redirect', value='/')
-                input(type='hidden', name='policy', value='{{ policy }}')
-                input(type='hidden', name='signature', value='{{ signature }}')
-                input(type='hidden', name='Content-Type', value="")
-                input(type='hidden', name='x-amz-meta-session_id', value='{{ session_id }}')
-                input.btn.btn-default(type='file', name='file', id='uploadFile')
-                br
-                br
-                button.btn.btn-success(type='button', id='uploadButton') Upload
+            form(id="uploadForm", action="https://dropbucket-datastore.s3.amazonaws.com", method="post", enctype='multipart/form-data')
+              input(type='hidden', name='key', id="uploadKey")
+              input(type='hidden', name='AWSAccessKeyId', value='{{ AWSAccessKeyId }}')
+              input(type='hidden', name='acl', value='public-read')
+              input(type='hidden', name='success_action_redirect', value='/')
+              input(type='hidden', name='policy', value='{{ policy }}')
+              input(type='hidden', name='signature', value='{{ signature }}')
+              input(type='hidden', name='Content-Type', value="")
+              input(type='hidden', name='x-amz-meta-session_id', value='{{ session_id }}')
+              input.btn.btn-default(type='file', name='file', id='uploadFile')
+              br
+              br
+              button.btn.btn-success(type='button', id='uploadButton') Upload
 
-              div#progressbar
-                div#progress-label Select a file...
+            #progressbar
+              #progress-label Select a file...
 
-              div#message
+            #message
+
         .row
           .col-xs-12
             h4 Get Started:
             ol
-              <li>Click <strong>Browse</strong> to select the file you want to share.</li>
-              <li>Click <strong>Upload</strong> to securely upload the file to DryIce's cloud storage.</li>
-              <li>Share the link! Anyone can use it to download that file until it expires.</li>
- 
+              li Click <strong>Browse</strong> to select the file you want to share.
+              li Click <strong>Upload</strong> to securely upload the file to DryIce's cloud storage.
+              li Share the link! Anyone can use it to download that file until it expires.
+
       .col-xs-12.col-sm-6#files-container
         .row
           .col-xs-12.col-sm-3.col-md-2
@@ -104,60 +52,29 @@ script.
           .col-xs-12.col-sm-10.col-md-12
               .row#files
                 if files
-                    table#link_table.table
-                      col(width='600px')
-                      col(width='250px')
-                      col(width='300px')
-                    
-                      th File
-                      th Link
-                      th Expires in...
-
-                      each file in files
-                        tr.file_row
-                          td.file_cell
-                            {{ file['nice_name'] }}
-                          td
-                            a(href='/'+file.ez_link, display='inline') dryice.io/{{ file['ez_link'] }}
-                          td.expires_cell
-                            <span id="{{loop.index}}_timeRemaining"></span>
-                          script.
-                            var endTime = 
-                                new Date(Date.UTC(
-                                    {{ file.expire_time.year }}, 
-                                    {{ file.expire_time.month }} - 1, 
-                                    {{ file.expire_time.day }}, 
-                                    {{ file.expire_time.hour }},
-                                    {{ file.expire_time.minute }}, 
-                                    {{ file.expire_time.second }}));
-                              startCountdown(endTime, {{loop.index}});
+                  table#link_table.table
+                    col(width='600px')
+                    col(width='250px')
+                    col(width='300px')
+                    th File
+                    th Link
+                    th Expires in...
+                    each file in files
+                      tr.file_row(data-file_expire_time="{{ file.expire_time }}")
+                        td.file_cell
+                          {{ file['nice_name'] }}
+                        td
+                          a(href='/'+file.ez_link, display='inline') dryice.io/{{ file.ez_link }}
+                        td.expires_cell
+                          <span id="{{loop.index}}_timeRemaining"></span>
                 else
-                  div#no_files  
+                  #no_files
                     h3 You haven't uploaded any files yet!
-{% endblock %}
 
-{% block scripts %}
-script(type='text/javascript').
-    $("document").ready(function() {
-        $('#upload-button').prop('disabled', true);
-        
-        var size_limit = {{ size_limit }} / 1024 / 1024;
+append extrascripts
+  include analytics.html
+  script.
+    window.SIZE_LIMIT =  {{ size_limit }};
+    window.SESSION_ID = "{{ session_id }}";
+  script(src='/static/js/index.js')
 
-        $('#upload-button').click(function() {
-            document.getElementById("upload-form").submit();
-        });
-
-        $("#file-input").change(function (e) {
-            var files = e.currentTarget.files;
-            var filesize = ((files[0].size/1024)/1024).toFixed(4); //MB
-            if (filesize > size_limit) {
-                alert("Selected file is larger than the " + 
-                        size_limit + "MB limit.");
-                $('#upload-button').prop('disabled', true);
-            } else {
-                $('#upload-button').prop('disabled', false);
-            }
-        });
-    });
-
-{% endblock %}
