@@ -1,5 +1,5 @@
+django==1.4.5
 jinja2
-werkzeug
 flask
 pyjade
 boto

@@ -137,9 +137,6 @@ def generate_upload_form(session_id):
     signature = base64.b64encode(hmac.new(SECRET_ACCESS_KEY, policy, hashlib.sha1).digest())
     return {'policy':policy, 'signature':signature}
 
-def generate_ez_link():
-    rw = RandomWords()
-    return rw.random_word().capitalize() + rw.random_word().capitalize()
 
 def update_reset_time():
     '''

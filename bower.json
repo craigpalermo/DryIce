@@ -11,7 +11,7 @@
     "bootstrap-file-input": "*"
   },
   "install": {
-    "path": "src/static/vendor",
+    "path": "DryIce/static/vendor",
     "sources": {
       "jquery-ui": [
         "bower_components/jquery-ui/ui/jquery-ui.js",

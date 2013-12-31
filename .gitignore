@@ -1,7 +1,11 @@
 *.swp
 *.png
 *.ico
+*.db
 datastore/*
 bower_components/*
 src/static/vendor/*
 node_modules/*
+*.log
+*.pyc
+
