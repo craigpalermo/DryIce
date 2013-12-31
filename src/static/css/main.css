@@ -154,6 +154,9 @@ header #subtitle {
 footer {
     background-color: #282828;
 }
+#footer-navbar {
+    margin-right: 15px;
+}
 
 #content h3, #content h4 {
     height:      30px;

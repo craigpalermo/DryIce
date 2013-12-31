@@ -37,7 +37,8 @@ html(lang='en')
 
     div.navbar.navbar-default.navbar-fixed-bottom
       {% block navbar_left %}{% endblock %}
-      div.container.pull-center
+      div.pull-left.navbar-text Problem? Contact <a href="mailto:support@dryice.io">support@dryice.io</a>
+      div.pull-right#footer-navbar
         a(href='/').navbar-btn.btn-link.btn Home
         a(href='/about/').navbar-btn.btn-link.btn FAQ
         a(href='/disclaimer/').navbar-btn.btn-link.btn Disclaimer
