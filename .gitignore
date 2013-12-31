@@ -8,4 +8,4 @@ src/static/vendor/*
 node_modules/*
 *.log
 *.pyc
-
+*.pydevproject
