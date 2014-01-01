@@ -7,6 +7,10 @@
     color: black;
 }
 
+.dropdown-menu {
+    width:200px;
+}
+
 /* Table with files, links, and expiration timers */
 #link_table {
     border: 1px solid white;
