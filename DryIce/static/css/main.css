@@ -2,6 +2,12 @@
     box-sizing: border-box;
 }
 
+#clear_session {
+    margin: 0;
+    color: black;
+}
+
+/* Table with files, links, and expiration timers */
 #link_table {
     border: 1px solid white;
 }
@@ -21,12 +27,6 @@
     padding-bottom:6px;
 }
 
-#ez_links_header {
-    margin-top: 5px;
-}
-#ez_links_instructions {
-    margin-bottom: 10px;
-}
 
 /* File upload progress bar */
 #progressbar {
@@ -153,9 +153,6 @@ header #subtitle {
 
 footer {
     background-color: #282828;
-}
-#footer-navbar {
-    margin-right: 15px;
 }
 
 #content h3, #content h4 {
