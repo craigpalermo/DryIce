@@ -9,7 +9,7 @@
     "jquery-file-upload": "~9.5.2",
     "moment": "~2.5.0",
     "bootstrap-file-input": "*",
-    "parsley": "*"
+    "parsleyjs": "~1.2.2"
   },
   "install": {
     "path": "DryIce/static/vendor",
@@ -20,7 +20,14 @@
       ],
       "bootstrap-file-input": [
         "bower_components/bootstrap-file-input/bootstrap.file-input.js"
+      ],
+      "parsleyjs": [
+          "bower_components/parsleyjs/parsley.js"
       ]
     }
+  },
+  "resolutions": {
+    "jquery": "~2.0.3",
+    "bootstrap": "~3.0.3"
   }
 }

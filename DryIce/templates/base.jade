@@ -64,27 +64,28 @@ html(lang='en')
               form(action="/users/login/", method="post", accept-charset="UTF-8", role="form")
                 {% csrf_token %}
                 div.form-group
-                  input#username.form-control(style="margin-bottom: 15px;", name="username", size="30", placeholder='username')    
+                  input#username.form-control(style="margin-bottom: 15px;", name="username", size="30", placeholder='username')
                 div.form-group
                   input#password.form-control(style="margin-bottom: 15px;", type="password", name="password", size="30", placeholder='password')
                 //- input#remember_me(style="float: left; margin-right: 10px;", type="checkbox", name="remember_me", value="1")
                 //- label.string.optional(for='remember_me') Remember Me
-                input.btn.btn-primary(style="clear: left; width: 100%; height: 32px; font-size: 13px;", type="submit", name="commit", value="Sign In")                
+                input.btn.btn-primary(style="clear: left; width: 100%; height: 32px; font-size: 13px;", type="submit", name="commit", value="Sign In")
 
             script
               $(function() {
                 // Setup drop down menu
                 $('.dropdown-toggle').dropdown();
-                 
+
                 // Fix input element click problem
                 $('.dropdown input, .dropdown label').click(function(e) {
                   e.stopPropagation();
                 });
               });
            {% endif %}
- 
+
           li
-            a(href='/clear_session/', title="Delete all files linked to this session (cannot be undone).")#clear_session.navbar-btn.btn-danger.btn Clear Session
+            a#clear_session.navbar-btn.btn-danger.btn(href='/clear_session/', title="Delete all files linked to this session (cannot be undone).")
+              | Clear Session
 
     #scripts
       script(src="{% static '/static/vendor/jquery/jquery.js' %}")
@@ -99,6 +100,7 @@ html(lang='en')
 
       script(src="{% static '/static/js/vendor/countdown_timer.js' %}")
 
+      script(src="{% static '/static/vendor/parsleyjs/parsley.js' %}")
+
       script(src="{% static '/static/js/main.js' %}")
-      script(src="{% static '/static/vendor/parsley.js' %}")
       block extrascripts
