@@ -12,8 +12,6 @@ from DryIce.models import UserProfile
 def get_session_id(request):
     if request.user.is_authenticated():
         profile = UserProfile.objects.get(user=request.user)
-        print "user is logged in"
-        print profile.uuid
         return profile.uuid
     else:
         # set uuid in session
@@ -56,8 +54,6 @@ def generate_upload_form(session_id):
         ]
     }
     """
-    print '------'
-    print session_id
     policy = policy%{
         "expires":"2015-01-01T00:00:00Z",
         "bucket": BUCKET,
