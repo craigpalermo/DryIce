@@ -5,3 +5,4 @@ pyjade
 boto
 redis
 RandomWords
+psycopg2

@@ -12,7 +12,7 @@ from django.contrib.auth.hashers import make_password
 from redis import Redis
 from datetime import datetime, timedelta
 
-from utils.fileutils import get_file_info, delete_session_keys, setup_bucket
+from utils.file_utils import get_file_info, delete_session_keys, setup_bucket
 from utils.session_utils import update_reset_time, generate_upload_form, \
                                 generate_ez_link, get_session_id
 from DryIce.settings import REDIS_ADDRESS, MAX_CONTENT_LENGTH, FILE_RETENTION_TIME, \

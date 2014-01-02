@@ -3,7 +3,7 @@ from   time       import sleep
 from   operator   import itemgetter
 from   boto.s3.connection import S3Connection
 from   redis      import Redis
-from   settings import ACCESS_KEY, SECRET_ACCESS_KEY, BUCKET, \
+from   DryIce.settings import ACCESS_KEY, SECRET_ACCESS_KEY, BUCKET, \
                                 FILE_RETENTION_TIME, TZ_OFFSET, REDIS_ADDRESS
                                 
 r_server = Redis(REDIS_ADDRESS)
