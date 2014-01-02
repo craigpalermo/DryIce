@@ -3,7 +3,7 @@ from   time       import sleep
 from   operator   import itemgetter
 from   boto.s3.connection import S3Connection
 from   redis      import Redis
-from   DryIce.settings import ACCESS_KEY, SECRET_ACCESS_KEY, BUCKET, \
+from   settings import ACCESS_KEY, SECRET_ACCESS_KEY, BUCKET, \
                                 FILE_RETENTION_TIME, TZ_OFFSET, REDIS_ADDRESS
                                 
 r_server = Redis(REDIS_ADDRESS)
@@ -61,8 +61,8 @@ def expire_files():
             tmp = datetime.strptime(tmp, "%Y-%m-%dT%H:%M:%S")
             age = datetime.now() - tmp
                    
-            # print tmp
-            # print datetime.now()
+            #print tmp
+            #print datetime.now()
 
             if age > timedelta(minutes=FILE_RETENTION_TIME):
                 # print "Deleting %s" % (key.name.encode('utf-8'))
