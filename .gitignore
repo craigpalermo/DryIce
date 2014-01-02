@@ -4,7 +4,7 @@
 *.db
 datastore/*
 bower_components/*
-src/static/vendor/*
+DryIce/static/vendor/*
 node_modules/*
 *.log
 *.pyc
