@@ -123,7 +123,8 @@ def clear_session(request):
     '''
     Delete all files linked to request's session
     '''
-    delete_session_keys(request.session.get('session_id'))    
+    session_id = get_session_id(request)
+    delete_session_keys(session_id)    
     return redirect(reverse('home'))
 
 def page_not_found(e, message=None):
