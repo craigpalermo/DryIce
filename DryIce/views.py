@@ -1,14 +1,24 @@
-import uuid
+import uuid, json
 
-from redis import Redis
-from utils.fileutils import get_file_info, delete_session_keys, setup_bucket
-from utils.session_utils import update_reset_time, generate_upload_form, \
-                                generate_ez_link
-from DryIce.settings import REDIS_ADDRESS, MAX_CONTENT_LENGTH, FILE_RETENTION_TIME, \
-                            BUCKET, ACCESS_KEY
-from datetime import datetime, timedelta
+from django.template import RequestContext
 from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
+from django.http import HttpResponse, HttpResponseRedirect
+from django.views.generic.base import View
+from django.contrib.auth import logout, authenticate, login
+from django.contrib.auth.models import User
+from django.contrib.auth.hashers import make_password
+
+from redis import Redis
+from datetime import datetime, timedelta
+
+from utils.fileutils import get_file_info, delete_session_keys, setup_bucket
+from utils.session_utils import update_reset_time, generate_upload_form, \
+                                generate_ez_link, get_session_id
+from DryIce.settings import REDIS_ADDRESS, MAX_CONTENT_LENGTH, FILE_RETENTION_TIME, \
+                            BUCKET, ACCESS_KEY
+from forms import UserForm
+from models import UserProfile
 
 # Setup connection to redis server
 r_server = Redis(REDIS_ADDRESS)
@@ -16,14 +26,10 @@ r_server = Redis(REDIS_ADDRESS)
 def home(request):
     files = []
     update_reset_time(request)
-
-    # set uuid in session
-    if not 'session_id' in request.session:
-        request.session['session_id'] = str(uuid.uuid1())
-        
-    session_id = request.session.get('session_id')
+    session_id = get_session_id(request)
+    print session_id
+    
     temp = get_file_info(session_id)
-
     form_dict = generate_upload_form(session_id)
 
     # pick out which files were uploaded from the current session
@@ -52,14 +58,65 @@ def home(request):
                     'files': files, \
                     'size_limit': MAX_CONTENT_LENGTH, \
                     'reset_time': request.session.get('reset_time'), \
-                    'session_id': request.session.get('session_id'), \
+                    'session_id': session_id, \
                     'AWSAccessKeyId': ACCESS_KEY,
                     'bucket': BUCKET
                     }
 
     template_data.update(form_dict)
 
-    return render(request, 'index.jade', template_data)
+    return render(request, 'index.jade', template_data, context_instance=RequestContext(request))
+
+class RegistrationView(View):
+    form_class = UserForm
+    template_name = "register.jade"
+    
+    def get(self, request):
+        return render(request, self.template_name)
+    
+    def post(self, request):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            
+            username = cd['username']
+            email = cd['email']
+            password = cd['password']
+            user = User.objects.create_user(username, email, password)
+                            
+            profile = UserProfile(user=user)
+            profile.uuid = str(uuid.uuid1())
+            profile.save()
+            
+            # log the new user in
+            user = authenticate(username=username, password=password)
+            login(request, user)
+            
+            return redirect('home')
+            
+        return render(request, self.template_name, context_instance = RequestContext(request))
+
+def login_user(request):
+    '''
+    Attempt to log the user in. If username and password don't match, return
+    the standard error json string with error info.
+    '''
+    username = request.POST.get('username')
+    password = request.POST.get('password')
+    user = authenticate(username=username, password=password)
+    if user is not None:
+        if user.is_active:
+            login(request, user)
+            return redirect('/')
+        else:
+            message = {'error': 'login failed', 'data': 'user inactive'}
+    else:
+        message = {'error': 'login failed', 'data': 'incorrect login info'}
+        return HttpResponse(json.dumps(message))
+
+def logout_view(request):
+    logout(request)
+    return redirect('home')
 
 def clear_session(request):
     '''

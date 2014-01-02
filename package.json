@@ -4,7 +4,8 @@
   "description": "Upload files. Download files. Nothing else.",
   "dependencies": {
     "bower": "~1.2.8",
-    "bower-installer": "~0.6.0"
+    "bower-installer": "~0.6.0",
+    "parsley": "~0.1.0"
   },
   "devDependencies": {},
   "scripts": {

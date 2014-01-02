@@ -41,24 +41,34 @@ html(lang='en')
       div.pull-left.navbar-text Problem? Contact <a href="mailto:support@dryice.io">support@dryice.io</a>
       div.pull-right#footer-navbar
         ul.nav.navbar-nav
+          {% if user.is_authenticated %}
+          div.navbar-text Welcome, {{ user.username }}!
+          {% endif %}
           li(class="{% block home_active %}{% endblock %}")
             a(href='/') Home
           li(class="{% block faq_active %}{% endblock %}")
             a(href='/about/') FAQ
           li(class="{% block disclaimer_active %}{% endblock %}")
             a(href='/disclaimer/') Disclaimer
+          {% if user.is_authenticated %}
           li
-            a(href="/users/sign_up") Sign Up
+            a(href="/users/logout/") Log Out
+          {% else %}
+          li(class="{% block register_active %}{% endblock %}")
+            a(href="/users/sign_up/") Sign Up
+          {% endif %}
+          {% if not user.is_authenticated %}
           li.dropdown
             a.dropdown-toggle(href='/login/', data-toggle="dropdown") Sign In <strong class="caret"></strong>
             div.dropdown-menu.pull-left(style="padding: 15px;")
               form(action="/users/login/", method="post", accept-charset="UTF-8", role="form")
+                {% csrf_token %}
                 div.form-group
-                  input#username.form-control(style="margin-bottom: 15px;", type="email", name="user[username]", size="30", placeholder='email')    
+                  input#username.form-control(style="margin-bottom: 15px;", name="username", size="30", placeholder='username')    
                 div.form-group
-                  input#password.form-control(style="margin-bottom: 15px;", type="password", name="user[password]", size="30", placeholder='password')
-                input#remember_me(style="float: left; margin-right: 10px;", type="checkbox", name="user[remember_me]", value="1")
-                label.string.optional(for='remember_me') Remember Me
+                  input#password.form-control(style="margin-bottom: 15px;", type="password", name="password", size="30", placeholder='password')
+                //- input#remember_me(style="float: left; margin-right: 10px;", type="checkbox", name="remember_me", value="1")
+                //- label.string.optional(for='remember_me') Remember Me
                 input.btn.btn-primary(style="clear: left; width: 100%; height: 32px; font-size: 13px;", type="submit", name="commit", value="Sign In")                
 
             script
@@ -71,6 +81,7 @@ html(lang='en')
                   e.stopPropagation();
                 });
               });
+           {% endif %}
  
           li
             a(href='/clear_session/', title="Delete all files linked to this session (cannot be undone).")#clear_session.navbar-btn.btn-danger.btn Clear Session
@@ -89,4 +100,5 @@ html(lang='en')
       script(src="{% static '/static/js/vendor/countdown_timer.js' %}")
 
       script(src="{% static '/static/js/main.js' %}")
+      script(src="{% static '/static/vendor/parsley.js' %}")
       block extrascripts

@@ -1,10 +1,25 @@
 import base64
 import hmac, hashlib
+import uuid
 
 from random_words  import RandomWords
 from datetime import datetime, timedelta
+from django.contrib.auth.models import User
 from DryIce.settings import FILE_RETENTION_TIME, MB_UPLOAD_LIMIT, BUCKET, \
                             SECRET_ACCESS_KEY, MAX_CONTENT_LENGTH
+from DryIce.models import UserProfile
+
+def get_session_id(request):
+    if request.user.is_authenticated():
+        profile = UserProfile.objects.get(user=request.user)
+        print "user is logged in"
+        print profile.uuid
+        return profile.uuid
+    else:
+        # set uuid in session
+        if not 'session_id' in request.session:
+            request.session['session_id'] = str(uuid.uuid1())
+        return request.session.get('session_id')
 
 def update_reset_time(request):
     '''
@@ -41,6 +56,8 @@ def generate_upload_form(session_id):
         ]
     }
     """
+    print '------'
+    print session_id
     policy = policy%{
         "expires":"2015-01-01T00:00:00Z",
         "bucket": BUCKET,

@@ -8,7 +8,8 @@
     "jquery-ui": "~1.10.3",
     "jquery-file-upload": "~9.5.2",
     "moment": "~2.5.0",
-    "bootstrap-file-input": "*"
+    "bootstrap-file-input": "*",
+    "parsley": "*"
   },
   "install": {
     "path": "DryIce/static/vendor",
