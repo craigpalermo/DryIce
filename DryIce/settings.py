@@ -2,7 +2,7 @@
 
 from environments import development as current_environment
 
-# Begin Environment Variables ----------------------------------------------------
+# Begin Environment Variables ------------------------------------------
 DATABASES = current_environment.DATABASES
 ALLOWED_HOSTS = current_environment.ALLOWED_HOSTS
 DEBUG = current_environment.DEBUG
@@ -15,7 +15,9 @@ MB_UPLOAD_LIMIT = current_environment.MB_UPLOAD_LIMIT
 MAX_CONTENT_LENGTH = current_environment.MAX_CONTENT_LENGTH
 TZ_OFFSET = current_environment.TZ_OFFSET
 REDIS_ADDRESS = current_environment.REDIS_ADDRESS
-# End Environment Variables ---------------------------------------------------------
+# End Environment Variables ---------------------------------------------
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 import os
 import django

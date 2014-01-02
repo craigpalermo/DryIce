@@ -105,6 +105,8 @@ def login_user(request):
     user = authenticate(username=username, password=password)
     if user is not None:
         if user.is_active:
+            if request.POST.has_key('remember_me'):
+                request.session.set_expiry(1209600) # 2 weeks
             login(request, user)
             return redirect('/')
         else:
