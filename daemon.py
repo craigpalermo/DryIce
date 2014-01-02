@@ -1,4 +1,4 @@
-from utils.file_utils import expire_files
+from DryIce.utils.file_utils import expire_files
 
 def main():
     expire_files()
