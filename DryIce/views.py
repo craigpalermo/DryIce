@@ -27,7 +27,6 @@ def home(request):
     files = []
     update_reset_time(request)
     session_id = get_session_id(request)
-    print session_id
     
     temp = get_file_info(session_id)
     form_dict = generate_upload_form(session_id)
