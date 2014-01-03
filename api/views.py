@@ -1,15 +1,16 @@
 import json
 
 from django.http import HttpResponse
+from django.core.context_processors import csrf
 
 from redis import Redis
 from datetime import datetime, timedelta
 
-from utils.file_utils import get_file_info, delete_session_keys, setup_bucket
-from utils.session_utils import update_reset_time, generate_upload_form, \
-                                generate_ez_link, get_session_id
-from DryIce.settings import REDIS_ADDRESS, MAX_CONTENT_LENGTH, FILE_RETENTION_TIME, \
-                            BUCKET, ACCESS_KEY
+from DryIce.utils.file_utils import get_file_info, delete_session_keys, \
+                                    setup_bucket, generate_ez_link
+from DryIce.utils.session_utils import generate_upload_form, get_session_id
+from DryIce.settings import REDIS_ADDRESS, MAX_CONTENT_LENGTH, \
+                            FILE_RETENTION_TIME, BUCKET, ACCESS_KEY
 
 # Setup connection to redis server
 r_server = Redis(REDIS_ADDRESS)
@@ -48,7 +49,6 @@ def home_data(request):
     template_data = {
                     'files': files,
                     'size_limit': MAX_CONTENT_LENGTH,
-                    'reset_time': str(request.session.get('reset_time')),
                     'session_id': session_id,
                     'AWSAccessKeyId': ACCESS_KEY,
                     'bucket': BUCKET
@@ -73,4 +73,20 @@ def route_file_data(request, ez_link):
         data = {"error": "file not found", "data": "null"}
     data = json.dumps(data)
     return HttpResponse(data,mimetype='application/json')
-    
+
+def register_data(request):
+    for x in csrf(request).viewvalues():
+        csrf_value = x
+    data = {
+            "csrf_token": str(csrf_value)
+            }
+    return HttpResponse(json.dumps(data),mimetype='application/json')
+
+def base_data(request):
+    for x in csrf(request).viewvalues():
+        csrf_value = x
+    data = {
+            "csrf_token": str(csrf_value),
+            "user_authenticated": str(request.user.is_authenticated()).lower(),
+            }
+    return HttpResponse(json.dumps(data),mimetype='application/json')

@@ -84,3 +84,7 @@ def delete_session_keys(session_id):
    
     delete_redis_entry(to_delete)
     bucket.delete_keys(to_delete)
+
+def generate_ez_link():
+    rw = RandomWords()
+    return rw.random_word().capitalize() + rw.random_word().capitalize()

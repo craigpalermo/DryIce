@@ -12,11 +12,11 @@ from django.contrib.auth.hashers import make_password
 from redis import Redis
 from datetime import datetime, timedelta
 
-from utils.file_utils import get_file_info, delete_session_keys, setup_bucket
-from utils.session_utils import update_reset_time, generate_upload_form, \
-                                generate_ez_link, get_session_id
-from DryIce.settings import REDIS_ADDRESS, MAX_CONTENT_LENGTH, FILE_RETENTION_TIME, \
-                            BUCKET, ACCESS_KEY
+from utils.file_utils import get_file_info, delete_session_keys, setup_bucket, \
+                             generate_ez_link
+from utils.session_utils import generate_upload_form, get_session_id
+from DryIce.settings import REDIS_ADDRESS, MAX_CONTENT_LENGTH, \
+                            FILE_RETENTION_TIME, BUCKET, ACCESS_KEY
 from forms import UserForm
 from models import UserProfile
 
@@ -25,7 +25,6 @@ r_server = Redis(REDIS_ADDRESS)
 
 def home(request):
     files = []
-    update_reset_time(request)
     session_id = get_session_id(request)
     
     temp = get_file_info(session_id)
@@ -56,7 +55,6 @@ def home(request):
     template_data = {
                     'files': files, \
                     'size_limit': MAX_CONTENT_LENGTH, \
-                    'reset_time': request.session.get('reset_time'), \
                     'session_id': session_id, \
                     'AWSAccessKeyId': ACCESS_KEY,
                     'bucket': BUCKET
@@ -64,7 +62,8 @@ def home(request):
 
     template_data.update(form_dict)
 
-    return render(request, 'index.jade', template_data, context_instance=RequestContext(request))
+    return render(request, 'index.jade', template_data, 
+                  context_instance=RequestContext(request))
 
 class RegistrationView(View):
     form_class = UserForm
@@ -93,7 +92,8 @@ class RegistrationView(View):
             
             return redirect('home')
             
-        return render(request, self.template_name, context_instance = RequestContext(request))
+        return render(request, self.template_name, context_instance = 
+                      RequestContext(request))
 
 def login_user(request):
     '''
@@ -141,7 +141,8 @@ def route_file(request, ez_link):
     filename = r_server.get(ez_link)
     if filename != None:
         key = bucket.new_key(filename)
-        url = key.generate_url(expires_in=(FILE_RETENTION_TIME * 60),query_auth=False, force_http=True)
+        url = key.generate_url(expires_in=(FILE_RETENTION_TIME * 60), \
+                               query_auth=False, force_http=True)
         filename = filename[37:] # strip folder prefix
         template_data = {'filename': filename, 'url': url}
         return render(request, 'file.html', template_data)

@@ -1,0 +1,18 @@
+block content
+  #content.container.text-content
+    h2 Register
+    form(role="form", action=".", method="post", parsley-validate)
+      <input type='hidden' name='csrfmiddlewaretoken' value='{{ csrf_token }}' />
+      div.form-group
+        label(for="username") Username
+        input#id_username.form-control(type="text", placeholder="Enter username", name="username", parsley-trigger="change", required)
+      div.form-group
+        label(for="email") Email address
+        input#id_email.form-control(type="text", placeholder="Enter email", name="email", parsley-trigger="change", parsley-type="email", required)
+      div.form-group
+        label(for="password") Password
+        input#id_password.form-control(type="password", placeholder="Enter password", name="password")
+      div.form-group
+        label(for="confirm-password") Re-type password
+        input.form-control(type="password", placeholder="Re-type password", parsley-trigger="change", parsley-equalto="#id_password")
+      button.btn.btn-default(type="submit") Submit

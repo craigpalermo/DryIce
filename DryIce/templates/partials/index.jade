@@ -1,0 +1,77 @@
+block content
+  #content.container
+    .row
+      .col-xs-12.col-sm-6#upload-container
+        .row
+          .col-xs-12.col-sm-1.col-md-1
+            h3.col-xs-center.col-sm-right up
+          .col-xs-12.col-sm-11.col-md-11
+            .col-xs-center.col-sm-left
+              h4 browse and upload
+
+        .row
+          .col-xs-12.col-sm-12.col-md.12
+            form(id="uploadForm", action="https://{{ bucket }}.s3.amazonaws.com", method="post", enctype='multipart/form-data')
+              input(type='hidden', name='key', id="uploadKey")
+              input(type='hidden', name='AWSAccessKeyId', value='{{ AWSAccessKeyId }}')
+              input(type='hidden', name='acl', value='public-read')
+              input(type='hidden', name='success_action_redirect', value='/')
+              input(type='hidden', name='policy', value='{{ policy }}')
+              input(type='hidden', name='signature', value='{{ signature }}')
+              input(type='hidden', name='Content-Type', value="")
+              input(type='hidden', name='x-amz-meta-session_id', value='{{ session_id }}')
+              input.btn.btn-default(type='file', name='file', id='uploadFile')
+              br
+              br
+              button.btn.btn-success(type='button', id='uploadButton') Upload
+
+            #progressbar
+              #progress-label Select a file...
+
+            #message
+
+        .row
+          .col-xs-12
+            h4 Get Started:
+            ol
+              li Click <strong>Browse</strong> to select the file you want to share.
+              li Click <strong>Upload</strong> to securely upload the file to DryIce's cloud storage.
+              li Share the link! Anyone can use it to download that file until it expires.
+
+      .col-xs-12.col-sm-6#files-container
+        .row
+          .col-xs-12.col-sm-3.col-md-2
+            h3.col-xs-center.col-sm-right down
+          .col-xs-12.col-sm-6.col-md-8
+            .col-xs-center.col-sm-left
+              h4 pick and click
+        .row
+          .col-xs-12.col-sm-10.col-md-12
+              .row#files
+                if files
+                  table#link_table.table
+                    col(width='600px')
+                    col(width='250px')
+                    col(width='300px')
+                    th File
+                    th Link
+                    th Expires in...
+                    each file in files
+                      tr.file_row(data-file_expire_time="{{ file.expire_time_string }}")
+                        td.file_cell
+                          {{ file.nice_name }}
+                        td
+                          a(href='/{{ file.ez_link }}', display='inline') dryice.io/{{ file.ez_link }}
+                        td.expires_cell
+                          <span id="{{ forloop.counter }}_timeRemaining"></span>
+                else
+                  #no_files
+                    h3 You haven't uploaded any files yet!
+
+append extrascripts
+  include analytics.html
+  script.
+    window.SIZE_LIMIT =  {{ size_limit }};
+    window.SESSION_ID = "{{ session_id }}";
+  script(src="/static/js/index.js")
+

@@ -6,13 +6,6 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('DryIce.views',
-    # Examples:
-    # url(r'^$', 'DryIce.views.home', name='home'),
-    # url(r'^DryIce/', include('DryIce.foo.urls')),
-
-    # Uncomment the admin/doc line below to enable admin documentation:
-    # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-
     url(r'^admin/', include(admin.site.urls)),
     
     url(r'^$', 'home', name='home'),
@@ -26,7 +19,15 @@ urlpatterns = patterns('DryIce.views',
     url(r'^users/logout/$', 'logout_view', name='logout'),
 )
 
-urlpatterns += patterns('DryIce.api',
+# API data views
+urlpatterns += patterns('api.views',
     url(r'^api/home/$', 'home_data', name='home_data'),
-    url(r'^api/route_file/(?P<ez_link>\w+)/$', 'route_file_data', name='route_file_data')
+    url(r'^api/route_file/(?P<ez_link>\w+)/$', 'route_file_data', name='route_file_data'),
+    url(r'^api/register/$', 'register_data', name='register_data'),
+    url(r'^api/base/$', 'base_data', name='base_data'),
+)
+
+# Authentication
+urlpatterns += patterns('api.authentication',
+    url(r'^api/login/$', 'login_user', name='login_data')
 )
