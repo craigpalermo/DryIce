@@ -43,7 +43,7 @@ html(lang='en')
           
           // In navbar, show different stuff depending on if user is logged in
           {% if user.is_authenticated %}
-          div.navbar-text Welcome, {{ user.username }}!
+          div.navbar-text Welcome, {{ "{{ user.username }" }}}!
           {% endif %}
           
           li(class="{% block home_active %}{% endblock %}")
