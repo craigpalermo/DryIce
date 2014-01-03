@@ -25,3 +25,8 @@ urlpatterns = patterns('DryIce.views',
     url(r'^users/login/$', 'login_user', name='login'),
     url(r'^users/logout/$', 'logout_view', name='logout'),
 )
+
+urlpatterns += patterns('DryIce.api',
+    url(r'^api/home/$', 'home_data', name='home_data'),
+    url(r'^api/route_file/(?P<ez_link>\w+)/$', 'route_file_data', name='route_file_data')
+)
