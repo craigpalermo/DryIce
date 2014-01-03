@@ -11,15 +11,15 @@ block content
 
         .row
           .col-xs-12.col-sm-12.col-md.12
-            form(id="uploadForm", action="https://{{ bucket }}.s3.amazonaws.com", method="post", enctype='multipart/form-data')
+            form(id="uploadForm", action="https://{{ "{{ bucket }" }}}.s3.amazonaws.com", method="post", enctype='multipart/form-data')
               input(type='hidden', name='key', id="uploadKey")
-              input(type='hidden', name='AWSAccessKeyId', value='{{ AWSAccessKeyId }}')
+              input(type='hidden', name='AWSAccessKeyId', value='{{ "{{ AWSAccessKeyId }" }}}')
               input(type='hidden', name='acl', value='public-read')
               input(type='hidden', name='success_action_redirect', value='/')
-              input(type='hidden', name='policy', value='{{ policy }}')
-              input(type='hidden', name='signature', value='{{ signature }}')
+              input(type='hidden', name='policy', value='{{ "{{ policy }" }}}')
+              input(type='hidden', name='signature', value='{{ "{{ signature }" }}}')
               input(type='hidden', name='Content-Type', value="")
-              input(type='hidden', name='x-amz-meta-session_id', value='{{ session_id }}')
+              input(type='hidden', name='x-amz-meta-session_id', value='{{ "{{ session_id }" }}}')
               input.btn.btn-default(type='file', name='file', id='uploadFile')
               br
               br
@@ -56,14 +56,15 @@ block content
                     th File
                     th Link
                     th Expires in...
-                    each file in files
-                      tr.file_row(data-file_expire_time="{{ file.expire_time_string }}")
+                    each file, i in files
+                      tr.file_row(data-file_expire_time="{{ "{{ file.expire_time_string }" }}}")
                         td.file_cell
-                          {{ file.nice_name }}
+                          {{ "{{ file.nice_name }" }}}
                         td
-                          a(href='/{{ file.ez_link }}', display='inline') dryice.io/{{ file.ez_link }}
+                          a(href='/{{ file.ez_link }}', display='inline') dryice.io/{{ "{{ file.ez_link }" }}}
                         td.expires_cell
-                          <span id="{{ forloop.counter }}_timeRemaining"></span>
+                          // next line should look like <span id="{{ loop_counter }}_timeRemaining"></span>
+                          span##{i}_timeRemaining"
                 else
                   #no_files
                     h3 You haven't uploaded any files yet!
@@ -71,7 +72,7 @@ block content
 append extrascripts
   include analytics.html
   script.
-    window.SIZE_LIMIT =  {{ size_limit }};
-    window.SESSION_ID = "{{ session_id }}";
+    window.SIZE_LIMIT =  {{ "{{ size_limit }" }}};
+    window.SESSION_ID = '{{ "{{ session_id }" }}}';
   script(src="/static/js/index.js")
 

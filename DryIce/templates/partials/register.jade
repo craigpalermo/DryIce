@@ -2,7 +2,7 @@ block content
   #content.container.text-content
     h2 Register
     form(role="form", action=".", method="post", parsley-validate)
-      <input type='hidden' name='csrfmiddlewaretoken' value='{{ csrf_token }}' />
+      <div style='display:none'><input type='hidden' name='csrfmiddlewaretoken' value='{{ "{{ csrf_token }" }}}' /></div>
       div.form-group
         label(for="username") Username
         input#id_username.form-control(type="text", placeholder="Enter username", name="username", parsley-trigger="change", required)

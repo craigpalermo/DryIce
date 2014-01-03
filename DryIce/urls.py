@@ -7,10 +7,7 @@ admin.autodiscover()
 from views import RegistrationView
 from settings import SITE_ROOT
 
-urlpatterns = patterns('',
-    url(r'^partials/(?P<path>.*)$', 'django.views.static.serve', \
-            {'document_root': SITE_ROOT + '/static/partials/'}),
-)
+urlpatterns = patterns('',)
 
 urlpatterns += patterns('DryIce.views',
     url(r'^admin/', include(admin.site.urls)),
@@ -24,6 +21,18 @@ urlpatterns += patterns('DryIce.views',
     url(r'^users/sign_up/$', RegistrationView.as_view(), name='sign_up'),
     url(r'^users/login/$', 'login_user', name='login'),
     url(r'^users/logout/$', 'logout_view', name='logout'),
+)
+
+# Partials
+urlpatterns += patterns('DryIce.partial_views',
+    url(r'^partials/404/$', 'not_found_view'),
+    url(r'^partials/about/$', 'about_view'),
+    url(r'^partials/analytics/$', 'analytics_view'),
+    url(r'^partials/base/$', 'base_view'),
+    url(r'^partials/disclaimer/$', 'disclaimer_view'),
+    url(r'^partials/file/$', 'file_view'),
+    url(r'^partials/home/$', 'index_view'),
+    url(r'^partials/register/$', 'register_view'),
 )
 
 # API data views
