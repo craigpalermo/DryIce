@@ -1,11 +1,18 @@
 from django.conf.urls import patterns, include, url
 from django.views.generic import TemplateView
-from views import RegistrationView
 
 from django.contrib import admin
 admin.autodiscover()
 
-urlpatterns = patterns('DryIce.views',
+from views import RegistrationView
+from settings import SITE_ROOT
+
+urlpatterns = patterns('',
+    url(r'^partials/(?P<path>.*)$', 'django.views.static.serve', \
+            {'document_root': SITE_ROOT + '/static/partials/'}),
+)
+
+urlpatterns += patterns('DryIce.views',
     url(r'^admin/', include(admin.site.urls)),
     
     url(r'^$', 'home', name='home'),
