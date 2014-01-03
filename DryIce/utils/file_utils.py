@@ -5,7 +5,8 @@ from   boto.s3.connection import S3Connection
 from   redis      import Redis
 from   DryIce.settings import ACCESS_KEY, SECRET_ACCESS_KEY, BUCKET, \
                                 FILE_RETENTION_TIME, TZ_OFFSET, REDIS_ADDRESS
-                                
+from random_words import RandomWords
+
 r_server = Redis(REDIS_ADDRESS)
 
 def setup_bucket():

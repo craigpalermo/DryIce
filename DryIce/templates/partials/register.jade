@@ -1,8 +1,9 @@
 block content
+  {% verbatim %}
   #content.container.text-content
     h2 Register
     form(role="form", action=".", method="post", parsley-validate)
-      <div style='display:none'><input type='hidden' name='csrfmiddlewaretoken' value='{{ "{{ csrf_token }" }}}' /></div>
+      <div style='display:none'><input type='hidden' name='csrfmiddlewaretoken' value='{{ csrf_token }}' /></div>
       div.form-group
         label(for="username") Username
         input#id_username.form-control(type="text", placeholder="Enter username", name="username", parsley-trigger="change", required)
@@ -16,3 +17,4 @@ block content
         label(for="confirm-password") Re-type password
         input.form-control(type="password", placeholder="Re-type password", parsley-trigger="change", parsley-equalto="#id_password")
       button.btn.btn-default(type="submit") Submit
+  {% endverbatim %}

@@ -25,7 +25,6 @@ def home_data(request):
     
     # pick out which files were uploaded from the current session
     for f in temp:
-        print f
         f_name = f.get('name')
         f['expire_time'] = str(f['created'] + \
                             timedelta(minutes=FILE_RETENTION_TIME))
@@ -53,6 +52,9 @@ def home_data(request):
                     'AWSAccessKeyId': ACCESS_KEY,
                     'bucket': BUCKET
                     }
+
+    user_authenticated = str(request.user.is_authenticated()).lower()
+    template_data['user_is_authenticated'] = user_authenticated
 
     template_data.update(form_dict)
     template_data = {"error": "null", "data": template_data}
