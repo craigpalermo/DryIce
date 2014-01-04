@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html data-ng-app>
+<head>
+</head>
+{% verbatim %}
+<body>
+	<div class="container">
+	
+		<h3>Have a link?</h3>
+		<input type="text" data-ng-model="ez_link" />
+		<a href='/{{ ez_link }}/'><input type="button" value="Pickup File"></a>
+		
+	</div>
+
+	<script src="/static/vendor/angular/angular.min.js"></script>
+</body>
+{% endverbatim %}
+</html>

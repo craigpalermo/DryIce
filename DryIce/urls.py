@@ -33,6 +33,7 @@ urlpatterns += patterns('DryIce.partial_views',
     url(r'^partials/file/$', 'file_view'),
     url(r'^partials/home/$', 'index_view'),
     url(r'^partials/register/$', 'register_view'),
+    url(r'^partials/pickup/$', 'pickup_view'),
 )
 
 # API data views
