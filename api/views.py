@@ -21,13 +21,12 @@ def home_data(request):
     session_id = get_session_id(request)
     
     temp = get_file_info(session_id)
-    form_dict = generate_upload_form(session_id)
     
     # pick out which files were uploaded from the current session
     for f in temp:
         f_name = f.get('name')
         f['expire_time'] = str(f['created'] + \
-                            timedelta(minutes=FILE_RETENTION_TIME))
+                            timedelta(minutes=f.get('expire_time')))
         f['created'] = str(f['created'])
         f['nice_name'] = f.get('name')[37:] # strip folder prefix
 
@@ -50,13 +49,13 @@ def home_data(request):
                     'size_limit': MAX_CONTENT_LENGTH,
                     'session_id': session_id,
                     'AWSAccessKeyId': ACCESS_KEY,
-                    'bucket': BUCKET
+                    'bucket': BUCKET,
+                    'retention_time': FILE_RETENTION_TIME
                     }
 
     user_authenticated = str(request.user.is_authenticated()).lower()
     template_data['user_is_authenticated'] = user_authenticated
 
-    template_data.update(form_dict)
     template_data = {"error": "null", "data": template_data}
     data = json.dumps(template_data)
     return HttpResponse(data,mimetype='application/json')

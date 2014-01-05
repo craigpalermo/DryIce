@@ -57,7 +57,7 @@ def home(request):
                     'size_limit': MAX_CONTENT_LENGTH, \
                     'session_id': session_id, \
                     'AWSAccessKeyId': ACCESS_KEY,
-                    'bucket': BUCKET
+                    'bucket': BUCKET,
                     }
 
     template_data.update(form_dict)

@@ -21,6 +21,7 @@ span#fake_span_because_im_too_lazy_to_reindent_the_whole_page
               input(type='hidden', name='signature', value='{{ signature }}')
               input(type='hidden', name='Content-Type', value="")
               input(type='hidden', name='x-amz-meta-session_id', value='{{ session_id }}')
+              input(type='number', name='x-amz-meta-expire_time', value='{{ retention_time }}')
               input.btn.btn-default(type='file', name='file', id='uploadFile')
               br
               br

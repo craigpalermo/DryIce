@@ -7,7 +7,9 @@ admin.autodiscover()
 from views import RegistrationView
 from settings import SITE_ROOT
 
-urlpatterns = patterns('',)
+urlpatterns = patterns('',
+    url(r'^api/upload-form/$', 'DryIce.utils.session_utils.generate_upload_form', name='upload_form'),
+)
 
 urlpatterns += patterns('DryIce.views',
     url(r'^admin/', include(admin.site.urls)),
@@ -43,6 +45,7 @@ urlpatterns += patterns('api.views',
     url(r'^api/register/$', 'register_data', name='register_data'),
     url(r'^api/base/$', 'base_data', name='base_data'),
 )
+
 
 # Authentication
 urlpatterns += patterns('api.authentication',
