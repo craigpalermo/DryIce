@@ -23,7 +23,7 @@ def get_session_id(request):
         return request.session.get('session_id')
         
 # S3 Storage Setup
-def generate_upload_form(request):
+def generate_upload_form_data(request):
     session_id = request.POST.get('session_id', 0)
     expire_time = request.POST.get('expire_time', FILE_RETENTION_TIME)
     
@@ -51,9 +51,11 @@ def generate_upload_form(request):
     
     policy = base64.b64encode(policy)
     signature = base64.b64encode(hmac.new(SECRET_ACCESS_KEY, policy, hashlib.sha1).digest())
-    return {'policy':policy, 'signature':signature}
+    temp = {"policy":policy, "signature":signature}
+    data = {"error": "null", "data": temp}
+    return HttpResponse(json.dumps(data), mimetype='application/json') 
 
-def generate_upload_form_data(session_id):
+def generate_upload_form(session_id):
     policy = """
     {"expiration": "%(expires)s",
         "conditions": [ 
@@ -64,7 +66,6 @@ def generate_upload_form_data(session_id):
             ["starts-with", "$Content-Type", ""],
             ["content-length-range", 0, %(length_range)s],
             {"x-amz-meta-session_id": "%(session_id)s"},
-            {"x-amz-meta-expire_time": "%(expire_time)s"},
         ]
     }
     """
@@ -76,11 +77,8 @@ def generate_upload_form_data(session_id):
         "success_redirect": "/",
         "length_range": MAX_CONTENT_LENGTH,
         "session_id": session_id,
-        "expire_time": expire_time
     }
 
     policy = base64.b64encode(policy)
     signature = base64.b64encode(hmac.new(SECRET_ACCESS_KEY, policy, hashlib.sha1).digest())
-    temp = {"policy":policy, "signature":signature}
-    data = {"error": "null", "data": temp}
-    return HttpResponse(json.dumps(data), mimetype='application/json') 
+    return {'policy':policy, 'signature':signature}

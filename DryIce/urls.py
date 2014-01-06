@@ -8,7 +8,7 @@ from views import RegistrationView
 from settings import SITE_ROOT
 
 urlpatterns = patterns('',
-    url(r'^api/upload-form/$', 'DryIce.utils.session_utils.generate_upload_form', name='upload_form'),
+    url(r'^api/upload-form/$', 'DryIce.utils.session_utils.generate_upload_form_data', name='upload_form'),
 )
 
 urlpatterns += patterns('DryIce.views',
