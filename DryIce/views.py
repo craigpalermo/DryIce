@@ -57,7 +57,7 @@ def home(request):
                     'size_limit': MAX_CONTENT_LENGTH, \
                     'session_id': session_id, \
                     'AWSAccessKeyId': ACCESS_KEY,
-                    'bucket': BUCKET
+                    'bucket': BUCKET,
                     }
 
     template_data.update(form_dict)
@@ -127,11 +127,11 @@ def clear_session(request):
     delete_session_keys(session_id)    
     return redirect(reverse('home'))
 
-def page_not_found(e, message=None):
+def page_not_found(request, message=None):
     '''
     Display 404 page with custom message
     '''
-    return render('404.html', {'message': message})
+    return render(request, '404.html', {'message': message})
 
 def route_file(request, ez_link):
     '''
@@ -148,4 +148,4 @@ def route_file(request, ez_link):
         return render(request, 'file.html', template_data)
     else:
         message = "That EZLink didn't match any files. Verify correct spelling and capitalization, then try again."
-        return page_not_found(None, message)
+        return page_not_found(request, message)

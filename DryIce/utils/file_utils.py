@@ -64,8 +64,13 @@ def expire_files():
                    
             #print tmp
             #print datetime.now()
+            
+            # get the expiration time of key; if none is set, use default
+            k = bucket.lookup(key)
+            temp = k.get_metadata('expire_time')
+            minutes = FILE_RETENTION_TIME if temp == None else int(temp)
 
-            if age > timedelta(minutes=FILE_RETENTION_TIME):
+            if age > timedelta(minutes=minutes):
                 # print "Deleting %s" % (key.name.encode('utf-8'))
                 delete_redis_entry(key.name)
                 to_delete.append(key)

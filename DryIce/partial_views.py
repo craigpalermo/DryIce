@@ -55,3 +55,6 @@ def index_view(request):
 def register_view(request):
     return render(request, 'partials/register.jade')
 
+
+def pickup_view(request):
+    return render(request, 'partials/pickup.html')

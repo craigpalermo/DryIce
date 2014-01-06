@@ -9,7 +9,8 @@
     "jquery-file-upload": "~9.5.2",
     "moment": "~2.5.0",
     "bootstrap-file-input": "*",
-    "parsleyjs": "~1.2.2"
+    "parsleyjs": "~1.2.2",
+    "angular": "~1.2.7"
   },
   "install": {
     "path": "DryIce/static/vendor",
@@ -22,7 +23,11 @@
         "bower_components/bootstrap-file-input/bootstrap.file-input.js"
       ],
       "parsleyjs": [
-          "bower_components/parsleyjs/parsley.js"
+        "bower_components/parsleyjs/parsley.js"
+      ],
+      "angular": [
+        "bower_components/angular/angular.min.js",
+        "bower_components/angular/angular-csp.css"
       ]
     }
   },
