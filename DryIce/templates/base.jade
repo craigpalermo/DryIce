@@ -61,7 +61,7 @@ html(lang='en')
           li.dropdown
             a.dropdown-toggle(href='/login/', data-toggle="dropdown") Sign In <strong class="caret"></strong>
             div.dropdown-menu.pull-left(style="padding: 15px;")
-              form(action="/api/login/", method="post", accept-charset="UTF-8", role="form")
+              form(action="/users/login/", method="post", accept-charset="UTF-8", role="form")
                 {% csrf_token %}
                 div.form-group
                   input#username.form-control(style="margin-bottom: 15px;", name="username", size="30", placeholder='username')
