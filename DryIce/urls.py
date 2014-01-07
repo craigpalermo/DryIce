@@ -12,7 +12,7 @@ urlpatterns = patterns('',
 )
 
 urlpatterns += patterns('DryIce.views',
-    url(r'^admin/', include(admin.site.urls)),
+    # url(r'^admin/', include(admin.site.urls)),
     
     url(r'^$', 'home', name='home'),
     url(r'^disclaimer/$', TemplateView.as_view(template_name='disclaimer.html')),
