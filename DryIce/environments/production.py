@@ -7,10 +7,10 @@ ENV_ROOT = os.path.dirname(os.path.realpath(__file__))
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.4/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['dryice.io']
 
-DEBUG = False
-TEMPLATE_DEBUG = DEBUG
+DEBUG = False 
+TEMPLATE_DEBUG = False
 
 
 DATABASES = {
@@ -26,7 +26,7 @@ DATABASES = {
 
 
 # Time zone offset for file creation times, set to 0 for production
-TZ_OFFSET = 0
+TZ_OFFSET = 5
 
 # File storage parameters
 FILE_RETENTION_TIME = 60

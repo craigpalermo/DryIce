@@ -24,15 +24,7 @@
       ],
       "parsleyjs": [
         "bower_components/parsleyjs/parsley.js"
-      ],
-      "angular": [
-        "bower_components/angular/angular.min.js",
-        "bower_components/angular/angular-csp.css"
       ]
     }
-  },
-  "resolutions": {
-    "jquery": "~2.0.3",
-    "bootstrap": "~3.0.3"
   }
 }
