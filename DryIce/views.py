@@ -113,7 +113,7 @@ def login_user(request):
             message = {'error': 'login failed', 'data': 'user inactive'}
     else:
         message = {'error': 'login failed', 'data': 'incorrect login info'}
-        return HttpResponse(json.dumps(message))
+        return page_not_found(request, "The username or password you entered is incorrect.") 
 
 def logout_view(request):
     logout(request)
