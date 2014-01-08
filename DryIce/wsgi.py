@@ -15,7 +15,7 @@ framework.
 """
 import os, sys
 
-path = '/var/www/DryIce/'
+path = '/home/ubuntu/git/DryIce/'
 if path not in sys.path:
     sys.path.append(path)
 
