@@ -25,6 +25,7 @@ block content
               input(type='hidden', name='signature', value='{{ signature }}')
               input(type='hidden', name='Content-Type', value="")
               input(type='hidden', name='x-amz-meta-session_id', value='{{ session_id }}')
+              input(type='hidden', name='x-amz-server-side-encryption', value="AES256")
               input.btn.btn-default(type='file', name='file', id='uploadFile')
               br
               br

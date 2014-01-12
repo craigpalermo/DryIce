@@ -36,7 +36,8 @@ def generate_upload_form_data(request):
                 {"success_action_redirect": "%(success_redirect)s"},
                 ["starts-with", "$Content-Type", ""],
                 ["content-length-range", 0, %(length_range)s],
-                {"x-amz-meta-session_id": "%(session_id)s"}
+                {"x-amz-meta-session_id": "%(session_id)s"},
+                {"x-amz-server-side-encryption": "%(encryption)s"}
              ]
             }
                                                                                         """
@@ -46,7 +47,8 @@ def generate_upload_form_data(request):
         "acl": "public-read",
         "success_redirect": "/",
         "length_range": MAX_CONTENT_LENGTH,
-        "session_id": session_id
+        "session_id": session_id,
+        "encryption": "AES256"
     }
     
     policy = base64.b64encode(policy)
@@ -66,6 +68,7 @@ def generate_upload_form(session_id):
             ["starts-with", "$Content-Type", ""],
             ["content-length-range", 0, %(length_range)s],
             {"x-amz-meta-session_id": "%(session_id)s"},
+            {"x-amz-server-side-encryption": "%(encryption)s"}
         ]
     }
     """
@@ -77,6 +80,7 @@ def generate_upload_form(session_id):
         "success_redirect": "/",
         "length_range": MAX_CONTENT_LENGTH,
         "session_id": session_id,
+        "encryption": "AES256"
     }
 
     policy = base64.b64encode(policy)
