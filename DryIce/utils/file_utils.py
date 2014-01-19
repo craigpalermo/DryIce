@@ -10,11 +10,17 @@ from random_words import RandomWords
 r_server = Redis(REDIS_ADDRESS)
 
 def setup_bucket():
+    '''
+    Setup a connection with the S3 bucket and return the bucket object
+    '''
     conn = S3Connection(ACCESS_KEY, SECRET_ACCESS_KEY)
     bucket = conn.get_bucket(BUCKET)
     return bucket
 
 def delete_redis_entry(filename):
+    '''
+    Removes the actual filename and its ez_link from the redis hash
+    '''
     ez_link = r_server.get(filename)
     r_server.delete(ez_link, filename)
 

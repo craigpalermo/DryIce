@@ -19,6 +19,7 @@ urlpatterns += patterns('DryIce.views',
     url(r'^about/$', TemplateView.as_view(template_name='about.html')),
     url(r'^clear_session/$', 'clear_session', name='clear_session'),
     url(r'^(?P<ez_link>\w+)/$', 'route_file', name='route_file'),
+    url(r'^delete/(?P<filename>.+)/$', 'delete_file', name='delete'),
     
     url(r'^users/sign_up/$', RegistrationView.as_view(), name='sign_up'),
     url(r'^users/login/$', 'login_user', name='login'),

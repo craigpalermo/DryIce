@@ -59,9 +59,11 @@ block content
                     col(width='600px')
                     col(width='250px')
                     col(width='300px')
+                    col(width='25px')
                     th File
                     th Link
                     th Expires in...
+                    th
                     each file in files
                       tr.file_row(data-file_expire_time="{{ file.expire_time_string }}")
                         td.file_cell
@@ -70,6 +72,8 @@ block content
                           a(href='/{{ file.ez_link }}', display='inline') dryice.io/{{ file.ez_link }}
                         td.expires_cell
                           <span id="{{ forloop.counter }}_timeRemaining"></span>
+                        td.delete_cell
+                          a(href='/delete/{{ file.name }}') <i class="fa fa-trash-o"></i>
                 else
                   #no_files
                     h3 You haven't uploaded any files yet!

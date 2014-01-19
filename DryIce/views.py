@@ -12,8 +12,9 @@ from django.contrib.auth.hashers import make_password
 from redis import Redis
 from datetime import datetime, timedelta
 
-from utils.file_utils import get_file_info, delete_session_keys, setup_bucket, \
-                             generate_ez_link
+from utils.file_utils import get_file_info, delete_session_keys, \
+                             setup_bucket, generate_ez_link, \
+                             delete_redis_entry
 from utils.session_utils import generate_upload_form, get_session_id
 from DryIce.settings import REDIS_ADDRESS, MAX_CONTENT_LENGTH, \
                             FILE_RETENTION_TIME, BUCKET, ACCESS_KEY
@@ -126,6 +127,13 @@ def clear_session(request):
     session_id = get_session_id(request)
     delete_session_keys(session_id)    
     return redirect(reverse('home'))
+
+def delete_file(request, filename):
+    if not filename == None: 
+        bucket = setup_bucket()
+        delete_redis_entry(filename)
+        bucket.delete_key(filename)
+    return redirect('home')
 
 def page_not_found(request, message=None):
     '''
