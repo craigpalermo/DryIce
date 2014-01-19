@@ -33,7 +33,9 @@ $(function() {
       });
     },
     done: function (e, data) {
-      setTimeout(function() { location.reload(); }, 800);
+        $('#no_files').css('visibility', 'hidden');
+        $('#refresh-spinner').css('visibility', 'visible');
+        setTimeout(function() { location.reload(); }, 800);
     },
     fail: function(e, data) {
       console.log(e);

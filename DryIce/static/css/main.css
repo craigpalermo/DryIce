@@ -189,3 +189,24 @@ header #subtitle {
 #logo {
     width: 230px;
 }
+
+#files-container {
+    text-align:relative;
+    min-height: 250px;
+}
+#spinner-container {
+    text-align: center;
+    z-index: 2000;
+    width: 50%;
+    height: 50%;
+    overflow: auto;
+    margin: auto;
+    position: absolute;
+    top: 0; left: 0; bottom: 0; right: 0;
+}
+#refresh-spinner {
+    visibility: hidden;
+}
+#no_files {
+    visibilty: visible;
+}
