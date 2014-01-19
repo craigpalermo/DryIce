@@ -196,7 +196,6 @@ header #subtitle {
 }
 #spinner-container {
     text-align: center;
-    z-index: 2000;
     width: 50%;
     height: 50%;
     overflow: auto;

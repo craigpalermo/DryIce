@@ -34,7 +34,8 @@ $(function() {
     },
     done: function (e, data) {
         $('#no_files').css('visibility', 'hidden');
-        $('#refresh-spinner').css('visibility', 'visible');
+        $('#spinner-container').css('z-index', '1000');
+        $('#refresh-spinner').css({'visibility':'visible', 'z-index':'1000'});
         setTimeout(function() { location.reload(); }, 800);
     },
     fail: function(e, data) {
