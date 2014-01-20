@@ -24,8 +24,10 @@ block content
                 option(value='60') 1h
                 option(value='1440') 24h
                 option(value='4320') 3d
-                option(value='-1') Never
+                //-option(value='-1') Never
               input(type='hidden', name='hidden-filename', value='chicken')
+
+            br
 
             form(id="uploadForm", action="https://{{ bucket }}.s3.amazonaws.com", method="post", enctype='multipart/form-data')
               input(type='hidden', name='key', id="uploadKey")
