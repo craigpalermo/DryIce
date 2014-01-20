@@ -131,6 +131,10 @@ def add_file_info(request):
         session_id = get_session_id(request)
         f_name = session_id + "/" + f_name
 
+        # make sure form had legal expire time, 3 days
+        expire_time = int(expire_time)
+        expire_time = expire_time if expire_time < 4320 else 4320
+
         ez_link = generate_ez_link()
 
         # make sure ez_link is unique
