@@ -34,24 +34,18 @@ def home(request):
     # pick out which files were uploaded from the current session
     for f in temp:
         f_name = f.get('name')
-        f['expire_time'] = f['created'] + \
-                            timedelta(minutes=FILE_RETENTION_TIME)
-        f['expire_time_string'] = datetime.strftime(f['expire_time'], '%Y-%m-%d %H:%M:%S')
-        f['nice_name'] = f.get('name')[37:] # strip folder prefix
+        json_string = r_server.get(f_name)
+        # return HttpResponse(json_string)
+        if json_string != None:
+            file_info = json.loads(json_string)
 
-        if not r_server.exists(f_name):
-            ez_link = generate_ez_link()
-
-            # make sure ez_link is unique
-            while r_server.exists(ez_link):
-                ez_link = generate_ez_link()
+            f['expire_time'] = f['created'] + \
+                                timedelta(minutes=int(file_info.get('expire_time')))
+            f['expire_time_string'] = datetime.strftime(f['expire_time'], '%Y-%m-%d %H:%M:%S')
+            f['nice_name'] = f.get('name')[37:] # strip folder prefix
+            f['ez_link'] = file_info.get('ez_link')
             
-            r_server.set(f_name, ez_link)
-            r_server.set(ez_link, f_name)
-
-        f['ez_link'] = r_server.get(f_name)
-        
-        files.append(f)
+            files.append(f)
     
     template_data = {
                     'files': files, \
@@ -126,6 +120,28 @@ def clear_session(request):
     '''
     session_id = get_session_id(request)
     delete_session_keys(session_id)    
+    return redirect(reverse('home'))
+
+def add_file_info(request):
+    if request.method == 'POST':
+        expire_time = request.POST.get('expiration')
+        f_name = request.POST.get('hidden-filename')
+
+        # append the session_id to the filename
+        session_id = get_session_id(request)
+        f_name = session_id + "/" + f_name
+
+        ez_link = generate_ez_link()
+
+        # make sure ez_link is unique
+        while r_server.exists(ez_link):
+            ez_link = generate_ez_link()
+    
+        temp = {'ez_link': ez_link, 'expire_time': expire_time}
+        json_string = json.dumps(temp)
+
+        r_server.set(f_name, json_string)
+        r_server.set(ez_link, f_name)
     return redirect(reverse('home'))
 
 def delete_file(request, filename):

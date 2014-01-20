@@ -33,10 +33,19 @@ $(function() {
       });
     },
     done: function (e, data) {
+        /* make the refresh spinner appear */
         $('#no_files').css('visibility', 'hidden');
         $('#spinner-container').css('z-index', '1000');
         $('#refresh-spinner').css({'visibility':'visible', 'z-index':'1000'});
+    
+        /* wait a while so new file appears on page refresh */
         setTimeout(function() { location.reload(); }, 800);
+
+        /* submit form with file info */
+        var filename = $('input[type=file]').val().split('\\').pop(); 
+        console.log(filename);
+        $('input[name=hidden-filename]').val(filename);
+        $("#file-info").submit();
     },
     fail: function(e, data) {
       console.log(e);

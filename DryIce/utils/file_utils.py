@@ -6,7 +6,7 @@ from   redis      import Redis
 from   DryIce.settings import ACCESS_KEY, SECRET_ACCESS_KEY, BUCKET, \
                                 FILE_RETENTION_TIME, TZ_OFFSET, REDIS_ADDRESS
 from random_words import RandomWords
-
+import json
 r_server = Redis(REDIS_ADDRESS)
 
 def setup_bucket():
@@ -22,7 +22,7 @@ def delete_redis_entry(filename):
     Removes the actual filename and its ez_link from the redis hash
     '''
     ez_link = r_server.get(filename)
-    r_server.delete(ez_link, filename)
+    r_server.delete([ez_link, filename])
 
 def get_file_info(session_id):
     '''
@@ -71,10 +71,12 @@ def expire_files():
             #print tmp
             #print datetime.now()
             
-            # get the expiration time of key; if none is set, use default
-            k = bucket.lookup(key)
-            temp = k.get_metadata('expire_time')
-            minutes = FILE_RETENTION_TIME if temp == None else int(temp)
+            json_string = r_server.get(key.name)
+            if json_string == None:
+                minutes = FILE_RETENTION_TIME
+            else:
+                temp = json.loads(json_string)
+                minutes = int(temp.get('expire_time'))
 
             if age > timedelta(minutes=minutes):
                 # print "Deleting %s" % (key.name.encode('utf-8'))

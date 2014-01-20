@@ -16,6 +16,17 @@ block content
 
         .row
           .col-xs-12.col-sm-12.col-md.12
+            form(id="file-info", action="/add_file_info/", method="post")
+              {% csrf_token %}
+              label(for='expiration') Expiration
+              select#expiration(name='expiration')
+                option(value='10') 10m
+                option(value='60') 1h
+                option(value='1440') 24h
+                option(value='4320') 3d
+                option(value='-1') Never
+              input(type='hidden', name='hidden-filename', value='chicken')
+
             form(id="uploadForm", action="https://{{ bucket }}.s3.amazonaws.com", method="post", enctype='multipart/form-data')
               input(type='hidden', name='key', id="uploadKey")
               input(type='hidden', name='AWSAccessKeyId', value='{{ AWSAccessKeyId }}')
