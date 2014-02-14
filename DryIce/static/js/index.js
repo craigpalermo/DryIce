@@ -1,9 +1,17 @@
 $( document ).ready(function() {
-    $(".file_row").each(function(i, x) {
-    	var end = moment($(x).data('file_expire_time'));
-    	startCountdown(new Date(end), i+1);
-    });
+    resetTimers();    
 });
+
+function resetTimers() {
+    $(".file_row").each(function(i, x) {
+        var end = moment($(x).data('file_expire_time'));
+        startCountdown(new Date(end), i+1);
+    });
+}
+
+function reloadLinkTable() {
+    $('#link_table').load("/api/load_link_table");
+}
 
 $(function() {
   $('input[type=file]').bootstrapFileInput();
@@ -39,13 +47,33 @@ $(function() {
         $('#refresh-spinner').css({'visibility':'visible', 'z-index':'1000'});
     
         /* wait a while so new file appears on page refresh */
-        setTimeout(function() { location.reload(); }, 800);
+        setTimeout(reloadLinkTable, 800);
 
         /* submit form with file info */
-        var filename = $('input[type=file]').val().split('\\').pop(); 
-        console.log(filename);
-        $('input[name=hidden-filename]').val(filename);
-        $("#file-info").submit();
+        var hidden_filename = $('input[type=file]').val().split('\\').pop(); 
+        var expiration = $('[name="expiration"]').val();
+        var csrftoken = $('[name="csrfmiddlewaretoken"]').val();
+
+        var dataString = 'hidden-filename='+ hidden_filename + '&expiration=' + expiration
+                         + '&csrftoken=' + csrftoken;
+        $.ajax({
+            type: "POST",
+            beforeSend: function(request)
+            {
+                request.setRequestHeader("X-CSRFToken", csrftoken);
+            },
+            url: "/add_file_info/",
+            data: dataString,
+            success: function() {
+                reloadLinkTable();
+                resetTimers();
+                $('#refresh-spinner').css({'visibility':'hidden'});
+            },
+            error: function() {
+                $('#link_table').html("<div id='message'></div>");
+                $('#message').html("<h2>There was a problem loading your files... Try refreshing the page.</h2>");
+            }
+        });    
     },
     fail: function(e, data) {
       console.log(e);

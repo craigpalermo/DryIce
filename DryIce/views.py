@@ -155,6 +155,39 @@ def delete_file(request, filename):
         bucket.delete_key(filename)
     return redirect('home')
 
+def load_link_table(request):
+    files = []
+    session_id = get_session_id(request)
+    
+    temp = get_file_info(session_id)
+    form_dict = generate_upload_form(session_id)
+
+    # pick out which files were uploaded from the current session
+    for f in temp:
+        f_name = f.get('name')
+        json_string = r_server.get(f_name)
+        # return HttpResponse(json_string)
+        if json_string != None:
+            file_info = json.loads(json_string)
+
+            f['expire_time'] = f['created'] + \
+                                timedelta(minutes=int(file_info.get('expire_time')))
+            f['expire_time_string'] = datetime.strftime(f['expire_time'], '%Y-%m-%d %H:%M:%S')
+            f['nice_name'] = f.get('name')[37:] # strip folder prefix
+            f['ez_link'] = file_info.get('ez_link')
+            
+            files.append(f)
+    
+    template_data = {
+                    'files': files, \
+                    }
+
+    template_data.update(form_dict)
+
+    return render(request, 'link_table.jade', template_data, 
+                  context_instance=RequestContext(request))
+
+
 def page_not_found(request, message=None):
     '''
     Display 404 page with custom message

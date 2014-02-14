@@ -25,6 +25,8 @@ urlpatterns += patterns('DryIce.views',
     url(r'^users/sign_up/$', RegistrationView.as_view(), name='sign_up'),
     url(r'^users/login/$', 'login_user', name='login'),
     url(r'^users/logout/$', 'logout_view', name='logout'),
+    
+    url(r'^api/load_link_table/$', 'load_link_table', name='link_table'),
 )
 
 # Partials
