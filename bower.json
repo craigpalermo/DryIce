@@ -10,7 +10,8 @@
     "moment": "~2.5.0",
     "bootstrap-file-input": "*",
     "parsleyjs": "~1.2.2",
-    "angular": "~1.2.7"
+    "angular": "~1.2.7",
+    "sco.js": "*"
   },
   "install": {
     "path": "DryIce/static/vendor",
@@ -24,6 +25,10 @@
       ],
       "parsleyjs": [
         "bower_components/parsleyjs/parsley.js"
+      ],
+      "sco.js": [
+        "bower_components/sco.js/js/*",
+        "bower_components/sco.js/css/*"
       ]
     }
   }

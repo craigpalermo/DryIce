@@ -5,12 +5,36 @@ $( document ).ready(function() {
 function resetTimers() {
     $(".file_row").each(function(i, x) {
         var end = moment($(x).data('file_expire_time'));
-        startCountdown(new Date(end), i+1);
+        var unixtime = new Date(end).getTime() / 1000;
+        var spanName = "#" + (i+1) + "_timeRemaining";
+        console.log(spanName);
+        $(spanName).scojs_countdown({until:unixtime});
     });
 }
 
 function reloadLinkTable() {
-    $('#link_table').load("/api/load_link_table");
+    /*
+    $.ajax({
+        type: "GET",
+        url: "/api/load_link_table",
+        success: function(data) {
+            $('#link_table').html(data);
+            setTimeout(resetTimers, 1000);
+            $('#refresh-spinner').css({'visibility':'hidden'});
+            $('#spinner-container').css('z-index', '-1');
+            $('#refresh-spinner').css({'visibility':'visible', 'z-index':'-1'});
+        },
+        error: function() {
+            $('#link_table').html("<div id='message'></div>");
+            $('#message').html("<h2>There was a problem loading your files... Try refreshing the page.</h2>");
+        }
+    });*/
+
+    $('#link_table').load('/api/load_link_table', function() {
+        resetTimers(); 
+        $('#refresh-spinner').css({'visibility':'hidden'});
+        $('#spinner-container').css('z-index', '-1');
+    });
 }
 
 $(function() {
@@ -46,8 +70,6 @@ $(function() {
         $('#spinner-container').css('z-index', '1000');
         $('#refresh-spinner').css({'visibility':'visible', 'z-index':'1000'});
     
-        /* wait a while so new file appears on page refresh */
-        setTimeout(reloadLinkTable, 800);
 
         /* submit form with file info */
         var hidden_filename = $('input[type=file]').val().split('\\').pop(); 
@@ -66,8 +88,7 @@ $(function() {
             data: dataString,
             success: function() {
                 reloadLinkTable();
-                resetTimers();
-                $('#refresh-spinner').css({'visibility':'hidden'});
+                
             },
             error: function() {
                 $('#link_table').html("<div id='message'></div>");
