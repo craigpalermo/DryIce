@@ -6,7 +6,6 @@ $( document ).ready(function() {
     });
 
     $("#link_table").on("click", ".trashcan", function() {
-        alert("fuck");
         var filename = $(this).data('filename');
         deleteFiles(filename);
     });
@@ -120,8 +119,6 @@ $(function() {
         });    
     },
     fail: function(e, data) {
-      console.log(e);
-      console.log(data);
     },
     always: function(e, data) {
       $("#uploadButton").text("Upload").removeAttr("disabled");
