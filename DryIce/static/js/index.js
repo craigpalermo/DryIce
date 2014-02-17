@@ -1,5 +1,15 @@
 $( document ).ready(function() {
     resetTimers();    
+
+    $(function() {
+        // Setup drop down menu
+        $('.dropdown-toggle').dropdown();
+
+        // Fix input element click problem
+        $('.dropdown input, .dropdown label').click(function(e) {
+            e.stopPropagation();
+        });
+    });
 });
 
 function resetTimers() {
@@ -7,29 +17,11 @@ function resetTimers() {
         var end = moment($(x).data('file_expire_time'));
         var unixtime = new Date(end).getTime() / 1000;
         var spanName = "#" + (i+1) + "_timeRemaining";
-        console.log(spanName);
         $(spanName).scojs_countdown({until:unixtime});
     });
 }
 
 function reloadLinkTable() {
-    /*
-    $.ajax({
-        type: "GET",
-        url: "/api/load_link_table",
-        success: function(data) {
-            $('#link_table').html(data);
-            setTimeout(resetTimers, 1000);
-            $('#refresh-spinner').css({'visibility':'hidden'});
-            $('#spinner-container').css('z-index', '-1');
-            $('#refresh-spinner').css({'visibility':'visible', 'z-index':'-1'});
-        },
-        error: function() {
-            $('#link_table').html("<div id='message'></div>");
-            $('#message').html("<h2>There was a problem loading your files... Try refreshing the page.</h2>");
-        }
-    });*/
-
     $('#link_table').load('/api/load_link_table', function() {
         resetTimers(); 
         $('#refresh-spinner').css({'visibility':'hidden'});
