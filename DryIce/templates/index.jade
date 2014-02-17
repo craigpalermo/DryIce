@@ -6,7 +6,7 @@
 block content
   #content.container
     .row
-      .col-xs-12.col-sm-6#upload-container
+      .col-xs-12.col-md-4#upload-container
         .row
           .col-xs-12.col-sm-1.col-md-1
             h3.col-xs-center.col-sm-right up
@@ -57,7 +57,7 @@ block content
               li Click <strong>Upload</strong> to securely upload the file to DryIce's cloud storage.
               li Share the link! Anyone can use it to download that file until it expires.
 
-      .col-xs-12.col-sm-6#files-container
+      .col-xs-12.col-md-8#files-container
         #spinner-container
           #refresh-spinner.i.fa.fa-spinner.fa-spin.fa-5x
         .row
@@ -69,13 +69,7 @@ block content
         .row
           .col-xs-12.col-sm-10.col-md-12
               .row#files
-                if files
-                  div#link_table
-                    {% include "link_table.jade" %} 
-                else
-                  div#link_table
-                    #no_files
-                      h3 You haven't uploaded any files yet!
+                {% include "link_table.jade" %} 
 
 append extrascripts
   include analytics.html

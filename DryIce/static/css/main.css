@@ -2,6 +2,13 @@
     box-sizing: border-box;
 }
 
+.trashcan {
+    color: #d2322d;
+}
+.trashcan:hover {
+    cursor:pointer;
+}
+
 #clear_session {
     margin: 0;
     color: black;

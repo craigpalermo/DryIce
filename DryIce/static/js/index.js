@@ -1,6 +1,16 @@
 $( document ).ready(function() {
     resetTimers();    
 
+    $("#clear_session").on("click", function() {
+        deleteFiles();
+    });
+
+    $("#link_table").on("click", ".trashcan", function() {
+        alert("fuck");
+        var filename = $(this).data('filename');
+        deleteFiles(filename);
+    });
+
     $(function() {
         // Setup drop down menu
         $('.dropdown-toggle').dropdown();
@@ -11,6 +21,27 @@ $( document ).ready(function() {
         });
     });
 });
+
+function deleteFiles(filename) {
+    $('#spinner-container').css('z-index', '1000');
+    $('#refresh-spinner').css({'visibility':'visible', 'z-index':'1000'});
+   
+    url = typeof filename !== 'undefined' ? '/delete/'+filename : 'clear_session';
+    alert(url);
+
+    $.ajax({
+        type: "GET",
+        url: url,
+        success: function() {
+            reloadLinkTable();
+        },
+        error: function() {
+            $('#link_table').html("<div id='message'></div>");
+            $('#message').html("<h2>There was a problem loading your files... Try refreshing the page.</h2>");
+        }
+    });    
+}
+
 
 function resetTimers() {
     $(".file_row").each(function(i, x) {
