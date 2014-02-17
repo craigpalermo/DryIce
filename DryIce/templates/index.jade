@@ -73,8 +73,9 @@ block content
                   div#link_table
                     {% include "link_table.jade" %} 
                 else
-                  #no_files
-                    h3 You haven't uploaded any files yet!
+                  div#link_table
+                    #no_files
+                      h3 You haven't uploaded any files yet!
 
 append extrascripts
   include analytics.html
