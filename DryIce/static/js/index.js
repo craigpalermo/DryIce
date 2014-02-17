@@ -26,7 +26,6 @@ function deleteFiles(filename) {
     $('#refresh-spinner').css({'visibility':'visible', 'z-index':'1000'});
    
     url = typeof filename !== 'undefined' ? '/delete/'+filename : 'clear_session';
-    alert(url);
 
     $.ajax({
         type: "GET",
