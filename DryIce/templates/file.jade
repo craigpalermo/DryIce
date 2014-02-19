@@ -1,0 +1,21 @@
+{% extends "base.jade" %}
+{% load staticfiles %}
+
+{% block content %}
+div.text-content.pull-center
+    h3
+      strong File: 
+      {{ filename }}
+    h4 This file will expire in: 
+      strong
+        span#countdown(data-expire_time="{{ expire_time }}") 
+   
+    br
+
+    a(href="{{ url }}", download="{{ filename }}")
+      button.btn.btn-default(type="button")  Click to Download
+{% endblock %}
+
+{% block extrascripts %}
+script(src="{% static '/static/js/file-page.js' %}")
+{% endblock %}

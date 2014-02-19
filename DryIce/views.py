@@ -204,9 +204,25 @@ def route_file(request, ez_link):
         key = bucket.new_key(filename)
         url = key.generate_url(expires_in=(FILE_RETENTION_TIME * 60), \
                                query_auth=False, force_http=True)
-        filename = filename[37:] # strip folder prefix
-        template_data = {'filename': filename, 'url': url}
-        return render(request, 'file.html', template_data)
+       
+        # get additional info for file
+        temp = get_file_info(get_session_id(request))
+
+        for f in temp:
+            if f.get('name') == filename:
+                json_string = r_server.get(filename)
+                if json_string != None:
+                    file_info = json.loads(json_string)
+
+                    expire_time = f['created'] + \
+                                        timedelta(minutes=int(file_info.get('expire_time')))
+                    expire_time = datetime.strftime(expire_time, '%Y-%m-%d %H:%M:%S')
+                    filename = f.get('name')[37:] # strip folder prefix
+        
+        template_data = {'filename': filename, 
+                         'expire_time': expire_time, 
+                         'url': url}
+        return render(request, 'file.jade', template_data)
     else:
         message = "That EZLink didn't match any files. Verify correct spelling and capitalization, then try again."
         return page_not_found(request, message)
