@@ -207,7 +207,8 @@ def route_file(request, ez_link):
        
         # get additional info for file
         temp = get_file_info(get_session_id(request))
-
+        filename = filename[37:] # strip folder prefix
+        '''
         for f in temp:
             if f.get('name') == filename:
                 json_string = r_server.get(filename)
@@ -217,10 +218,10 @@ def route_file(request, ez_link):
                     expire_time = f['created'] + \
                                         timedelta(minutes=int(file_info.get('expire_time')))
                     expire_time = datetime.strftime(expire_time, '%Y-%m-%d %H:%M:%S')
-                    filename = f.get('name')[37:] # strip folder prefix
-        
+        '''
+
         template_data = {'filename': filename, 
-                         'expire_time': expire_time, 
+                         #'expire_time': expire_time, 
                          'url': url}
         return render(request, 'file.jade', template_data)
     else:
