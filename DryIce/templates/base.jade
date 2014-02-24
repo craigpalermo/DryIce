@@ -55,13 +55,13 @@ html(lang='en')
           li
             a(href="/users/logout/") Log Out
           {% else %}
-          li(class="{% block register_active %}{% endblock %}")
-            a(href="/users/sign_up/") Sign Up
-          {% endif %}
           {% if not user.is_authenticated %}
           li.dropdown
             a.dropdown-toggle(href='/login/', data-toggle="dropdown") Sign In <strong class="caret"></strong>
             div.dropdown-menu.pull-left(style="padding: 15px;")
+              p(class="{% block register_active %}{% endblock %}")
+                a(href="/users/sign_up/") Sign Up
+              {% endif %}
               form(action="/users/login/", method="post", accept-charset="UTF-8", role="form")
                 {% csrf_token %}
                 div.form-group
@@ -75,7 +75,7 @@ html(lang='en')
 
           li
             a#clear_session.navbar-btn.btn-danger.btn(title="Delete all files linked to this session (cannot be undone).")
-              | Clear Session
+              | Delete All Files
 
     #scripts
       script(src="{% static '/static/vendor/jquery/jquery.js' %}")
