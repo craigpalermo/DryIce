@@ -101,6 +101,7 @@
 /* Code Preview (google-code-prettify) */
 #code-preview {
     text-align: left !important;
+    display: none;
 }
 
 .file-page-cell {

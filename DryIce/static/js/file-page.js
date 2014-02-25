@@ -10,8 +10,14 @@ $(document).ready(function() {
     if (checkURL(url)) {
         $("#image").attr('src', url);
     } else if (checkURLCode(url)) {
-        $("#code-preview").load(url, function() {
-            prettyPrint();
+        $.ajax({
+            url: url,
+            type: "get",
+            success:  function(data) {
+                $("#code-preview").html(data);
+                prettyPrint();
+                $("#code-preview").show().children.show();
+            }
         });
     }
 });
