@@ -9,9 +9,17 @@ $(document).ready(function() {
 
     if (checkURL(url)) {
         $("#image").attr('src', url);
+    } else if (checkURLCode(url)) {
+        $("#code-preview").load(url, function() {
+            prettyPrint();
+        });
     }
 });
 
 function checkURL(url) {
     return(url.match(/\.(jpeg|jpg|gif|png)$/) != null);
+}
+
+function checkURLCode(url) {
+    return(url.match(/\.(bsh|c|cc|cpp|cs|csh|cyc|cv|htm|html|java|js|m|mxml|perl|pl|pm|py|rb|sh|xhtml|xml|xsl)$/) != null);
 }

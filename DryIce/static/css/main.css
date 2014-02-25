@@ -98,6 +98,24 @@
     float: left;
 }
 
+/* Code Preview (google-code-prettify) */
+#code-preview {
+    text-align: left !important;
+}
+
+.file-page-cell {
+    display: table;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    height: 65px;
+}
+.file-page-cell .file-cell-wrapper {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+}
+
+
 /* Center the text in the middle of the window */
 .text-content {
     width: 65%;

@@ -11,7 +11,8 @@
     "bootstrap-file-input": "*",
     "parsleyjs": "~1.2.2",
     "angular": "~1.2.7",
-    "sco.js": "*"
+    "sco.js": "*",
+    "google-code-prettify": "*"
   },
   "install": {
     "path": "DryIce/static/vendor",
@@ -29,6 +30,10 @@
       "sco.js": [
         "bower_components/sco.js/js/*",
         "bower_components/sco.js/css/*"
+      ],
+      "google-code-prettify": [
+        "bower_components/google-code-prettify/src/*",
+        "bower_components/google-code-prettify/styles/*"
       ]
     }
   }

@@ -3,21 +3,30 @@
 
 {% block content %}
 div.text-content.pull-center
-    h3
-      strong File: 
-      {{ filename }}
-    //-h4 This file will expire in: 
-    //-  strong
-    //-    span#countdown(data-expire_time="{{ expire_time }}") 
+  .row
+    .col-xs-12.col-sm-6.file-page-cell
+      .file-cell-wrapper
+        strong File: 
+        {{ filename }}
+    .col-xs-12.col-sm-6.file-page-cell
+      .file-cell-wrapper
+        a#download-link(href="{{ url }}", download="{{ filename }}")
+          button.btn.btn-default(type="button")  Click to Download
+  .row
+    .col-sm-12
+      //-h4 This file will expire in: 
+      //-  strong
+      //-    span#countdown(data-expire_time="{{ expire_time }}") 
+    
+      pre.prettyprint.linenums#code-preview
 
-    img#image(src="")
+      img#image(src="")
 
-    br
+      br
 
-    a#download-link(href="{{ url }}", download="{{ filename }}")
-      button.btn.btn-default(type="button")  Click to Download
 {% endblock %}
 
 {% block extrascripts %}
 script(src="{% static '/static/js/file-page.js' %}")
+script(src="{% static '/static/vendor/google-code-prettify/prettify.js' %}")
 {% endblock %}
