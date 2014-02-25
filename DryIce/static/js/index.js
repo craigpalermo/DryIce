@@ -84,25 +84,25 @@ $(function() {
     replaceFileInput: true,
     autoUpload: true,
     add: function (e, data) {
-      $("#uploadButton").unbind("click").click(function () {
-      });
         $("#uploadKey").val(window.SESSION_ID+'/${filename}');
         data.submit();
         $("#uploadButton").text("Uploading...").attr("disabled", "disabled");
     },
     done: function (e, data) {
+        // get name of file uploaded
+        filess = data.files;
+        filename = filess[0].name;
+        
         /* make the refresh spinner appear */
         $('#no_files').css('visibility', 'hidden');
         $('#spinner-container').css('z-index', '1000');
         $('#refresh-spinner').css({'visibility':'visible', 'z-index':'1000'});
-    
 
         /* submit form with file info */
-        var hidden_filename = $('input[type=file]').val().split('\\').pop(); 
         var expiration = $('[name="expiration"]').val();
         var csrftoken = $('[name="csrfmiddlewaretoken"]').val();
 
-        var dataString = 'hidden-filename='+ hidden_filename + '&expiration=' + expiration
+        var dataString = 'hidden-filename='+ filename + '&expiration=' + expiration
                          + '&csrftoken=' + csrftoken;
         $.ajax({
             type: "POST",

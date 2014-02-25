@@ -160,6 +160,7 @@ def load_link_table(request):
     session_id = get_session_id(request)
     
     temp = get_file_info(session_id)
+    print temp
     form_dict = generate_upload_form(session_id)
 
     # pick out which files were uploaded from the current session
@@ -177,7 +178,8 @@ def load_link_table(request):
             f['ez_link'] = file_info.get('ez_link')
             
             files.append(f)
-    
+    print files
+    print "---------------" 
     template_data = {
                     'files': files, \
                     }
