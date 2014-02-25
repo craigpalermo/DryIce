@@ -80,6 +80,7 @@
     vertical-align: middle;
     line-height: 35px;
     width: auto;
+    visibility: hidden;
 }
 #progress-label {
     float: left;
@@ -88,8 +89,9 @@
     position: absolute;
     vertical-align: middle;
 }
-.ui-progressbar-overlay {
-    background: none !important;
+.ui-widget-header {
+    background-image: none !important;
+    background-color: #76f776 !important;
 }
 #uploadButton {
     margin-right: 10px;

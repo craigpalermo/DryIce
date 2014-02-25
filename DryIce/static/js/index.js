@@ -70,7 +70,7 @@ $(function() {
       progressLabel = $("#progress-label");
 
   progressbar.progressbar({
-    value: false,
+    value: 0,
     change: function() {
       progressLabel.text(progressbar.progressbar("value") + "%");
     },
@@ -84,6 +84,7 @@ $(function() {
     replaceFileInput: true,
     autoUpload: true,
     add: function (e, data) {
+        $("#progressbar").css('visibility', 'visible');
         $("#uploadKey").val(window.SESSION_ID+'/${filename}');
         data.submit();
         $("#uploadButton").text("Uploading...").attr("disabled", "disabled");
