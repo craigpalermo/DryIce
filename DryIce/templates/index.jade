@@ -22,7 +22,7 @@ block content
               select#expiration(name='expiration')
                 option(value='10') 10m
                 option(value='60') 1h
-                option(value='1440') 24h
+                option(value='1440', selected="selected") 24h
                 option(value='4320') 3d
                 //-option(value='-1') Never
               input(type='hidden', name='hidden-filename', value='chicken')
@@ -39,23 +39,24 @@ block content
               input(type='hidden', name='Content-Type', value="")
               input(type='hidden', name='x-amz-meta-session_id', value='{{ session_id }}')
               input(type='hidden', name='x-amz-server-side-encryption', value="AES256")
-              input.btn.btn-default(type='file', name='file', id='uploadFile')
+              input.btn.btn-default(type='file', name='file', id='uploadFile', multiple)
               br
               br
               button.btn.btn-success(type='button', id='uploadButton') Upload
-
+        .row
+          .col-sm-11
+            div#dropbox()
+              span#dropbox-text
+                h2 
+                  strong Drop files 
+                  | to upload
+                h4 (or click)
+        .row
+          .col-sm-11
             #progressbar
               #progress-label Select a file...
 
             #message
-
-        .row
-          .col-xs-12
-            h4 Get Started:
-            ol
-              li Click <strong>Browse</strong> to select the file you want to share.
-              li Click <strong>Upload</strong> to securely upload the file to DryIce's cloud storage.
-              li Share the link! Anyone can use it to download that file until it expires.
 
       .col-xs-12.col-md-7#files-container
         #spinner-container

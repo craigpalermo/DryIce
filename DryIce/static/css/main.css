@@ -14,6 +14,33 @@
     margin-bottom: 20px;
 }
 
+#progressbar {
+    margin-top:15px;
+}
+
+#dropbox {
+    display: table;
+    height: 60%;
+    border: gray 1px solid;
+    width: 100%;
+    transition: background .25s ease-in-out;
+    -moz-transition: background .25s ease-in-out;
+    -webkit-transition: background .25s ease-in-out;
+}
+#dropbox:hover {
+    cursor: pointer;
+    background: #ddd;
+}
+#dropbox-text {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+}
+
+#uploadForm {
+    display: none;
+}
+
 #clear_session {
     margin: 0;
     color: black;

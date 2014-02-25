@@ -1,6 +1,18 @@
 $( document ).ready(function() {
     resetTimers();    
 
+    $(document).bind('drop dragover', function(e) {
+        e.preventDefault(); 
+    });
+    
+    $("#dropbox").on("click", function() {
+        $("#uploadFile").trigger('click');
+    });
+
+    $("#dropbox").bind('fileuploaddragover', function(e) {
+        alert('bla');
+    });
+
     $("#clear_session").on("click", function() {
         deleteFiles();
     });
@@ -77,13 +89,14 @@ $(function() {
 
   $("#uploadFile").fileupload({
     dataType: "xml",
-    replaceFileInput: false,
+    replaceFileInput: true,
+    autoUpload: true,
     add: function (e, data) {
       $("#uploadButton").unbind("click").click(function () {
+      });
         $("#uploadKey").val(window.SESSION_ID+'/${filename}');
         data.submit();
         $("#uploadButton").text("Uploading...").attr("disabled", "disabled");
-      });
     },
     done: function (e, data) {
         /* make the refresh spinner appear */
