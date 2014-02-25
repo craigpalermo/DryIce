@@ -1,16 +1,8 @@
 $( document ).ready(function() {
     resetTimers();    
 
-    $(document).bind('drop dragover', function(e) {
-        e.preventDefault(); 
-    });
-    
     $("#dropbox").on("click", function() {
         $("#uploadFile").trigger('click');
-    });
-
-    $("#dropbox").bind('fileuploaddragover', function(e) {
-        alert('bla');
     });
 
     $("#clear_session").on("click", function() {
@@ -122,7 +114,6 @@ $(function() {
             data: dataString,
             success: function() {
                 reloadLinkTable();
-                
             },
             error: function() {
                 $('#link_table').html("<div id='message'></div>");
