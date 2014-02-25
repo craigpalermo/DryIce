@@ -6,6 +6,9 @@ $(document).ready(function() {
 
 
     var url = $("#download-link").attr("href");
+    url = url.slice(4,url.length);
+    url = "https" + url;
+    console.log(url);
 
     if (checkURL(url)) {
         $("#image").attr('src', url);
