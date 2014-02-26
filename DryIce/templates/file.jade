@@ -4,12 +4,16 @@
 {% block content %}
 div.text-content.pull-center
   .row
-    .col-xs-12.col-sm-6.file-page-cell
+    .col-xs-12.col-sm-5.file-page-cell
       .file-cell-wrapper
         strong File: 
         {{ filename }}
-    .col-xs-12.col-sm-6.file-page-cell
-      .file-cell-wrapper
+    .col-xs-12.col-sm-4.file-page-cell
+      p 
+        strong Direct Link: 
+        span https://dryice.io/f/{{ ez_link }}
+    .col-xs-12.col-sm-3
+      #download-button.file-cell-wrapper.file-page-cell
         a#download-link(href="{{ url }}", download="{{ filename }}")
           button.btn.btn-default(type="button")  Click to Download
   .row

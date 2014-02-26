@@ -113,9 +113,11 @@
 .file-page-cell .file-cell-wrapper {
     display: table-cell;
     vertical-align: middle;
+    text-align: left;
+}
+#download-button {
     text-align: center;
 }
-
 
 /* Center the text in the middle of the window */
 .text-content {

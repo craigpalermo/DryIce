@@ -235,7 +235,8 @@ def route_file(request, ez_link):
                     expire_time = datetime.strftime(expire_time, '%Y-%m-%d %H:%M:%S')
         '''
 
-        template_data = {'filename': filename, 
+        template_data = {'ez_link': ez_link,
+                         'filename': filename, 
                          #'expire_time': expire_time, 
                          'url': url}
         return render(request, 'file.jade', template_data)
