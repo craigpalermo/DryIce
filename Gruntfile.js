@@ -1,5 +1,6 @@
 module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-contrib-commands');
     
     grunt.initConfig({
         watch: {
@@ -10,11 +11,11 @@ module.exports = function(grunt) {
                         'DryIce/templates/*',
                        ]
             }
+        },
+        command: {
+            run_cmd: {
+                cmd: ['python manage.py runserver 0.0.0.0:8000']
+            }
         }
-    });
-
-    grunt.registerTask('server', 'Start a custom web server', function() {
-        grunt.log.writeln('Started web server on port 3000');
-        require('./app.js').listen(3000);
     });
 };
