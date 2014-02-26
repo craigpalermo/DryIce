@@ -207,7 +207,7 @@ def direct_link(request, ez_link):
         print url
         return HttpResponseRedirect(url)
     else:
-        return raise Http404 
+        raise Http404 
 
 def route_file(request, ez_link):
     '''
