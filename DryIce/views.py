@@ -8,6 +8,7 @@ from django.views.generic.base import View
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
+from django.http import Http404
 
 from redis import Redis
 from datetime import datetime, timedelta
@@ -195,6 +196,18 @@ def page_not_found(request, message=None):
     Display 404 page with custom message
     '''
     return render(request, '404.html', {'message': message})
+
+def direct_link(request, ez_link):
+    filename = r_server.get(ez_link)
+    bucket = setup_bucket()  
+    if filename != None:
+        key = bucket.new_key(filename)
+        url = key.generate_url(expires_in=(FILE_RETENTION_TIME * 60), \
+                               query_auth=False, force_http=True)
+        print url
+        return HttpResponseRedirect(url)
+    else:
+        return raise Http404 
 
 def route_file(request, ez_link):
     '''

@@ -20,8 +20,10 @@ urlpatterns += patterns('DryIce.views',
     url(r'^clear_session/$', 'clear_session', name='clear_session'),
     url(r'^add_file_info/$', 'add_file_info', name='add_file_info'),
     url(r'^delete/(?P<filename>.+)/$', 'delete_file', name='delete'),
+
     url(r'^(?P<ez_link>\w+)/$', 'route_file', name='route_file'),
-    
+    url(r'^f/(?P<ez_link>\w+)/$', 'direct_link', name='direct_link'),
+
     url(r'^users/sign_up/$', RegistrationView.as_view(), name='sign_up'),
     url(r'^users/login/$', 'login_user', name='login'),
     url(r'^users/logout/$', 'logout_view', name='logout'),
