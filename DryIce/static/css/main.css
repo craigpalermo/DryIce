@@ -18,6 +18,12 @@
     margin-top:15px;
 }
 
+#navbar {
+    margin-top: 5px;
+    margin-bottom:0px;
+    height:30px !important;
+}
+
 #dropbox {
     display: table;
     height: 60%;
@@ -44,6 +50,10 @@
 #clear_session {
     margin: 0;
     color: black;
+}
+
+.navbar {
+    margin-bottom:0;
 }
 
 .dropdown-menu {
@@ -113,11 +123,9 @@
 .file-page-cell .file-cell-wrapper {
     display: table-cell;
     vertical-align: middle;
-    text-align: left;
-}
-#download-button {
     text-align: center;
 }
+
 
 /* Center the text in the middle of the window */
 .text-content {
@@ -177,7 +185,8 @@ small {
 }
 
 header {
-    background-color: #0066cc;
+    //background-color: #0066cc;
+    background-color: #eaeaea;
     padding: 20px 0;
     height: 140px;
     color: white;
@@ -250,6 +259,15 @@ header #subtitle {
 
 #logo {
     width: 230px;
+}
+
+#navbar ul {
+}
+#navbar a:hover, a:active {
+    color: gray;
+}
+.sign-in-box, a:hover {
+    color: gray !important;
 }
 
 #files-container {
