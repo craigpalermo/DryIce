@@ -18,11 +18,6 @@
     margin-top:15px;
 }
 
-#navbar {
-    margin-top: 5px;
-    margin-bottom:0px;
-    height:30px !important;
-}
 
 #dropbox {
     display: table;
@@ -50,10 +45,6 @@
 #clear_session {
     margin: 0;
     color: black;
-}
-
-.navbar {
-    margin-bottom:0;
 }
 
 .dropdown-menu {
@@ -138,7 +129,6 @@
 
 
 /* Bootstrap Additions & Modifications */
-.pull-center { text-align: center; }
 
 @media only screen {
     .col-xs-left   { text-align: left   !important; }
@@ -209,6 +199,20 @@ header #subtitle {
     display: table-cell;
     vertical-align: middle;
 }
+header {
+    background-image: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    color-stop(0.36, #1E45E2),
+    color-stop(0.81, #FFFFFF)
+    );
+    background-image: -o-linear-gradient(bottom, #1E45E2 36%, #FFFFFF 81%);
+    background-image: -moz-linear-gradient(bottom, #1E45E2 36%, #FFFFFF 81%);
+    background-image: -webkit-linear-gradient(bottom, #1E45E2 36%, #FFFFFF 81%);
+    background-image: -ms-linear-gradient(bottom, #1E45E2 36%, #FFFFFF 81%);
+    background-image: linear-gradient(to bottom, #1E45E2 36%, #FFFFFF 81%);
+}
 
 #no_files { text-align: center; }
 
@@ -257,16 +261,32 @@ header #subtitle {
 }
 
 #logo {
-    width: 230px;
+    //width: 230px;
+    width: 100%;
 }
 
-#navbar ul {
-}
-#navbar a:hover, a:active {
-    color: gray;
+#navbar {
+    margin-top: 5px;
+    margin-bottom:10px;
+    z-index:1;
 }
 .sign-in-box, a:hover {
     color: gray !important;
+}
+
+.pull-center {
+    text-align:center;
+    margin: 0 auto;
+    display: table;
+    table-layout:fixed;
+    float: none;
+}
+
+#header {
+    margin-top:10px;
+    padding-bottom:10px;
+    margin-bottom:10px;
+    border-bottom: 2px dashed #428bca;
 }
 
 #files-container {
@@ -287,4 +307,12 @@ header #subtitle {
 }
 #no_files {
     visibilty: visible;
+}
+
+#wrapper {
+    display:table;
+}
+#cell {
+    display:table-cell;
+    vertical-align:middle;
 }

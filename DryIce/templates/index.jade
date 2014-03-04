@@ -7,15 +7,15 @@ block content
   #content.container
     .row
       .col-xs-12.col-md-5#upload-container
-        .row
-          .col-xs-12.col-sm-1.col-md-1
+        .row.hidden-xs.pull-left
+          .col-xs-12.col-sm-2
             h3.col-xs-center.col-sm-right up
-          .col-xs-12.col-sm-11.col-md-11
+          .col-xs-12.col-sm-10
             .col-xs-center.col-sm-left
               h4 browse and upload
 
         .row
-          .col-xs-12.col-sm-12.col-md.12
+          .col-xs-12.col-sm-12.pull-center
             form(id="file-info", action="/add_file_info/", method="post")
               {% csrf_token %}
               label(for='expiration') Expiration
@@ -43,7 +43,7 @@ block content
               br
               button.btn.btn-success(type='button', id='uploadButton') Upload
         .row
-          .col-sm-11
+          .col-sm-12
             div#dropbox()
               span#dropbox-text
                 h2 
@@ -51,7 +51,7 @@ block content
                   | to upload
                 h4 (or click)
         .row
-          .col-sm-11
+          .col-sm-12
             #progressbar
               #progress-label Status 
 
@@ -60,12 +60,12 @@ block content
       .col-xs-12.col-md-7#files-container
         #spinner-container
           #refresh-spinner.i.fa.fa-spinner.fa-spin.fa-5x
-        .row
-          .col-xs-12.col-sm-3.col-md-2
-            h3.col-xs-center.col-sm-right down
-          .col-xs-12.col-sm-6.col-md-8
-            .col-xs-center.col-sm-left
-              h4 pick and click
+        .row.hidden-xs.pull-left
+          .col-xs-12.col-sm-2
+            h3.col-xs-center.col-sm-left down
+          .col-xs-12.col-sm-10
+            .col-xs-center.col-sm-right
+              h4 pick and click 
         .row
           .col-xs-12.col-sm-10.col-md-12
               .row#files

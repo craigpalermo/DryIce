@@ -21,67 +21,72 @@ html(lang='en')
     link(rel='stylesheet', href="{% static '/static/vendor/google-code-prettify/prettify.css' %}")
 
   body
-    header#header
-      .container
-        .row
-          #title.col-xs-12.col-sm-3
-            a(href='/')
-              img#logo(src='/static/img/logo.png') 
-          #navbar-container.col-xs-12.col-sm-9
-            nav#navbar.navbar(role="navigation")
-              div.pull-right
-                ul.nav.nav-pills
-                  {% if user.is_authenticated %}
-                  div.navbar-text Welcome, {{ user.username }}!
-                  {% endif %}
-                  li(class="{% block home_active %}{% endblock %}")
-                    a(href='/') Home
-                  li(class="{% block faq_active %}{% endblock %}")
-                    a(href='/about/') FAQ
-                  li(class="{% block disclaimer_active %}{% endblock %}")
-                    a(href='/disclaimer/') Disclaimer
-                  {% if user.is_authenticated %}
-                  li
-                    a(href="/users/logout/") Log Out
-                  {% else %}
-                  {% if not user.is_authenticated %}
-                  li.dropdown
-                    a.dropdown-toggle(href='/login/', data-toggle="dropdown") Sign In <strong class="caret"></strong>
-                    div.dropdown-menu.pull-left(style="padding: 15px;")
-                      p.sign-in-box(class="{% block register_active %}{% endblock %}")
-                        a(href="/users/sign_up/") Sign Up
-                      {% endif %}
-                      form(action="/users/login/", method="post", accept-charset="UTF-8", role="form")
-                        {% csrf_token %}
-                        div.form-group
-                          input#username.form-control(style="margin-bottom: 15px;", name="username", size="30", placeholder='username')
-                        div.form-group
-                          input#password.form-control(style="margin-bottom: 15px;", type="password", name="password", size="30", placeholder='password')
-                        input#remember_me(style="float: left; margin-right: 10px;", type="checkbox", name="remember_me", value="1")
-                        label.sign-in-box.string.optional(for='remember_me') Remember Me
-                        input.btn.btn-primary(style="clear: left; width: 100%; height: 32px; font-size: 13px;", type="submit", name="commit", value="Sign In")
-                   {% endif %}
+    .container
+      .row#header
+        div#title.col-sm-4
+          a(href='/')
+            img#logo(src='/static/img/logo.png') 
+        div#navbar-container.col-sm-8
+          .row
+            div#wrapper.col-xs-12
+              div#cell
+                .row
+                  div.col-xs-12
+                    nav#navbar.navbar.pull-center(role="navigation")
+                      ul.nav.nav-pills
+                        li(class="{% block home_active %}{% endblock %}")
+                          a(href='/') Home
+                        li(class="{% block faq_active %}{% endblock %}")
+                          a(href='/about/') FAQ
+                        li(class="{% block disclaimer_active %}{% endblock %}")
+                          a(href='/disclaimer/') Disclaimer
+                        {% if user.is_authenticated %}
+                        li
+                          a(href="/users/logout/") Log Out
+                        {% else %}
+                        {% if not user.is_authenticated %}
+                        li.dropdown
+                          a.dropdown-toggle(href='/login/', data-toggle="dropdown") Sign In <strong class="caret"></strong>
+                          div.dropdown-menu.pull-left(style="padding: 15px;")
+                            p.sign-in-box(class="{% block register_active %}{% endblock %}")
+                              a(href="/users/sign_up/") Sign Up
+                            {% endif %}
+                            form(action="/users/login/", method="post", accept-charset="UTF-8", role="form")
+                              {% csrf_token %}
+                              div.form-group
+                                input#username.form-control(style="margin-bottom: 15px;", name="username", size="30", placeholder='username')
+                              div.form-group
+                                input#password.form-control(style="margin-bottom: 15px;", type="password", name="password", size="30", placeholder='password')
+                              input#remember_me(style="float: left; margin-right: 10px;", type="checkbox", name="remember_me", value="1")
+                              label.sign-in-box.string.optional(for='remember_me') Remember Me
+                              input.btn.btn-primary(style="clear: left; width: 100%; height: 32px; font-size: 13px;", type="submit", name="commit", value="Sign In")
+                         {% endif %}
 
-                  li
-                    a#clear_session.navbar-btn.btn-danger.btn(title="Delete all files linked to this session (cannot be undone).")
-                      | Delete All Files
+                        li
+                          a#clear_session.navbar-btn.btn-danger.btn(title="Delete all files linked to this session (cannot be undone).")
+                            | Delete All Files
+                  
+                  div#welcome.col-xs-12.pull-center
+                    {% if user.is_authenticated %}
+                    div Welcome, {{ user.username }}!
+                    {% endif %}
+
+      div#content
+        {% block content %}{% endblock %}
+
+
+  #scripts
+    script(src="{% static '/static/vendor/jquery/jquery.js' %}")
+    script(src="{% static '/static/vendor/jquery-ui/jquery-ui.js' %}")
+    script(src="{% static '/static/vendor/jquery-file-upload/jquery.iframe-transport.js' %}")
+    script(src="{% static '/static/vendor/jquery-file-upload/jquery.fileupload.js' %}")
     
-    div#content
-      {% block content %}{% endblock %}
+    script(src="{% static '/static/vendor/bootstrap/bootstrap.js' %}")
+    script(src="{% static '/static/vendor/bootstrap-file-input/bootstrap.file-input.js' %}")
+    
+    script(src="{% static '/static/vendor/moment/moment.js' %}")
+    script(src="{% static '/static/vendor/sco.js/sco.countdown.js' %}")     
+    script(src="{% static '/static/vendor/parsleyjs/parsley.js' %}")
+    script(src="{% static '/static/js/main.js' %}")
 
-
-    #scripts
-      script(src="{% static '/static/vendor/jquery/jquery.js' %}")
-      script(src="{% static '/static/vendor/jquery-ui/jquery-ui.js' %}")
-      script(src="{% static '/static/vendor/jquery-file-upload/jquery.iframe-transport.js' %}")
-      script(src="{% static '/static/vendor/jquery-file-upload/jquery.fileupload.js' %}")
-      
-      script(src="{% static '/static/vendor/bootstrap/bootstrap.js' %}")
-      script(src="{% static '/static/vendor/bootstrap-file-input/bootstrap.file-input.js' %}")
-      
-      script(src="{% static '/static/vendor/moment/moment.js' %}")
-      script(src="{% static '/static/vendor/sco.js/sco.countdown.js' %}")     
-      script(src="{% static '/static/vendor/parsleyjs/parsley.js' %}")
-      script(src="{% static '/static/js/main.js' %}")
- 
-      block extrascripts
+    block extrascripts
