@@ -29,7 +29,7 @@ html(lang='en')
         div#navbar-container.col-sm-8
           .row
             div#wrapper.col-xs-12
-              div#cell
+              div#cell.pull-center
                 .row
                   div.col-xs-12
                     nav#navbar.navbar.pull-center(role="navigation")
@@ -65,8 +65,11 @@ html(lang='en')
                         li
                           a#clear_session.navbar-btn.btn-danger.btn(title="Delete all files linked to this session (cannot be undone).")
                             | Delete All Files
-                  
-                  div#welcome.col-xs-12.pull-center
+                .row
+                  div.col-xs-12
+                    h5#tagline Simple. Anonymous. Filesharing.
+                .row  
+                  div#welcome.col-xs-12
                     {% if user.is_authenticated %}
                     div Welcome, {{ user.username }}!
                     {% endif %}
