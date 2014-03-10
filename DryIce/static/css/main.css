@@ -24,13 +24,14 @@
     height: 60%;
     border: gray 1px solid;
     width: 100%;
+    background: #efefef;
     transition: background .25s ease-in-out;
     -moz-transition: background .25s ease-in-out;
     -webkit-transition: background .25s ease-in-out;
 }
 #dropbox:hover {
     cursor: pointer;
-    background: #ddd;
+    background: #cecece;
 }
 #dropbox-text {
     display: table-cell;
