@@ -80,16 +80,30 @@ $(function() {
   });
 
   $("#uploadFile").fileupload({
-    dataType: "xml",
-    replaceFileInput: true,
-    autoUpload: true,
-    add: function (e, data) {
-        $("#progressbar").css('visibility', 'visible');
-        $("#uploadKey").val(window.SESSION_ID+'/${filename}');
-        data.submit();
-        $("#uploadButton").text("Uploading...").attr("disabled", "disabled");
-    },
-    done: function (e, data) {
+      dataType: "xml",
+      replaceFileInput: true,
+      autoUpload: true,
+      add: function (e, data) {
+          var uploadErrors = [];
+          var acceptFileTypes = /^image\/(gif|jpe?g|png)$/i;
+          var maxFileSize = 2147483648;
+          
+          /*if(data.originalFiles[0]['type'].length && !acceptFileTypes.test(data.originalFiles[0]['type'])) {
+              uploadErrors.push('Not an accepted file type');
+          }*/
+          if(data.originalFiles[0]['size'].length && data.originalFiles[0]['size'] > maxFileSize) {
+              uploadErrors.push('Sorry, DryIce only supports files up to 2GB.');
+          }
+          if(uploadErrors.length > 0) {
+              alert(uploadErrors.join("\n"));
+          } else {
+              $("#progressbar").css('visibility', 'visible');
+              $("#uploadKey").val(window.SESSION_ID+'/${filename}');
+              data.submit();
+              $("#uploadButton").text("Uploading...").attr("disabled", "disabled");
+          }
+      },
+      done: function (e, data) {
         // get name of file uploaded
         filess = data.files;
         filename = filess[0].name;
