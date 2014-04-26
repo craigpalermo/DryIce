@@ -26,7 +26,7 @@ DATABASES = {
 
 
 # Time zone offset for file creation times, set to 0 for production
-TZ_OFFSET = 5
+TZ_OFFSET = 4
 
 # File storage parameters
 FILE_RETENTION_TIME = 60

@@ -1,6 +1,6 @@
 # Django settings for DryIce project.
 
-from environments import development as current_environment
+from environments import production as current_environment
 
 # Begin Environment Variables ------------------------------------------
 DATABASES = current_environment.DATABASES
